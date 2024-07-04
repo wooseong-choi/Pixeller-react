@@ -16,8 +16,12 @@ class GameScene extends Phaser.Scene {
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("ws://192.168.0.96:3001", {
-      extraHeaders: {
-        Authorization: "Bearer " + sessionStorage.getItem("user"),
+      transportOptions: {
+        polling: {
+        extraHeaders: {
+          Authorization: "Bearer " + sessionStorage.getItem("user"),
+          }
+        }
       },
     });
     this.OPlayer = {};
@@ -152,8 +156,12 @@ class GameScene extends Phaser.Scene {
       sessionStorage.removeItem("username");
     });
 
-    this.socket.on("error", function (error) {
-      console.log("Socket.IO Error: " + error);
+    this.socket.on('error', (error) => {
+      if (error.message === 'Unauthorized') {
+        alert('Session expired. Redirecting to login page.');
+        // this.socket.disconnect();
+        window.location.href = '/';
+      }
     });
   }
 
