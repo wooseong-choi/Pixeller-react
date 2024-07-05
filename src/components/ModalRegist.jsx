@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./ModalLogin.css";
 import { jwtDecode } from "jwt-decode";
+import "../static/css/ModalLogin.css";
 
 const ModalRegist = ({ isRegistOpen, onClose, children }) => {
   const [username, setUsername] = useState("");

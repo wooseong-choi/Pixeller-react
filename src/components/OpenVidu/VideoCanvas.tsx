@@ -7,7 +7,7 @@ import {
   RoomEvent,
 } from "livekit-client";
 import React, { useEffect, useRef, useState } from "react";
-import "./VideoComponent.css";
+import "../../static/css/VideoComponent.css";
 import AudioComponent from "./AudioComponent";
 import VideoComponent from "./VideoComponent.tsx";
 
@@ -106,7 +106,7 @@ function VideoCanvas() {
         "There was an error connecting to the room: ",
         (error as Error).message
       );
-      await leaveRoom();
+      // await leaveRoom();
     }
   }
 
