@@ -9,7 +9,7 @@ interface VideoComponentProps {
 
 function VideoComponent({ track, participantId, local }: VideoComponentProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
-
+  console.log('typeof track ',typeof track);
   useEffect(() => {
     if (videoElement.current) {
       track.attach(videoElement.current);
