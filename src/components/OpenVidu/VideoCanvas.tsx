@@ -26,7 +26,7 @@ function configureUrls() {
     if (window.location.hostname === "localhost") {
       APPLICATION_SERVER_URL = "http://localhost:6080/";
     } else {
-      APPLICATION_SERVER_URL = "https://" + window.location.hostname + ":6443/";
+      APPLICATION_SERVER_URL = "http://" + window.location.hostname + ":6443/";
     }
   }
 
