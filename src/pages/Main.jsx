@@ -22,20 +22,24 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     }
   }, [isOpen, isChatOpen]);
 
+ 
   const startVideoStream = (e) => {
     e.preventDefault();
     console.log("startVideoStream");
     isVideoOpen ? setIsVideoOpen(false) : setIsVideoOpen(true);
   };
 
-  window.addEventListener("start-video", startVideoStream);
+  
+  useEffect(() => {
+    window.addEventListener("start-video", startVideoStream); 
+  });
 
   return (
     <>
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className="video-container">
+            <div className={`cam-div ${isVideoOpen ? "active":""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
