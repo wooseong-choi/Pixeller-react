@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import GLogin from "./GLogin";
@@ -6,13 +6,13 @@ import "../static/css/ModalLogin.css";
 import { setCookie } from "./Cookies.ts";
 import { jwtDecode } from "jwt-decode";
 
-const ModalLogin = ({ isOpen, onClose, children }) => {
+const ModalLogin = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const clientId =
-    "99709035135-lq4adkjjk5trck2eg2fsi3aagilljfmv.apps.googleusercontent.com";
+  // const clientId =
+  //   "99709035135-lq4adkjjk5trck2eg2fsi3aagilljfmv.apps.googleusercontent.com";
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -48,7 +48,7 @@ const ModalLogin = ({ isOpen, onClose, children }) => {
       .post("http://192.168.0.96:3333/user/login", { user })
       .then((response) => {
         console.log(response);
-        if (response.data == null || response.data == "")
+        if (response.data === null || response.data === "")
           return alert("로그인이 실패하였습니다.");
         if (response.data.msg === "Ok") {
           if (response.data.jwt) {
