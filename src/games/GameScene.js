@@ -214,6 +214,9 @@ class GameScene extends Phaser.Scene {
       0,
       0
     );
+    tileLayer1.setCollisionByExclusion([-1]);
+    areaLayer1.setCollisionByExclusion([-1]);
+    objectLayer1.setCollisionByExclusion([-1]);
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
@@ -353,10 +356,7 @@ class GameScene extends Phaser.Scene {
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
-      console.log("'Q' 키가 눌렸습니다!");
-      // 여기에 원하는 코드를 추가하세요.
       this.Player.moveTo(400, 300);
-      // this.Player.moveToBlock(400, 300);
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {

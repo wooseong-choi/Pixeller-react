@@ -1,9 +1,9 @@
-.lists{
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    min-height: 0px;
-    position: relative;
+.lists {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  min-height: 0px;
+  position: relative;
 }
 /* .lists {
   display: flex;
@@ -26,7 +26,6 @@
   transform: translateX(calc(100% + 4px));
 } */
 
-
 /* src/components/SideMenu.css */
 .side-menu {
   /* display: flex; */
@@ -35,7 +34,7 @@
   width: 25vw;
   right: 0px;
   bottom: 0px;
-  background-color: #519C79;
+  background-color: #519c79;
   top: 0px;
   transition: transform 500ms ease 0s;
   transform: translateX(calc(100% + 4px));
@@ -54,7 +53,7 @@
   width: 30vw;
   right: 0px;
   bottom: 0px;
-  background-color: #519C79;
+  background-color: #519c79;
   top: 0px;
   transition: transform 500ms ease 0s;
   transform: translateX(calc(100% + 4px));
@@ -119,7 +118,7 @@
   min-width: 160px;
   width: 90%;
   border-radius: 1em;
-  border: 1px solid #519C79;
+  border: 1px solid #519c79;
   background-color: #fff;
   justify-content: center;
   height: 55px;
@@ -165,34 +164,33 @@
   right: 15px;
 }
 .menu-items .status-dot.on {
-  background-color: #6FC45C;
+  background-color: #6fc45c;
 }
 
-
 /* 검색 */
-.searchDivWrap{
+.searchDivWrap {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 }
-.searchDiv{
+.searchDiv {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 90%;
   max-width: 800px;
-  border: 1px solid #519C79;
+  border: 1px solid #519c79;
   border-radius: 20px;
   background-color: #fff;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
 }
-.searchDiv img{
+.searchDiv img {
   width: 15px;
   height: 15px;
   margin-left: 20px;
 }
-.searchDiv input[type="text"]{
+.searchDiv input[type="text"] {
   width: 80%;
   height: 40px;
   border: none;
@@ -203,23 +201,28 @@
 }
 
 /* 채팅목록 */
-.chatDivWrap{
+.chatDivWrap {
   display: flex;
   height: 40px;
 }
-.chatDiv{
-  border-bottom: 1px solid #519C79;
-  background-color: rgba(81,156,121,0.85);
+.chatDiv {
+  border-bottom: 1px solid #519c79;
+  background-color: rgba(81, 156, 121, 0.85);
   width: 100%;
   color: #fff;
-  font-size: 1.5em!important;
+  font-size: 1.5em !important;
   line-height: 40px;
-  font-weight: bold!important;
+  font-weight: bold !important;
   padding-left: 15px;
 }
-.chatDiv h1 { margin: 0; padding: 0; font-size: 1em; font-weight: bold;}
+.chatDiv h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-weight: bold;
+}
 
-.chat-content{
+.chat-content {
   display: inline-block;
   flex-direction: column;
   justify-content: center;
@@ -228,25 +231,25 @@
   height: calc(100% - 40px);
   overflow-y: auto;
 }
-.chat-content > div{
+.chat-content > div {
   width: 80%;
   margin: auto;
 }
-.chat-rooms{
+.chat-rooms {
   display: inline-block;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 20%;
   height: calc(100% - 40px);
-  background-color: #6BAB8D;
+  background-color: #6bab8d;
 }
-.chat-info{
+.chat-info {
   display: flex;
   align-items: center;
   min-width: 160px;
   border-radius: 1em 1em 1em 0;
-  border: 1px solid #519C79;
+  border: 1px solid #519c79;
   background-color: #fff;
   justify-content: center;
   height: 55px;
@@ -255,7 +258,7 @@
   width: 75%;
   margin-bottom: 10px;
 }
-.chat-info.me{
+.chat-info.me {
   border-radius: 1em 1em 0 1em;
   margin-left: auto;
 }
@@ -272,7 +275,7 @@
   border-style: solid;
   border-color: #ffffff transparent transparent transparent;
 }
-.chat-profile{
+.chat-profile {
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -281,10 +284,10 @@
   left: -28px;
   bottom: -20px;
 }
-.chat-info.me .chat-profile{
+.chat-info.me .chat-profile {
   left: auto;
   right: -37px;
 }
-.chat-profile img{
+.chat-profile img {
   width: 100%;
 }
