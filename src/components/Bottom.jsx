@@ -1,13 +1,15 @@
 import React from "react";
-import "../static/css/Bottom.css";
+import "../static/css/bottom.css";
 
 const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen }) => {
+  const currentUser = sessionStorage.getItem("username");
+
   return (
     <div className="navbar">
       <div className="left-section">
         <div className="user-info">
           <img src="svg/user-icon.svg" alt="User Icon" className="user-icon" />
-          <span className="username">류강현</span>
+          <span className="username">{currentUser}</span>
           <span className="status">활동중</span>
           <span className="status-dot on"></span>
         </div>
