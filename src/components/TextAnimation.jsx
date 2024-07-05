@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
-import "./TypingAnimation.css";
+import "../static/css/TypingAnimation.css";
 
 gsap.registerPlugin(TextPlugin);
 

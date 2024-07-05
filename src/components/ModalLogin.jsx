@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import GLogin from "./GLogin";
-import "./ModalLogin.css";
-import { login } from "../api/login";
+import "../static/css/ModalLogin.css";
 import { setCookie } from "./Cookies.ts";
 import { jwtDecode } from "jwt-decode";
 
@@ -49,24 +48,24 @@ const ModalLogin = ({ isOpen, onClose, children }) => {
       .post("http://192.168.0.96:3333/user/login", { user })
       .then((response) => {
         console.log(response);
-        if(response.data == null || response.data == '')
-            return alert("로그인이 실패하였습니다.");
-        if(response.data.msg === 'Ok'){
-          
-          if(response.data.jwt){
-
+        if (response.data == null || response.data == "")
+          return alert("로그인이 실패하였습니다.");
+        if (response.data.msg === "Ok") {
+          if (response.data.jwt) {
             const option = {
-              Path:'/',
-              HttpOnly:true,
-              SameSite:'None',
-              Secure:true,
-              expires: new Date(new Date().getTime() + (60*60*1000*24*14))
+              Path: "/",
+              HttpOnly: true,
+              SameSite: "None",
+              Secure: true,
+              expires: new Date(
+                new Date().getTime() + 60 * 60 * 1000 * 24 * 14
+              ),
             };
-            
-            setCookie('refresh_token',response.data.jwt,option);
+
+            setCookie("refresh_token", response.data.jwt, option);
           }
-          console.log( jwtDecode(response.data.jwt) );
-          sessionStorage.setItem("user",response.data.jwt);
+          console.log(jwtDecode(response.data.jwt));
+          sessionStorage.setItem("user", response.data.jwt);
           sessionStorage.setItem("username", username);
           navigate("/main");
         } else {

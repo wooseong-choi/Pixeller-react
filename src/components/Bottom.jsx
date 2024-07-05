@@ -1,7 +1,7 @@
 import React from "react";
-import "./bottom.css";
+import "../static/css/Bottom.css";
 
-const App = ({ isOpen,setIsOpen, isChatOpen,setIsChatOpen }) => {
+const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen }) => {
   return (
     <div className="navbar">
       <div className="left-section">
@@ -33,13 +33,22 @@ const App = ({ isOpen,setIsOpen, isChatOpen,setIsChatOpen }) => {
         <button className="nav-button">
           <img src="svg/calendar-icon.svg" alt="Calendar" />
         </button>
-        <button className="nav-button" onClick={() => {setIsChatOpen(prev => !prev);
-                                                      if(isOpen) setIsOpen(prev => !prev)} }>
+        <button
+          className="nav-button"
+          onClick={() => {
+            setIsChatOpen((prev) => !prev);
+            if (isOpen) setIsOpen((prev) => !prev);
+          }}
+        >
           <img src="svg/chat-icon.svg" alt="Chat" />
         </button>
-        <button className="nav-button" onClick={() => {setIsOpen(prev => !prev);
-                                                      if(isChatOpen) setIsChatOpen(prev => !prev);
-                                                      }}>
+        <button
+          className="nav-button"
+          onClick={() => {
+            setIsOpen((prev) => !prev);
+            if (isChatOpen) setIsChatOpen((prev) => !prev);
+          }}
+        >
           <img src="svg/group-icon.svg" alt="Group" />
           <div className="notification-count">23</div>
         </button>
