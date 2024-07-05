@@ -37,8 +37,8 @@ const TypingAnimation = () => {
       ease: "none",
       onUpdate: () => {
         // 텍스트 길이에 따라 커서 위치 조정
-        const textLength = textRef.current.textContent.length;
-        cursorRef.current.style.left = `${textLength}ch`;
+        // const textLength = textRef.current.textContent.length;
+        // cursorRef.current.style.left = `${textLength}ch`;
       },
     });
   }, [index]);
