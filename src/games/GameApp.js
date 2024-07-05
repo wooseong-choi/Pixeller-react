@@ -41,8 +41,9 @@ const GameApp = () => {
     // 컴포넌트 언마운트 시 Phaser 게임 정리
     return () => {
       if (window.game) {
-        // window.game.destroy(true);
-        // window.game = null;
+      }else{
+        window.game.destroy(true);
+        window.game = null;
       }
     };
   }, []);

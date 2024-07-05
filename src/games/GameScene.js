@@ -190,7 +190,8 @@ class GameScene extends Phaser.Scene {
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
     var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
-    var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
+    // 지금은 안쓰는데 지우지마
+    // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
     var tilesclassroom_asset1 = map.addTilesetImage(
       "classroom_asset1",
       "classroom_asset1"
@@ -200,28 +201,34 @@ class GameScene extends Phaser.Scene {
     // 레이어 생성
     var metaLayer = map.createLayer(
       "Meta",
-      [tilesClassroomA2, tilesClassroomB, tilesclassroom_asset1, Inner],
+      tilesclassroom_asset1,
       0,
       0
     );
     var tileLayer1 = map.createLayer(
       "Tile Layer 1",
-      [tilesClassroomA2, tilesClassroomB, tilesclassroom_asset1, Inner],
+      Inner,
       0,
       0
     );
     var areaLayer1 = map.createLayer(
       "Area Layer 1",
-      [tilesClassroomA2, tilesClassroomB, tilesclassroom_asset1, Inner],
+      tilesClassroomA2,
       0,
       0
     );
     var objectLayer1 = map.createLayer(
       "Object Layer 1",
-      [tilesClassroomA2, tilesClassroomB, tilesclassroom_asset1, Inner],
+      tilesclassroom_asset1,
       0,
       0
     );
+
+    // 화면에 보이는 타일만 렌더링하도록 설정
+    tileLayer1.setCullPadding(2, 2);
+    areaLayer1.setCullPadding(2, 2);
+    metaLayer.setCullPadding(2, 2);
+
     tileLayer1.setCollisionByExclusion([-1]);
     areaLayer1.setCollisionByExclusion([-1]);
     objectLayer1.setCollisionByExclusion([-1]);
