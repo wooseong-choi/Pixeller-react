@@ -1,45 +1,66 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import "./PD.css";
 
 const ProductDetail = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isRegistOpen, setIsRegistOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
   return (
-    <>
-      <div className="board-wrapper">
-        <div className="board-container">
-          <div className="img-container">
-            <div> </div>
-            <input type="file" accept="image/*" name="product-image" />
-          </div>
-          <div className="product-detail">
-            <div className="product-seller">
-              판매자:
-              <span>seller(여기에 유저 아이콘)</span>
-            </div>
-            <div className="product-container">
-              <div className="product-title">상품 제목</div>
-              <div className="product-price">상품 가격</div>
-              <div className="product-content">상품 설명</div>
-              <div className="product-wantBuyer">
-                구매 요청자 목록
-                <div className="buyer-list">
-                  <ul>
-                    <li>buyer1</li>
-                    <li>buyer2</li>
-                    <li>buyer3</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="product-button">
-                <button className="product-request">구매 요청하기</button>
-              </div>
-            </div>
+    <div className="container">
+      <div className="left-section">
+        <div className="photo-upload">
+          <div className="upload-placeholder">
+            {selectedFile ? null : (
+              <span
+                className="plus-icon"
+                onClick={() => document.getElementById("file-input").click()}
+              >
+                +
+              </span>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              name="product-image"
+              id="file-input"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            {selectedFile ? (
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="Preview"
+                className="uploaded-image"
+                onClick={() => document.getElementById("file-input").click()}
+              />
+            ) : (
+              <span className="upload-text">사진 등록</span>
+            )}
           </div>
         </div>
       </div>
-    </>
+      <div className="right-section">
+        <div className="seller-info">
+          <div className="profile-icon"></div>
+          <div className="seller-name"></div>
+        </div>
+        <div className="product-info">
+          <input
+            type="text"
+            className="product-title"
+            placeholder="상품 제목을 작성해주세요"
+          />
+          <textarea
+            className="product-description"
+            placeholder="상품 소개 글을 작성해주세요"
+          ></textarea>
+        </div>
+        <button className="register-button">상품 등록</button>
+      </div>
+    </div>
   );
 };
 

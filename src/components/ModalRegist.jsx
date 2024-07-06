@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../static/css/ModalLogin.css";
 
-const ModalRegist = ({ isRegistOpen, onClose, children }) => {
+const ModalRegist = ({ isRegistOpen, onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,8 +18,7 @@ const ModalRegist = ({ isRegistOpen, onClose, children }) => {
 
   const handleregist = () => {
     // Perform login logic here
-    console.log("Username:", username);
-    console.log("Password:", password);
+
     const user = {
       id: username,
       name: username,
