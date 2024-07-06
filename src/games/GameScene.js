@@ -35,8 +35,9 @@ class GameScene extends Phaser.Scene {
       console.log(data);
     });
 
-    window.addEventListener('beforeunload', () => {
-      this.socket.disconnect();
+    window.addEventListener('beforeunload', async () => {
+      await this.socket.emit("userPosition", {position: {x: this.player.x, y: this.player.y}} );
+      await this.socket.disconnect();
     });
 
     // 메인 통신 로직
@@ -126,16 +127,21 @@ class GameScene extends Phaser.Scene {
               this.temp_OPlayer[userJson.uid] = userJson;
             } else {
               // 자기 자신인 경우
-              this.x = userJson.x;
-              this.y = userJson.y;
-              this.player.x = userJson.x;
-              this.player.y = userJson.y;
+              this.x = data.x;
+              this.y = data.y;
+              this.player.x = data.x;
+              this.player.y = data.y;
             }
             this.syncUserReceived = true;
             this.create_OPlayer();
           }
           break;
-
+        case "syncMe":
+          this.x = data.x;
+          this.y = data.y;
+          this.player.x = data.x;
+          this.player.y = data.y;
+          break;
         // 기타 이벤트 처리
         default:
           console.log("Error!: No msg event on Socket.");
@@ -146,17 +152,13 @@ class GameScene extends Phaser.Scene {
     // 웹 소켓 끊겼을 때 발생 이벤트
     this.socket.on("disconnecting", function () {
       console.log("Socket.IO disconnected.");
-      this.socket.emit("leave", {
-        username: sessionStorage.getItem("username"),
-      });
+      this.socket.emit("leave");
       sessionStorage.removeItem("username");
     });
 
     this.socket.on("disconnect", function () {
       console.log("Socket.IO disconnected.");
-      this.socket.emit("leave", {
-        username: sessionStorage.getItem("username"),
-      });
+      this.socket.emit("leave");
       sessionStorage.removeItem("username");
     });
 
@@ -187,9 +189,7 @@ class GameScene extends Phaser.Scene {
    */
   create() {
     // 서버에 입장 메시지 전송
-    this.socket.emit("join", {
-      username: sessionStorage.getItem("username"),
-    });
+    this.socket.emit("join");
 
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
