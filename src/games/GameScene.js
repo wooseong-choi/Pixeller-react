@@ -35,6 +35,10 @@ class GameScene extends Phaser.Scene {
       console.log(data);
     });
 
+    window.addEventListener('beforeunload', () => {
+      this.socket.disconnect();
+    });
+
     // 메인 통신 로직
     this.socket.on("message", (data) => {
       // console.log(data);
@@ -189,14 +193,14 @@ class GameScene extends Phaser.Scene {
 
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
-    var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
+    // var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
     // 지금은 안쓰는데 지우지마
     // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
     var tilesclassroom_asset1 = map.addTilesetImage(
       "classroom_asset1",
       "classroom_asset1"
     );
-    var Inner = map.addTilesetImage("Inner", "Inner");
+    // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
     var metaLayer = map.createLayer(
@@ -207,13 +211,13 @@ class GameScene extends Phaser.Scene {
     );
     var tileLayer1 = map.createLayer(
       "Tile Layer 1",
-      Inner,
+      tilesclassroom_asset1,
       0,
       0
     );
     var areaLayer1 = map.createLayer(
       "Area Layer 1",
-      tilesClassroomA2,
+      tilesclassroom_asset1,
       0,
       0
     );
