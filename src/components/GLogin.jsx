@@ -10,24 +10,26 @@ const GLogin = () => {
     "99709035135-lq4adkjjk5trck2eg2fsi3aagilljfmv.apps.googleusercontent.com";
 
   const handleSuccess = (response) => {
+    console.log("Google Login Success:", response);
     const token = response.credential;
     const jwt = jwtDecode(token);
-
+    console.log(jwt);
     const name = jwt.email;
     const user = {
       id: name,
       name: name,
       user_type: "G",
+      api_token:token,
     };
     axios
       .post("http://localhost:3333/user/login", { user })
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         if (response.data == null || response.data == "")
           return alert("로그인이 실패하였습니다.");
 
-        sessionStorage.setItem("user", JSON.stringify(response.data));
-        sessionStorage.setItem("username", name);
+        sessionStorage.setItem("user", response.data.jwt);
+
         navigate("/main");
       })
       .catch((error) => {
