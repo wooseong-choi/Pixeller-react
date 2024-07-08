@@ -16,8 +16,8 @@ type TrackInfo = {
   participant: string;
 };
 
-let APPLICATION_SERVER_URL = ""; // The URL of your application server
-let LIVEKIT_URL = ""; // The URL of your LiveKit server
+let APPLICATION_SERVER_URL = "http://localhost:3333/"; // The URL of your application server
+let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
 function configureUrls() {
@@ -94,9 +94,11 @@ function VideoCanvas() {
 
     try {
       const token = await getToken(roomName, participantName);
+      console.log("token: ", token);
       await room.connect(LIVEKIT_URL, token);
-
+      console.log("Connected to room: ", room.name);
       await room.localParticipant.enableCameraAndMicrophone();
+
       setLocalTrack(
         room.localParticipant.videoTrackPublications.values().next().value
           .videoTrack

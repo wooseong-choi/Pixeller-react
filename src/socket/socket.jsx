@@ -19,15 +19,14 @@
 //   console.log('Message from server ', event.data);
 // });
 
-import * as StompJs from '@stomp/stompjs';
+import * as StompJs from "@stomp/stompjs";
 
 const clientData = new StompJs.Client({
-  brokerURL: 'ws://localhost:8080/ws',
+  brokerURL: "ws://localhost:8080/ws",
   connectHeaders: {
     login: "",
   },
   debug: function (str) {
     console.log(str);
   },
-})
-
+});

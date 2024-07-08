@@ -15,13 +15,13 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("ws://192.168.0.96:3001", {
+    this.socket = io("ws://localhost:3001", {
       transportOptions: {
         polling: {
-        extraHeaders: {
-          Authorization: "Bearer " + sessionStorage.getItem("user"),
-          }
-        }
+          extraHeaders: {
+            Authorization: "Bearer " + sessionStorage.getItem("user"),
+          },
+        },
       },
     });
     this.OPlayer = {};
@@ -35,8 +35,10 @@ class GameScene extends Phaser.Scene {
       console.log(data);
     });
 
-    window.addEventListener('beforeunload', async () => {
-      await this.socket.emit("userPosition", {position: {x: this.player.x, y: this.player.y}} );
+    window.addEventListener("beforeunload", async () => {
+      await this.socket.emit("userPosition", {
+        position: { x: this.player.x, y: this.player.y },
+      });
       await this.socket.disconnect();
     });
 
@@ -162,11 +164,11 @@ class GameScene extends Phaser.Scene {
       sessionStorage.removeItem("username");
     });
 
-    this.socket.on('error', (error) => {
-      if (error.message === 'Unauthorized') {
-        alert('Session expired. Redirecting to login page.');
+    this.socket.on("error", (error) => {
+      if (error.message === "Unauthorized") {
+        alert("Session expired. Redirecting to login page.");
         // this.socket.disconnect();
-        window.location.href = '/';
+        window.location.href = "/";
       }
     });
   }
@@ -203,12 +205,7 @@ class GameScene extends Phaser.Scene {
     // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
-    var metaLayer = map.createLayer(
-      "Meta",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
+    var metaLayer = map.createLayer("Meta", tilesclassroom_asset1, 0, 0);
     var tileLayer1 = map.createLayer(
       "Tile Layer 1",
       tilesclassroom_asset1,
