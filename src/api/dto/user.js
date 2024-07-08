@@ -8,10 +8,11 @@ export class UserDTO {
 }
 
 export class GoogleUserDTO {
-  constructor(username, token) {
+  constructor(username, token, google_identity) {
     this.id = username;
     this.name = username.split("@")[0];
     this.user_type = "G";
-    this.api_token = token;
+    // this.api_token = token;
+    this.google_identity = google_identity;
   }
 }
