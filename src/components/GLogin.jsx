@@ -22,14 +22,14 @@ const GLogin = () => {
       api_token:token,
     };
     axios
-      .post("http://localhost:3333/user/login", { user })
+      .post("http://192.168.0.96:3333/user/login", { user })
       .then((response) => {
         console.log(response);
         if (response.data == null || response.data == "")
           return alert("로그인이 실패하였습니다.");
 
         sessionStorage.setItem("user", response.data.jwt);
-
+        
         navigate("/main");
       })
       .catch((error) => {
