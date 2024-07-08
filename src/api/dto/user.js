@@ -3,14 +3,15 @@ export class UserDTO {
     this.id = username;
     this.name = username;
     this.pw = password;
-    this.UserType = "U";
+    this.user_type = "U";
   }
 }
 
 export class GoogleUserDTO {
-  constructor(username) {
+  constructor(username, token) {
     this.id = username;
-    this.name = username;
-    this.UserType = "G";
+    this.name = username.split("@")[0];
+    this.user_type = "G";
+    this.api_token = token;
   }
 }
