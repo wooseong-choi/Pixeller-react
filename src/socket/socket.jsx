@@ -1,22 +1,33 @@
-import io from "socket.io-client";
+// import websocket from 'websocket';
 
-// Connect to the server
-export var socket = null; // io("ws://localhost:3001");
+// const socket = new WebSocket('ws://localhost:8080'); // Server End Point
 
-// Listen for 'connect' event
-socket.on("connect", () => {
-  console.log("Connected to server");
-});
+// const data = {
+//   type: 'login',
+//   data: {
+//     username: 'test',
+//   }
+// };
 
-// Listen for 'message' event
-socket.on("message", (data) => {
-  console.log("Received message:", data);
-});
+// // socket connection
+// socket.addEventListener('open', (event) => {
+//   socket.send(data);
+// });
 
-// Send a message to the server
-socket.emit("message", "Hello, server!");
+// // socket message
+// socket.addEventListener('message', (event) => {
+//   console.log('Message from server ', event.data);
+// });
 
-// Disconnect from the server
-socket.on("disconnect", () => {
-  console.log("Disconnected from server");
-});
+import * as StompJs from '@stomp/stompjs';
+
+const clientData = new StompJs.Client({
+  brokerURL: 'ws://localhost:8080/ws',
+  connectHeaders: {
+    login: "",
+  },
+  debug: function (str) {
+    console.log(str);
+  },
+})
+

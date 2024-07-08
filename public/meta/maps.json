@@ -1,0 +1,151 @@
+{
+  "objects": [
+    {
+      "name": "bookshelf_1",
+      "x": 0,
+      "y": 0,
+      "width": 96,
+      "height": 48
+    },
+    {
+      "name": "bookshelf_2",
+      "x": 96,
+      "y": 0,
+      "width": 96,
+      "height": 48
+    },
+    {
+      "name": "small_bookshelf_1",
+      "x": 192,
+      "y": 0,
+      "width": 32,
+      "height": 48
+    },
+    {
+      "name": "small_bookshelf_2",
+      "x": 224,
+      "y": 0,
+      "width": 32,
+      "height": 48
+    },
+    {
+      "name": "cabinet_blue",
+      "x": 256,
+      "y": 0,
+      "width": 32,
+      "height": 64
+    },
+    {
+      "name": "globe_1",
+      "x": 320,
+      "y": 0,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "globe_2",
+      "x": 352,
+      "y": 0,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "empty_bookshelf",
+      "x": 0,
+      "y": 48,
+      "width": 128,
+      "height": 64
+    },
+    {
+      "name": "window_1",
+      "x": 128,
+      "y": 48,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "window_2",
+      "x": 160,
+      "y": 48,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "desk_1",
+      "x": 192,
+      "y": 48,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "name": "chalkboard_1",
+      "x": 256,
+      "y": 64,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "name": "desk_2",
+      "x": 0,
+      "y": 112,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "name": "desk_3",
+      "x": 64,
+      "y": 112,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "name": "desk_4",
+      "x": 128,
+      "y": 112,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "name": "plant_1",
+      "x": 192,
+      "y": 112,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "plant_2",
+      "x": 224,
+      "y": 112,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "plant_3",
+      "x": 256,
+      "y": 112,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "plant_4",
+      "x": 288,
+      "y": 112,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "tile_1",
+      "x": 320,
+      "y": 64,
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "tile_2",
+      "x": 352,
+      "y": 64,
+      "width": 32,
+      "height": 32
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 // src/pages/Main.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import GameApp from "../games/GameApp";
-import Bottom from "../components/Bottom.jsx";
+import Bottom from "../components/UI/Bottom.jsx";
 import List from "../components/List";
 import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
 import "./Main.css";
@@ -11,9 +11,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  const ov = useRef(null);
-  const session = useRef(null);
-
   useEffect(() => {
     if (isOpen || isChatOpen) {
       setIsListOpen(true);
@@ -22,16 +19,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     }
   }, [isOpen, isChatOpen]);
 
- 
   const startVideoStream = (e) => {
     e.preventDefault();
     console.log("startVideoStream");
     isVideoOpen ? setIsVideoOpen(false) : setIsVideoOpen(true);
   };
 
-  
   useEffect(() => {
-    window.addEventListener("start-video", startVideoStream); 
+    window.addEventListener("start-video", startVideoStream);
   });
 
   return (
@@ -39,7 +34,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isVideoOpen ? "active":""}`}>
+            <div className={`cam-div ${isVideoOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}

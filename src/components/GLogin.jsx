@@ -3,6 +3,8 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleUserDTO } from "../api/dto/user";
+import { login } from "../api/login";
 
 const GLogin = () => {
   const navigate = useNavigate();
@@ -21,8 +23,9 @@ const GLogin = () => {
       user_type: "G",
       api_token:token,
     };
+
     axios
-      .post("http://localhost:3333/user/login", { user })
+      .post("http://192.168.0.96:3333/user/login", { user })
       .then((response) => {
         console.log(response);
         if (response.data == null || response.data == "")
