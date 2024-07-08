@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: /build
+  - source: /
     destination: /home/ubuntu/deploy-fe
     overwrite: yes
 
