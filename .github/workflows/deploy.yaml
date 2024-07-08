@@ -28,7 +28,7 @@ jobs:
           CI: false
 
       - name: Create ZIP archive
-        run: zip -r ./build-app.zip ./build appspec.yml deploy.sh
+        run: zip -qq -r ./build-app.zip .
         shell: bash
 
       - name: Configure AWS credentials
