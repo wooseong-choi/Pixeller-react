@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import "../static/css/ModalLogin.css";
 
-const ModalRegist = ({ isRegistOpen, onClose, children }) => {
+const ModalRegist = ({ isRegistOpen, onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,8 +18,7 @@ const ModalRegist = ({ isRegistOpen, onClose, children }) => {
 
   const handleregist = () => {
     // Perform login logic here
-    console.log("Username:", username);
-    console.log("Password:", password);
+
     const user = {
       id: username,
       name: username,
@@ -31,7 +29,7 @@ const ModalRegist = ({ isRegistOpen, onClose, children }) => {
       .post("http://192.168.0.96:3333/user/create", { user })
       .then((response) => {
         console.log(response);
-        if (response.data == null || response.data == "")
+        if (response.data === null || response.data === "")
           return alert("회원가입이 실패하였습니다.");
         if (response.data.msg === "Ok") {
           sessionStorage.setItem("user", JSON.stringify(response.data));

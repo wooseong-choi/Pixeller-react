@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "../static/css/List.css";
 
 // 이걸로 유저목록 만들어서 포문돌릴것
