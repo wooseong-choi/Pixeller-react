@@ -1,41 +1,26 @@
 import React from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleUserDTO } from "../api/dto/user";
+import { loginS } from "../api/login.jsx";
 
 const GLogin = () => {
   const navigate = useNavigate();
   const clientId =
     "99709035135-lq4adkjjk5trck2eg2fsi3aagilljfmv.apps.googleusercontent.com";
 
-  const handleSuccess = (response) => {
-    console.log("Google Login Success:", response);
+  const handleSuccess = async (response) => {
     const token = response.credential;
     const jwt = jwtDecode(token);
-    console.log(jwt);
     const name = jwt.email;
-    const user = {
-      id: name,
-      name: name,
-      user_type: "G",
-      api_token:token,
-    };
-    axios
-      .post("http://localhost:3333/user/login", { user })
-      .then((response) => {
-        console.log(response);
-        if (response.data == null || response.data == "")
-          return alert("로그인이 실패하였습니다.");
 
-        sessionStorage.setItem("user", response.data.jwt);
+    const user = new GoogleUserDTO(name, token);
 
-        navigate("/main");
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        return alert("에러가 발생했습니다.");
-      });
+    const res = await loginS(user);
+    if (res === "success") {
+      navigate("/main");
+    }
   };
 
   return (

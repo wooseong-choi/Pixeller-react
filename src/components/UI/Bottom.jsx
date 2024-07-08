@@ -1,5 +1,5 @@
 import React from "react";
-import "../static/css/bottom.css";
+import "../../static/css/bottom.css";
 
 const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen }) => {
   const currentUser = sessionStorage.getItem("username");
