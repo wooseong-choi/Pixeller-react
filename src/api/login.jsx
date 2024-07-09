@@ -23,6 +23,7 @@ export const login = async (user) => {
 export const loginS = async (user) => {
   try {
     const response = await axiosInstance.post("/user/login", { user });
+    console.log("response", response.data);
     if (response.data === null || response.data === "")
       return alert("로그인이 실패하였습니다.");
 
