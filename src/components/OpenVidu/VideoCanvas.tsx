@@ -16,7 +16,7 @@ type TrackInfo = {
   participant: string;
 };
 
-let APPLICATION_SERVER_URL = "http://192.168.0.109:6080/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
