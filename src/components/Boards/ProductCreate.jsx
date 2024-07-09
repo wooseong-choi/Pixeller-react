@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./PD.css";
+import "./PC.css";
 
 const ProductDetail = () => {
   const [selectedFile, setSelectedFile] = useState(null);
