@@ -10,12 +10,12 @@
     /* 페이지 중앙 정렬 */
 }
 
-.left-section,
-.right-section {
+.pc .left-section,
+.pc .right-section {
     padding: 80px;
 }
 
-.left-section {
+.pc .left-section {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -65,7 +65,7 @@
     cursor: pointer;
 }
 
-.right-section {
+.pc .right-section {
     flex: 1;
     background-color: #c8e6c9;
     display: flex;

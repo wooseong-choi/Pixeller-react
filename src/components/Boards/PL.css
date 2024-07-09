@@ -5,53 +5,29 @@ element.style {
     right: 0px;
 }
 
-root>div {
-    width: 100%;
-    height: 100%;
-}
 
 .sidebar-container {
-    background-color: #00ff00;
-    width: 200px;
-    height: 100%;
+    background-color: #519C79;
     display: flex;
     flex-direction: column;
     padding: 12px;
     position: fixed;
     top: 0;
-    left: 0;
-    bottom: 0;
-    border-right: 1px solid #ccc;
-}
-
-.sidebar-container {
-    background-color: #00ff00;
-    /* 초록색 배경 */
-    width: 200px;
-    /* 사이드바 크기로 조정 */
-    height: 100%;
-    /* 화면 높이 전체 크기로 조정 */
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    position: fixed;
-    top: 0;
-    left: 0;
     bottom: 0;
     border-right: 1px solid #ccc;
 }
 
 .search-container {
-    margin-bottom: 12px;
+    margin-bottom: 30px;
 }
 
 .search-input {
     width: 100%;
     padding: 6px 8px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 1em;
 }
-
+.search-input::placeholder { text-align: center; }
 .item-list {
     flex-grow: 1;
     overflow-y: auto;
@@ -60,9 +36,11 @@ root>div {
 .item-card {
     background-color: transparent;
     padding: 8px;
-    border-radius: 4px;
+    border-radius: 1em;
     cursor: pointer;
     transition: background-color 0.3s;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
 }
 
 .item-card.selected,
@@ -74,5 +52,18 @@ root>div {
     margin-top: 12px;
     padding: 8px;
     background-color: #f0f0f0;
-    border-radius: 4px;
+    border-radius: 1em;
+    text-align: center;
+}
+
+.item-card > span:first-child {
+    display: inline-block;
+}
+.item-card > span {
+    max-width: 30px;
+    line-height: 30px;
+}
+.item-card > span > img {
+    vertical-align: bottom!important;
+    display: inline !important;
 }

@@ -26,7 +26,8 @@ const ProductList = () => {
   );
 
   return (
-    <div className="sidebar-container">
+    // <div className="sidebar-container">
+    <>
       <div className="search-container">
         <input
           type="text"
@@ -43,17 +44,18 @@ const ProductList = () => {
             className={`item-card ${selectedItem && selectedItem.id === item.id ? 'selected' : ''}`}
             onClick={() => handleItemClick(item)}
           >
-            {item.name}
+            <span><img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3cRO4gfN0IIwH2MW1HGVnxom4lmneHbfaOQ&s' /></span>
+            <span>{item.name}</span>
+            <span>{item.sender_name}</span>
+            
           </div>
         ))}
       </div>
-      {selectedItem && (
-        <div className="item-details">
-          <h3>{selectedItem.name}</h3>
-          {/* Add more details about the selected item here */}
-        </div>
-      )}
-    </div>
+      <div className="item-details">
+        <h3>상품 등록</h3>
+      </div>
+    </>
+    // </div>
   );
 };
 

@@ -27,7 +27,7 @@ function App() {
         {/* <Route path="/game" element={<GameApp />} /> */}
         <Route path="/PC" element={<ProductCreate />} />
         <Route path="/PD" element={<ProductDetail />} />
-        {/* <Route path="/PL" element={<ProductList />} /> */}
+        <Route path="/PL" element={<ProductList />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
