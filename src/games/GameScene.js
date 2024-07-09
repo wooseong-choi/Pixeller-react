@@ -254,8 +254,9 @@ class GameScene extends Phaser.Scene {
     // test
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
-    areaLayer1.setCullPadding(2, 2);
+    // areaLayer1.setCullPadding(2, 2);
     metaLayer.setCullPadding(2, 2);
+    objectLayer1.setCullPadding(2, 2);
 
     // tileLayer1.setCollisionByExclusion([-1]);
     // areaLayer1.setCollisionByExclusion([-1]);
