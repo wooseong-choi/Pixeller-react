@@ -27,7 +27,7 @@
 } */
 
 /* src/components/SideMenu.css */
-.side-menu {
+.side-menu, .side-menu-noti {
   /* display: flex; */
   border-left: 1px solid rgb(70, 75, 104);
   position: absolute;
@@ -40,7 +40,7 @@
   transform: translateX(calc(100% + 4px));
 }
 
-.side-menu.open {
+.side-menu.open, .side-menu-noti.open {
   transform: translateX(0px);
   transition: transform 500ms ease 0s;
   z-index: 10;

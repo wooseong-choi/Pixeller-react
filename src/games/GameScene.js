@@ -3,6 +3,8 @@ import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
 import io from "socket.io-client";
 import OPlayer from "./character/OPlayer.ts";
+import { getCookie, setCookie } from "../components/Cookies.ts";
+import axiosInstance from "../api/axios";
 
 const CHARACTER_WIDTH = 32;
 const CHARACTER_HEIGHT = 32;
@@ -15,10 +17,18 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("https://api.pixeller.net/ws", {
-      transports: ['websocket'],
-      extraHeaders: {
-        Authorization: "Bearer " + sessionStorage.getItem("user"),
+
+    this.socket = io("ws://api.pixeller.net/ws", {
+
+      transportOptions: {
+        polling: {
+          extraHeaders: {
+            Authorization: "Bearer " + sessionStorage.getItem("user"),
+          },
+        },
+      },
+      auth: {
+        token: sessionStorage.getItem("user"),
       },
     });
     this.OPlayer = {};
@@ -32,8 +42,10 @@ class GameScene extends Phaser.Scene {
       console.log(data);
     });
 
-    window.addEventListener('beforeunload', async () => {
-      await this.socket.emit("userPosition", {position: {x: this.player.x, y: this.player.y}} );
+    window.addEventListener("beforeunload", async () => {
+      await this.socket.emit("userPosition", {
+        position: { x: this.player.x, y: this.player.y },
+      });
       await this.socket.disconnect();
     });
 
@@ -49,32 +61,32 @@ class GameScene extends Phaser.Scene {
         // 다른 유저들의 새로운 사람 처리
         case "join":
           console.log("New player connected: " + data);
-
-          if (this.OPlayer[data.uid] !== undefined) {
-            if (this.OPlayer[data.uid].clientid !== data.clientid) {
-              this.OPlayer[data.uid].Destroy();
-              this.OPlayer[data.uid] = new OPlayer(
+          // console.log(data);
+          if (this.OPlayer[data.user.uid] !== undefined) {
+            if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
+              this.OPlayer[data.user.uid].Destroy();
+              this.OPlayer[data.user.uid] = new OPlayer(
                 this,
-                data.username,
+                data.user.username,
                 CHARACTER_WIDTH,
                 CHARACTER_HEIGHT,
-                data.clientid
+                data.user.clientid
               );
-              this.OPlayer[data.uid].Create(data.x, data.y);
+              this.OPlayer[data.user.uid].Create(data.user.x, data.user.y);
             } else {
-              this.OPlayer[data.uid].clientid = data.clientid;
-              this.OPlayer[data.uid].x = data.x;
-              this.OPlayer[data.uid].y = data.y;
+              this.OPlayer[data.user.uid].clientid = data.user.clientid;
+              this.OPlayer[data.user.uid].x = data.user.x;
+              this.OPlayer[data.user.uid].y = data.user.y;
             }
           } else {
-            this.OPlayer[data.uid] = new OPlayer(
+            this.OPlayer[data.user.uid] = new OPlayer(
               this,
-              data.username,
+              data.user.username,
               CHARACTER_WIDTH,
               CHARACTER_HEIGHT,
-              data.clientid
+              data.user.clientid
             );
-            this.OPlayer[data.uid].Create(data.x, data.y);
+            this.OPlayer[data.user.uid].Create(data.user.x, data.user.y);
           }
 
           break;
@@ -103,10 +115,7 @@ class GameScene extends Phaser.Scene {
             this.OPlayer[data.uid].Destroy();
             delete this.OPlayer[data.uid];
           }
-          if (this.OPlayer[data.uid]) {
-            this.OPlayer[data.uid].Destroy();
-            delete this.OPlayer[data.uid];
-          }
+          console.log(this.OPlayer);
           break;
 
         // 유저 동기화
@@ -140,6 +149,8 @@ class GameScene extends Phaser.Scene {
           this.player.y = data.y;
           break;
         // 기타 이벤트 처리
+        case "error":
+
         default:
           console.log("Error!: No msg event on Socket.");
           break;
@@ -159,11 +170,46 @@ class GameScene extends Phaser.Scene {
       sessionStorage.removeItem("username");
     });
 
-    this.socket.on('error', (error) => {
-      if (error.message === 'Unauthorized') {
-        alert('Session expired. Redirecting to login page.');
+    this.socket.on("error", (error) => {
+      if (error.message === "Unauthorized") {
+        alert("Session expired. Redirecting to login page.");
         // this.socket.disconnect();
-        window.location.href = '/';
+        // window.location.href = '/';
+      } else if (error.message === "Invalid token") {
+        console.log("Session expired. Redirecting to login page.");
+        const refreshToken = getCookie("refresh_token");
+        axiosInstance
+          .post(
+            "/user/refresh",
+            { refreshToken: refreshToken },
+            {
+              headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("user"),
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            sessionStorage.removeItem("user");
+            sessionStorage.setItem("user", res.data.jwt);
+            const option = {
+              Path: "/",
+              HttpOnly: true, // 자바스크립트에서의 접근을 차단
+              SameSite: "None", // CORS 설정
+              Secure: true, // HTTPS에서만 쿠키 전송
+              expires: new Date(
+                new Date().getTime() + 60 * 60 * 1000 * 24 * 14
+              ), // 14일
+            };
+            setCookie("refresh_token", res.data.refreshToken, option);
+
+            this.socket.emit("refreshToken", res.data.jwt);
+          })
+          .catch((err) => {
+            console.log(err);
+            // alert("Session expired. Redirecting to login page.");
+            // Navigate("/");
+          });
       }
     });
   }
@@ -200,12 +246,7 @@ class GameScene extends Phaser.Scene {
     // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
-    var metaLayer = map.createLayer(
-      "Meta",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
+    var metaLayer = map.createLayer("Meta", tilesclassroom_asset1, 0, 0);
     var tileLayer1 = map.createLayer(
       "Tile Layer 1",
       tilesclassroom_asset1,

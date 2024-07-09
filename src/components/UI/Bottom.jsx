@@ -1,7 +1,7 @@
 import React from "react";
 import "../../static/css/bottom.css";
 
-const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen }) => {
+const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsNotiOpen  }) => {
   const currentUser = sessionStorage.getItem("username");
 
   return (
@@ -23,35 +23,38 @@ const App = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen }) => {
           <button className="nav-button">
             <img src="svg/emoji-icon.svg" alt="emoji" />
           </button>
-          <button className="nav-button">
-            <img src="svg/fullscreen-icon.svg" alt="Fullscreen" />
-          </button>
         </div>
       </div>
       <div className="right-section">
-        <button className="nav-button">
+        <button className="nav-button"
+          onClick={() => {
+            setIsNotiOpen((prev) => !prev);
+            if (isOpen) setIsOpen((prev) => !prev);
+            if (isChatOpen) setIsChatOpen((prev) => !prev);
+          }}
+          >
           <img src="svg/bell-icon.svg" alt="Bell" />
-        </button>
-        <button className="nav-button">
-          <img src="svg/calendar-icon.svg" alt="Calendar" />
         </button>
         <button
           className="nav-button"
           onClick={() => {
             setIsChatOpen((prev) => !prev);
             if (isOpen) setIsOpen((prev) => !prev);
+            if (isNotiOpen) setIsNotiOpen((prev) => !prev);
           }}
-        >
+          >
           <img src="svg/chat-icon.svg" alt="Chat" />
         </button>
         <button
           className="nav-button"
           onClick={() => {
             setIsOpen((prev) => !prev);
-            if (isChatOpen) setIsChatOpen((prev) => !prev);
+            if (isOpen) setIsOpen((prev) => !prev);
+            if (isNotiOpen) setIsNotiOpen((prev) => !prev);
           }}
         >
-          <img src="svg/group-icon.svg" alt="Group" />
+          <img src="svg/i_wont_product.svg" alt="Group" />
+          <span className="status-dot on"></span>
           <div className="notification-count">23</div>
         </button>
       </div>

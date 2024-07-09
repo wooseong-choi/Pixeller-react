@@ -14,8 +14,8 @@ const GLogin = () => {
     const token = response.credential;
     const jwt = jwtDecode(token);
     const name = jwt.email;
-
-    const user = new GoogleUserDTO(name, token);
+    console.log("Google Login Success:", jwt);
+    const user = new GoogleUserDTO(name, token, jwt.sub);
 
     const res = await loginS(user);
     if (res === "success") {
