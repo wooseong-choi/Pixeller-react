@@ -12,7 +12,6 @@ import "./static/css/App.css";
 
 function App() {
   const [isListOpen, setIsListOpen] = useState(false);
-
   return (
     <Router>
       <Routes>
@@ -20,14 +19,15 @@ function App() {
         <Route
           path="/main"
           element={
-            <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} />
+            <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen}
+            />
           }
         />
-        <Route path="/board" element={<Board />} />
-        <Route path="/game" element={<GameApp />} />
+        {/* <Route path="/board" element={<Board />} /> */}
+        {/* <Route path="/game" element={<GameApp />} /> */}
         <Route path="/PC" element={<ProductCreate />} />
         <Route path="/PD" element={<ProductDetail />} />
-        <Route path="/PL" element={<ProductList />} />
+        {/* <Route path="/PL" element={<ProductList />} /> */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
