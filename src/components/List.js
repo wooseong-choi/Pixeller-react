@@ -13,7 +13,7 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
 
   useEffect(() => {
     if (!chatComponent) {
-      setChatComponent(<Chat stompClient={stompClient} setStompClient={setStompClient} />);
+      setChatComponent(<Chat tempStompClient={stompClient} setStompClient={setStompClient} />);
     }
   }, [chatComponent]);
 
