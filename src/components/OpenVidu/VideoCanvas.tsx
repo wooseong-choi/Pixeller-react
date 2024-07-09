@@ -6,9 +6,9 @@ import {
   Room,
   RoomEvent,
 } from "livekit-client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../static/css/VideoComponent.css";
-import AudioComponent from "./AudioComponent";
+import AudioComponent from "./AudioComponent.tsx";
 import VideoComponent from "./VideoComponent.tsx";
 
 type TrackInfo = {
@@ -16,8 +16,8 @@ type TrackInfo = {
   participant: string;
 };
 
-let APPLICATION_SERVER_URL = ""; // The URL of your application server
-let LIVEKIT_URL = ""; // The URL of your LiveKit server
+let APPLICATION_SERVER_URL = "http://192.168.0.109:6080/"; // The URL of your application server
+let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
 function configureUrls() {
@@ -41,18 +41,19 @@ function configureUrls() {
 }
 
 function VideoCanvas() {
-  const [room, setRoom] = useState<Room | undefined>(undefined);
-  const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>(
+  const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
+  const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
     undefined
   );
 
-  const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]);
-  // 참가자 이름 -> props로 받아오기
+  const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
+  const Pname = sessionStorage.getItem("username");
   const [participantName, setParticipantName] =
-    useState<string>("LocalParticipant");
-  const [roomName, setRoomName] = useState<string>("LocalRoom");
+    useState<string>("LocalParticipant"); // 참가자 이름
+  const [roomName, setRoomName] = useState<string>("LocalRoomss"); // 화상 회의 방 이름
 
   useEffect(() => {
+    setParticipantName(Pname!);
     joinRoom();
 
     return () => {
@@ -63,6 +64,8 @@ function VideoCanvas() {
   async function joinRoom() {
     const room = new Room();
     setRoom(room);
+
+    setParticipantName(Pname!);
 
     room.on(
       RoomEvent.TrackSubscribed,
@@ -94,25 +97,32 @@ function VideoCanvas() {
 
     try {
       const token = await getToken(roomName, participantName);
+
       await room.connect(LIVEKIT_URL, token);
 
       await room.localParticipant.enableCameraAndMicrophone();
+
       setLocalTrack(
         room.localParticipant.videoTrackPublications.values().next().value
           .videoTrack
       );
+      console.log("Local track: ", localTrack);
     } catch (error) {
       console.log(
         "There was an error connecting to the room: ",
         (error as Error).message
       );
-      // await leaveRoom();
+      await leaveRoom();
     }
   }
 
   async function leaveRoom() {
     // Leave the room by calling 'disconnect' method over the Room object
-    await room?.disconnect();
+    try {
+      await room?.disconnect();
+    } catch (error) {
+      console.error("Error while disconnecting from the room: ", error);
+    }
 
     // Reset the state
     setRoom(undefined);
@@ -138,6 +148,7 @@ function VideoCanvas() {
     }
 
     const data = await response.json();
+    console.log("Token: ", data.token);
     return data.token;
   }
 
@@ -151,6 +162,20 @@ function VideoCanvas() {
               participantId={participantName}
               local={true}
             />
+          )}
+          {remoteTracks.map((remoteTrack) =>
+            remoteTrack.trackPublication.kind === "video" ? (
+              <VideoComponent
+                key={remoteTrack.trackPublication.trackSid}
+                track={remoteTrack.trackPublication.videoTrack!}
+                participantId={remoteTrack.participant}
+              />
+            ) : (
+              <AudioComponent
+                key={remoteTrack.trackPublication.trackSid}
+                track={remoteTrack.trackPublication.audioTrack!}
+              />
+            )
           )}
         </div>
       </div>
