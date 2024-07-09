@@ -23,7 +23,7 @@ export const login = async (user) => {
 export const loginS = async (user) => {
   try {
     const response = await axiosInstance.post("/user/login", { user });
-    console.log(response);
+
     if (response.data === null || response.data === "")
       return alert("로그인이 실패하였습니다.");
 
@@ -32,7 +32,7 @@ export const loginS = async (user) => {
         setCookie("refresh_token", response.data.refreshToken, option); // 쿠키 저장
       }
       sessionStorage.setItem("user", response.data.jwt);
-      sessionStorage.setItem("username", user.username);
+      sessionStorage.setItem("username", response.data.user.username);
       return "success";
     } else {
       return alert(response.data.msg);
