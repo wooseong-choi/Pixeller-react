@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import "./PC.css";
 
 const ProductDetail = () => {
   const [isOpen, setIsOpen] = useState(false);
