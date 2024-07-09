@@ -9,15 +9,16 @@ import "./Main.css";
 const Main = ({ isListOpen, setIsListOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-
+  
   useEffect(() => {
-    if (isOpen || isChatOpen) {
-      setIsListOpen(true);
+    if (isOpen || isChatOpen || isNotiOpen) {
+      if(!isListOpen) setIsListOpen(true);
     } else {
-      setIsListOpen(false);
+      if(isListOpen) setIsListOpen(false);
     }
-  }, [isOpen, isChatOpen]);
+  }, [isOpen, isChatOpen, isNotiOpen]);
 
   const startVideoStream = (e) => {
     e.preventDefault();
@@ -50,6 +51,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsOpen={setIsOpen}
                 isChatOpen={isChatOpen}
                 setIsChatOpen={setIsChatOpen}
+                isNotiOpen={isNotiOpen}
+                setIsNotiOpen={setIsNotiOpen}
               />
             </div>
           </div>
@@ -58,6 +61,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
             setIsChatOpen={setIsChatOpen}
+            isNotiOpen={isNotiOpen}
+            setIsNotiOpen={setIsNotiOpen}
           />
         </div>
       </div>
