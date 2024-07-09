@@ -10,11 +10,11 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
   
   const [chatComponent, setChatComponent] = useState(null);
 
-  useEffect(() => {
-    if (!chatComponent) {
-      setChatComponent(<Chat />);
-    }
-  }, [chatComponent]);
+  // useEffect(() => {
+  //   if (!chatComponent) {
+  //     setChatComponent(<Chat />);
+  //   }
+  // }, [chatComponent]);
 
 
   const toggleMenu = (val, method) => {
