@@ -2,7 +2,7 @@ import axios from "axios";
 // axios.defaults.withCredentials = true;
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.0.109:3333", // Change this to Backend API URL
+  baseURL: "http://192.168.0.96:3333", // Change this to Backend API URL
   timeout: 1000,
   Headers: {
     "Content-Type": "application/json",
