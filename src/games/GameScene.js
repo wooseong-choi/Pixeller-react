@@ -5,7 +5,6 @@ import io from "socket.io-client";
 import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
 import axiosInstance from "../api/axios";
-import { Navigate } from "react-router-dom";
 
 const CHARACTER_WIDTH = 32;
 const CHARACTER_HEIGHT = 32;
@@ -18,7 +17,7 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("ws://localhost:3001", {
+    this.socket = io("ws://192.168.0.109:3001", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -27,8 +26,8 @@ class GameScene extends Phaser.Scene {
         },
       },
       auth: {
-        token: sessionStorage.getItem("user")
-      }
+        token: sessionStorage.getItem("user"),
+      },
     });
     this.OPlayer = {};
     this.temp_OPlayer = {};
@@ -149,7 +148,6 @@ class GameScene extends Phaser.Scene {
           break;
         // 기타 이벤트 처리
         case "error":
-          
 
         default:
           console.log("Error!: No msg event on Socket.");
@@ -175,35 +173,41 @@ class GameScene extends Phaser.Scene {
         alert("Session expired. Redirecting to login page.");
         // this.socket.disconnect();
         // window.location.href = '/';
-      }else if(error.message === 'Invalid token') {
+      } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
-        const refreshToken = getCookie('refresh_token');
-        axiosInstance.post("/user/refresh", 
-          {refreshToken: refreshToken},
-          {
-            headers:{
-            Authorization: "Bearer " + sessionStorage.getItem("user"),
-          },
-        }).then((res) => {
-          console.log(res);
-          sessionStorage.removeItem('user');
-          sessionStorage.setItem('user', res.data.jwt);
-          const option = {
-            Path: "/",
-            HttpOnly: true, // 자바스크립트에서의 접근을 차단
-            SameSite: "None", // CORS 설정
-            Secure: true, // HTTPS에서만 쿠키 전송
-            expires: new Date(new Date().getTime() + 60 * 60 * 1000 * 24 * 14), // 14일
-          };
-          setCookie("refresh_token", res.data.refreshToken, option);
-          
-          this.socket.emit('refreshToken', res.data.jwt);
+        const refreshToken = getCookie("refresh_token");
+        axiosInstance
+          .post(
+            "/user/refresh",
+            { refreshToken: refreshToken },
+            {
+              headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("user"),
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            sessionStorage.removeItem("user");
+            sessionStorage.setItem("user", res.data.jwt);
+            const option = {
+              Path: "/",
+              HttpOnly: true, // 자바스크립트에서의 접근을 차단
+              SameSite: "None", // CORS 설정
+              Secure: true, // HTTPS에서만 쿠키 전송
+              expires: new Date(
+                new Date().getTime() + 60 * 60 * 1000 * 24 * 14
+              ), // 14일
+            };
+            setCookie("refresh_token", res.data.refreshToken, option);
 
-        }).catch((err) => {
-          console.log(err);
-          // alert("Session expired. Redirecting to login page.");
-          // Navigate("/");
-        });
+            this.socket.emit("refreshToken", res.data.jwt);
+          })
+          .catch((err) => {
+            console.log(err);
+            // alert("Session expired. Redirecting to login page.");
+            // Navigate("/");
+          });
       }
     });
   }
