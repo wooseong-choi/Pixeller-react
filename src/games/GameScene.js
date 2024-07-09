@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-//test
+
     this.socket = io("ws://api.pixeller.net/ws", {
 
       transportOptions: {
