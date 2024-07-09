@@ -11,11 +11,11 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
   const [chatComponent, setChatComponent] = useState(null);
   const [stompClient, setStompClient] = useState(null);
 
-  useEffect(() => {
-    if (!chatComponent) {
-      setChatComponent(<Chat tempStompClient={stompClient} setStompClient={setStompClient} />);
-    }
-  }, [chatComponent]);
+  // useEffect(() => {
+  //   if (!chatComponent) {
+  //     setChatComponent(<Chat tempStompClient={stompClient} setStompClient={setStompClient} />);
+  //   }
+  // }, [chatComponent]);
 
   const toggleMenu = (val, method) => {
     method(!val);
@@ -137,7 +137,7 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
             </div>
           </div>
           <div>
-            {chatComponent}
+            {/* {chatComponent} */}
 
           </div>
         </nav>
