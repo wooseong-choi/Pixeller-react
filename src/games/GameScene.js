@@ -18,7 +18,7 @@ class GameScene extends Phaser.Scene {
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
 
-    this.socket = io("ws://api.pixeller.net/ws", {
+    this.socket = io("wss://api.pixeller.net/ws", {
 
       transportOptions: {
         polling: {
@@ -173,8 +173,8 @@ class GameScene extends Phaser.Scene {
     this.socket.on("error", (error) => {
       if (error.message === "Unauthorized") {
         alert("Session expired. Redirecting to login page.");
-        // this.socket.disconnect();
-        // window.location.href = '/';
+        this.socket.disconnect();
+        window.location.href = '/';
       } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
