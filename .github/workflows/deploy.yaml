@@ -28,7 +28,7 @@ jobs:
           CI: false
 
       - name: Create ZIP archive
-        run: zip -qq -r ./build-app.zip . "node_modules/*"
+        run: zip -qq -r ./build-app.zip . -x "node_modules/*"
         shell: bash
 
       - name: Configure AWS credentials
