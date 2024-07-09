@@ -17,7 +17,8 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("ws://192.168.0.96:3333/ws", {
+
+    this.socket = io("wss://api.pixeller.net/ws", {
 
       transportOptions: {
         polling: {
@@ -172,8 +173,8 @@ class GameScene extends Phaser.Scene {
     this.socket.on("error", (error) => {
       if (error.message === "Unauthorized") {
         alert("Session expired. Redirecting to login page.");
-        // this.socket.disconnect();
-        // window.location.href = '/';
+        this.socket.disconnect();
+        window.location.href = '/';
       } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
@@ -264,7 +265,7 @@ class GameScene extends Phaser.Scene {
       0,
       0
     );
-
+    // test
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
     areaLayer1.setCullPadding(2, 2);

@@ -16,6 +16,7 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
     }
   }, [chatComponent]);
 
+
   const toggleMenu = (val, method) => {
     method(!val);
   };
@@ -100,7 +101,9 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
         </div>
         
         <nav className="chat-content">
+
             {chatComponent}
+
         </nav>
         <div className="chat-rooms"></div>
       </div>
