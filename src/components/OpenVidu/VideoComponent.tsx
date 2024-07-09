@@ -7,9 +7,13 @@ interface VideoComponentProps {
   local?: boolean;
 }
 
-function VideoComponent({ track, participantId, local }: VideoComponentProps) {
+function VideoComponent({
+  track,
+  participantId,
+  local = false,
+}: VideoComponentProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
-  console.log('typeof track ',typeof track);
+
   useEffect(() => {
     if (videoElement.current) {
       track.attach(videoElement.current);
