@@ -4,7 +4,7 @@ import Scroll from "./scroll/scrollEventHandler.ts";
 import io from "socket.io-client";
 import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
-import axiosInstance from "../api/axios";
+import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
 const CHARACTER_HEIGHT = 16;
@@ -17,7 +17,9 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("ws://192.168.0.96:3333/ws", {
+
+    this.socket = io("wss://api.pixeller.net/ws", {
+    // this.socket = io("ws://192.168.0.96/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -172,8 +174,8 @@ class GameScene extends Phaser.Scene {
     this.socket.on("error", (error) => {
       if (error.message === "Unauthorized") {
         alert("Session expired. Redirecting to login page.");
-        // this.socket.disconnect();
-        // window.location.href = '/';
+        this.socket.disconnect();
+        window.location.href = "/";
       } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
@@ -284,6 +286,7 @@ class GameScene extends Phaser.Scene {
     this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
 
     this.scale.on('resize', this.resize, this);
 
@@ -399,8 +402,7 @@ class GameScene extends Phaser.Scene {
       this.Player.moveTo(3000, 320);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
-      console.log("Space key is pressed!");
+    if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
       window.dispatchEvent(
         new CustomEvent("start-video", {
           detail: {
