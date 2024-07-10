@@ -26,7 +26,7 @@ const ModalRegist = ({ isRegistOpen, onClose }) => {
       user_type: "U",
     };
     axios
-      .post("http://192.168.0.96:3333/user/create", { user })
+      .post("https://pixeller.net:3333/user/create", { user })
       .then((response) => {
         console.log(response);
         if (response.data === null || response.data === "")

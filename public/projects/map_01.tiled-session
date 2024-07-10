@@ -1,0 +1,59 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "831c797a3ecf16fb1382c4c99d312f5b.tsx": {
+            "scaleInDock": 5.5,
+            "scaleInEditor": 1.5
+        },
+        "classroom_asset1.tsx": {
+            "scaleInDock": 0.33,
+            "scaleInEditor": 1
+        },
+        "map.tmx": {
+            "expandedGroupLayers": [
+                2
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 451.5151515151515,
+                "y": -195.4545454545455
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/web/NMM/real_project/jungle-navigation-react/public/projects",
+    "last.imagePath": "C:/web/NMM/real_project/jungle-navigation-react/public/gfx",
+    "map.height": 40,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 200,
+    "openFiles": [
+        "classroom_asset1.tsx",
+        "map.tmx"
+    ],
+    "project": "map_01.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "classroom_asset1.tsx",
+        "map.tmx",
+        "831c797a3ecf16fb1382c4c99d312f5b.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

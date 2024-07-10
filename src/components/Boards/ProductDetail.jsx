@@ -1,9 +1,13 @@
 import React from "react";
 import { useState } from "react";
+import "./PC.css";
+import productDTO from "../../api/dto/productDTO";
+import { createProduct } from "../../api/products";
 
 const ProductDetail = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isRegistOpen, setIsRegistOpen] = useState(false);
+  const productDTO = new productDTO();
+  const [imgFiles, setImgFiles] = useState([]);
+  const [product, setProduct] = useState(productDTO);
 
   return (
     <>

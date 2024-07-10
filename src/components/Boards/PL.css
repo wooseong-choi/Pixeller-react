@@ -1,0 +1,73 @@
+element.style {
+    width: 50%;
+    /* margin: auto; */
+    position: absolute;
+    right: 0px;
+}
+
+
+.sidebar-container {
+    background-color: #519C79;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 20px;
+    /* position: fixed; */
+    top: 0;
+    bottom: 0;
+    border-right: 1px solid #ccc;
+}
+
+.search-container {
+    margin-bottom: 30px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 1em;
+}
+.search-input::placeholder { text-align: center; }
+.item-list {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.item-card {
+    background-color: transparent;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    box-shadow: 10px 5px 5px #222;
+    border-radius: 1em;
+}
+
+.item-card.selected,
+.item-card:hover {
+    background-color: #f0f0f0;
+}
+
+.item-details {
+    margin-top: 12px;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 1em;
+    text-align: center;
+    width: 60%;
+    margin: auto;
+    line-height: 40px;
+}
+
+.item-card > span:first-child {
+    display: inline-block;
+}
+.item-card > span {
+    max-width: 30px;
+    line-height: 40px;
+}
+.item-card > span > img {
+    /* vertical-align: bottom!important; */
+    display: inline !important;
+}
