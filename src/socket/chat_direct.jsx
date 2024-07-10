@@ -23,14 +23,12 @@ const Chat = () => {
         
                 // Retrieve the token (this is a simplified example, you might get it from an auth context or API)
                 const token = sessionStorage.getItem('user');
-        
                 // Connect with token in headers
                 client.connect(
                     { 'Authorization': `Bearer ${token}` },
                     (frame) => {
                         console.log('Connected: ' + frame);
                         setStompClient(client);
-        
                         // 전체 메시지 경로 구독
                         client.subscribe(`/sub/message/`+PUBLIC_ROOM_NO, (message) => {
                             // alert('메세지왔다. 받아라.');
