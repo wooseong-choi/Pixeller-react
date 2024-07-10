@@ -1,4 +1,3 @@
-//test
 import Phaser from "phaser";
 import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
@@ -18,9 +17,7 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("wss://api.pixeller.net/ws", {
-    // this.socket = io("ws://192.168.0.96/ws", {
-
+    this.socket = io("ws://192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -175,8 +172,8 @@ class GameScene extends Phaser.Scene {
     this.socket.on("error", (error) => {
       if (error.message === "Unauthorized") {
         alert("Session expired. Redirecting to login page.");
-        this.socket.disconnect();
-        window.location.href = '/';
+        // this.socket.disconnect();
+        // window.location.href = '/';
       } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
@@ -221,12 +218,8 @@ class GameScene extends Phaser.Scene {
    */
   preload() {
     this.Player.Preload("player", "./reddude.png", "./meta/move.json");
-    this.load.tilemapTiledJSON("map", "./map/map.json");
+    this.load.tilemapTiledJSON("map", "./projects/map.json");
     this.load.image("object", "./gfx/object.png");
-    // this.load.image("Classroom_A2", "./gfx/Classroom_A2.png");
-    // this.load.image("Classroom_B", "./gfx/Classroom_B.png");
-    // this.load.image("classroom_asset1", "./gfx/classroom_asset1.png");
-    // this.load.image("Inner", "./gfx/Inner.png");
   }
 
   /**
@@ -239,53 +232,43 @@ class GameScene extends Phaser.Scene {
 
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
-    // var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
-    // 지금은 안쓰는데 지우지마
-    // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
-    var Asset = map.addTilesetImage(
-      "object",
-      "object"
-    );
-    // var Inner = map.addTilesetImage("Inner", "Inner");
+    var Asset = map.addTilesetImage("object", "object");
 
     // 레이어 생성
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
     var tileLayer1 = map.createLayer("Tile Layer 1", [Asset], 0, 0);
     var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
-
-    // test
+    
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
-    // areaLayer1.setCullPadding(2, 2);
     metaLayer.setCullPadding(2, 2);
     objectLayer1.setCullPadding(2, 2);
 
-    // tileLayer1.setCollisionByExclusion([-1]);
-    // areaLayer1.setCollisionByExclusion([-1]);
-    // objectLayer1.setCollisionByExclusion([-1]);
+    // 월드 경계 설정
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
+    this.player.setCollideWorldBounds(true);
+    
+    // 카메라 설정
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    // this.cameras.main.setSize(CAMERA_WIDTH, CAMERA_HEIGHT);
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5); // 카메라가 플레이어를 따라다니도록 설정
-    this.scoll.create(this, this.Map_Width, this.Map_Height);
+
+    // 카메라 데드존 설정
+    // this.cameras.main.setDeadzone(100, 100);
+
+    // 스크롤 설정
+    this.scoll.create(this, map.widthInPixels, map.heightInPixels);
 
     // 충돌 레이어, 플레이어와 충돌 설정
-    objectLayer1.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, objectLayer1);
+    metaLayer.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, metaLayer);
 
     if (this.syncUserReceived) {
       this.create_OPlayer();
     }
-
-    // 장애물 생성
-    // this.obstacles = this.physics.add.group({
-    //   key: "obstacle",
-    //   // repeat: 5,
-    //   setScale: { x: 0.1, y: 0.1 },
-    //   setXY: { x: 400, y: 300, stepX: 1 },
-    // });
-
-    // this.obstacles.setCollideWorldBounds(true);
 
     // 장애물과 플레이어의 충돌 설정
     this.physics.add.collider(
@@ -298,6 +281,13 @@ class GameScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+    this.scale.on('resize', this.resize, this);
+
+    this.resize({ width: this.scale.width, height: this.scale.height });
 
     this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const cam = this.cameras.main;
@@ -308,7 +298,7 @@ class GameScene extends Phaser.Scene {
       const playerY = this.player.y;
 
       // 줌 레벨 변경
-      const newZoom = Phaser.Math.Clamp(oldZoom - deltaY * 0.001, 1, 2);
+      const newZoom = Phaser.Math.Clamp(oldZoom - deltaY * 0.001, 1.5, 3);
       if (newZoom === oldZoom) {
         return;
       }
@@ -328,6 +318,27 @@ class GameScene extends Phaser.Scene {
       });
     });
   }
+
+  resize(gameSize) {
+    const width = gameSize.width;
+    const height = gameSize.height;
+
+    this.cameras.main.setViewport(0, 0, width, height);
+    
+    // 맵 크기 가져오기
+    const map = this.make.tilemap({ key: "map" });
+    const mapWidth = map.widthInPixels;
+    const mapHeight = map.heightInPixels;
+
+    // 화면 크기와 맵 크기를 비교하여 줌 계산
+    const zoomX = width / mapWidth;
+    const zoomY = height / mapHeight;
+    const zoom = Math.min(zoomX, zoomY);
+
+    const minZoom = 1.5;
+    this.cameras.main.setZoom(Math.max(zoom, minZoom));
+  }
+
 
   create_OPlayer() {
     // 다른 플레이어들 생성
@@ -373,7 +384,19 @@ class GameScene extends Phaser.Scene {
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
-      this.Player.moveTo(400, 300);
+      this.Player.moveTo(600, 320);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.wKey)) {
+      this.Player.moveTo(1400, 320);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+      this.Player.moveTo(2200, 320);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+      this.Player.moveTo(3000, 320);
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
