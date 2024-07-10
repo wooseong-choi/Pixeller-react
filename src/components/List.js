@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../static/css/List.css";
 import Chat from "../socket/chat_direct";
+import "../components/Boards/PL.css";
+import ProductList from "./Boards/ProductList";
 
 // 이걸로 유저목록 만들어서 포문돌릴것
 function getConnectedUser() {}
@@ -22,67 +24,8 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
   };
   return (
     <>
-      <div className={`side-menu ${isOpen ? "open" : ""}`}>
-        <button
-          className="menu-toggle"
-          onClick={() => {
-            toggleMenu(isOpen, setIsOpen);
-          }}
-        >
-          <img src="svg/exit.svg" />
-        </button>
-        <div className="searchDivWrap">
-          <div className="searchDiv">
-            <img
-              src="svg/search-icon.svg"
-              alt="Search Icon"
-              className="search-icon"
-            />
-            <input placeholder="Search" type="text" />
-          </div>
-        </div>
-        <nav className="menu-items">
-          <div className="user-info">
-            <img
-              src="svg/user-icon.svg"
-              alt="User Icon"
-              className="user-icon"
-            />
-            <span className="username">류강현</span>
-            <span className="status">활동중</span>
-            <span className="status-dot on"></span>
-          </div>
-          <div className="user-info">
-            <img
-              src="svg/user-icon.svg"
-              alt="User Icon"
-              className="user-icon"
-            />
-            <span className="username">류강현</span>
-            <span className="status">활동중</span>
-            <span className="status-dot on"></span>
-          </div>
-          <div className="user-info">
-            <img
-              src="svg/user-icon.svg"
-              alt="User Icon"
-              className="user-icon"
-            />
-            <span className="username">류강현</span>
-            <span className="status">활동중</span>
-            <span className="status-dot on"></span>
-          </div>
-          <div className="user-info">
-            <img
-              src="svg/user-icon.svg"
-              alt="User Icon"
-              className="user-icon"
-            />
-            <span className="username">류강현</span>
-            <span className="status">활동중</span>
-            <span className="status-dot on"></span>
-          </div>
-        </nav>
+      <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
+        <ProductList />
       </div>
 
       <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>

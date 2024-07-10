@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./PC.css";
 // import productDTO from "../../api/dto/productDTO.js";
 import { createProduct } from "../../api/products";
 
