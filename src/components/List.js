@@ -22,11 +22,11 @@ const List = ({
 
   const [chatComponent, setChatComponent] = useState(null);
 
-  // useEffect(() => {
-  //   if (!chatComponent) {
-  //     setChatComponent(<Chat />);
-  //   }
-  // }, [chatComponent]);
+  useEffect(() => {
+    if (!chatComponent) {
+      setChatComponent(<Chat />);
+    }
+  }, [chatComponent]);
 
   const toggleMenu = (val, method) => {
     method(!val);
