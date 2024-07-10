@@ -1,6 +1,7 @@
 // SidebarSection.js
 import React, { useState } from 'react';
 import './PL.css';
+import Auction from '../Auction/Auction';
 
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,6 +55,8 @@ const ProductList = () => {
       <div className="item-details">
         <h3>상품 등록</h3>
       </div>
+      <Auction />
+
     </>
     // </div>
   );
