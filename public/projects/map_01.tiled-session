@@ -17,7 +17,7 @@
             "scaleInEditor": 1.5
         },
         "classroom_asset1.tsx": {
-            "scaleInDock": 0.75,
+            "scaleInDock": 0.33,
             "scaleInEditor": 1
         },
         "map.tmx": {
@@ -27,8 +27,8 @@
             "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 751.5151515151515,
-                "y": -834.8484848484849
+                "x": 451.5151515151515,
+                "y": -195.4545454545455
             }
         }
     },
