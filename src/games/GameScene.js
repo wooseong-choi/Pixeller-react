@@ -6,8 +6,8 @@ import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
 import axiosInstance from "../api/axios";
 
-const CHARACTER_WIDTH = 32;
-const CHARACTER_HEIGHT = 32;
+const CHARACTER_WIDTH = 16;
+const CHARACTER_HEIGHT = 16;
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -16,7 +16,6 @@ class GameScene extends Phaser.Scene {
 
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
-
 
     this.socket = io("wss://api.pixeller.net/ws", {
 
@@ -37,6 +36,7 @@ class GameScene extends Phaser.Scene {
     this.x = 32;
     this.y = 32;
     this.syncUserReceived = false;
+    this.username = sessionStorage.getItem("username");
 
     this.socket.on("connect", function (data) {
       console.log(data);
@@ -220,10 +220,11 @@ class GameScene extends Phaser.Scene {
   preload() {
     this.Player.Preload("player", "./reddude.png", "./meta/move.json");
     this.load.tilemapTiledJSON("map", "./map/map.json");
-    this.load.image("Classroom_A2", "./gfx/Classroom_A2.png");
-    this.load.image("Classroom_B", "./gfx/Classroom_B.png");
-    this.load.image("classroom_asset1", "./gfx/classroom_asset1.png");
-    this.load.image("Inner", "./gfx/Inner.png");
+    this.load.image("object", "./gfx/object.png");
+    // this.load.image("Classroom_A2", "./gfx/Classroom_A2.png");
+    // this.load.image("Classroom_B", "./gfx/Classroom_B.png");
+    // this.load.image("classroom_asset1", "./gfx/classroom_asset1.png");
+    // this.load.image("Inner", "./gfx/Inner.png");
   }
 
   /**
@@ -239,41 +240,27 @@ class GameScene extends Phaser.Scene {
     // var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
     // 지금은 안쓰는데 지우지마
     // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
-    var tilesclassroom_asset1 = map.addTilesetImage(
-      "classroom_asset1",
-      "classroom_asset1"
+    var Asset = map.addTilesetImage(
+      "object",
+      "object"
     );
     // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
-    var metaLayer = map.createLayer("Meta", tilesclassroom_asset1, 0, 0);
-    var tileLayer1 = map.createLayer(
-      "Tile Layer 1",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
-    var areaLayer1 = map.createLayer(
-      "Area Layer 1",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
-    var objectLayer1 = map.createLayer(
-      "Object Layer 1",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
+    var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
+    var tileLayer1 = map.createLayer("Tile Layer 1", [Asset], 0, 0);
+    var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
+
     // test
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
-    areaLayer1.setCullPadding(2, 2);
+    // areaLayer1.setCullPadding(2, 2);
     metaLayer.setCullPadding(2, 2);
+    objectLayer1.setCullPadding(2, 2);
 
-    tileLayer1.setCollisionByExclusion([-1]);
-    areaLayer1.setCollisionByExclusion([-1]);
-    objectLayer1.setCollisionByExclusion([-1]);
+    // tileLayer1.setCollisionByExclusion([-1]);
+    // areaLayer1.setCollisionByExclusion([-1]);
+    // objectLayer1.setCollisionByExclusion([-1]);
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
@@ -281,8 +268,8 @@ class GameScene extends Phaser.Scene {
     this.scoll.create(this, this.Map_Width, this.Map_Height);
 
     // 충돌 레이어, 플레이어와 충돌 설정
-    metaLayer.setCollisionByExclusion([-1]);
-    this.physics.add.collider(this.player, metaLayer);
+    objectLayer1.setCollisionByExclusion([-1]);
+    this.physics.add.collider(this.player, objectLayer1);
 
     if (this.syncUserReceived) {
       this.create_OPlayer();
@@ -306,13 +293,6 @@ class GameScene extends Phaser.Scene {
       null,
       this
     );
-
-    // 재시작 키 설정
-    this.input.keyboard.on("keydown", (event) => {
-      if (event.key === "r") {
-        this.scene.restart();
-      }
-    });
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
@@ -376,11 +356,9 @@ class GameScene extends Phaser.Scene {
       (this.player.x !== this.Player.oldPosition.x ||
         this.player.y !== this.Player.oldPosition.y)
     ) {
-      const username = sessionStorage.getItem("username");
-
       const user = {
-        uid: username,
-        username: username,
+        uid: this.username,
+        username: this.username,
         x: Math.round(this.player.x),
         y: Math.round(this.player.y),
         direction: this.Player.direction,
@@ -390,26 +368,6 @@ class GameScene extends Phaser.Scene {
 
       this.lastPositionUpdateTime = time;
     }
-
-    // 플레이어가 이동했을 때만 서버에 위치 전송
-    // if (
-    //   this.Player.oldPosition &&
-    //   (this.player.x !== this.Player.oldPosition.x ||
-    //     this.player.y !== this.Player.oldPosition.y)
-    // ) {
-    //   const username = sessionStorage.getItem("username");
-
-    //   const user = {
-    //     uid: username,
-    //     clientid: this.socket.id,
-    //     username: username,
-    //     x: Math.round(this.player.x),
-    //     y: Math.round(this.player.y),
-    //     direction: this.Player.direction,
-    //   };
-    //   this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-    //   this.socket.emit("move", user);
-    // }
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     if (Phaser.Input.Keyboard.JustDown(this.qKey)) {

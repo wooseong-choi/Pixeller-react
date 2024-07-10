@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import "./PC.css";
+// import productDTO from "../../api/dto/productDTO.js";
+import { createProduct } from "../../api/products";
 
 const ProductDetail = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // const productDTO = new productDTO();
+  const [imgFiles, setImgFiles] = useState([]);
+  // const [product, setProduct] = useState(productDTO);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);

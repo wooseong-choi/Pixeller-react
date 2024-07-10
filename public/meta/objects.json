@@ -1,0 +1,221 @@
+{
+  "frames": [
+    { "filename": "object_0", "frame": { "x": 0, "y": 0, "w": 64, "h": 32 } },
+    { "filename": "object_1", "frame": { "x": 64, "y": 0, "w": 32, "h": 32 } },
+    { "filename": "object_2", "frame": { "x": 96, "y": 0, "w": 32, "h": 32 } },
+    { "filename": "object_3", "frame": { "x": 128, "y": 0, "w": 64, "h": 32 } },
+    { "filename": "object_4", "frame": { "x": 192, "y": 0, "w": 32, "h": 32 } },
+    { "filename": "object_5", "frame": { "x": 224, "y": 0, "w": 32, "h": 32 } },
+    { "filename": "object_6", "frame": { "x": 0, "y": 32, "w": 32, "h": 32 } },
+    { "filename": "object_7", "frame": { "x": 32, "y": 32, "w": 32, "h": 32 } },
+    { "filename": "object_8", "frame": { "x": 64, "y": 32, "w": 32, "h": 32 } },
+    { "filename": "object_9", "frame": { "x": 96, "y": 32, "w": 32, "h": 32 } },
+    {
+      "filename": "object_10",
+      "frame": { "x": 128, "y": 32, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_11",
+      "frame": { "x": 160, "y": 32, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_12",
+      "frame": { "x": 192, "y": 32, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_13",
+      "frame": { "x": 224, "y": 32, "w": 32, "h": 32 }
+    },
+    { "filename": "object_14", "frame": { "x": 0, "y": 64, "w": 32, "h": 32 } },
+    {
+      "filename": "object_15",
+      "frame": { "x": 32, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_16",
+      "frame": { "x": 64, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_17",
+      "frame": { "x": 96, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_18",
+      "frame": { "x": 128, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_19",
+      "frame": { "x": 160, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_20",
+      "frame": { "x": 192, "y": 64, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_21",
+      "frame": { "x": 224, "y": 64, "w": 32, "h": 32 }
+    },
+    { "filename": "object_22", "frame": { "x": 0, "y": 96, "w": 32, "h": 32 } },
+    {
+      "filename": "object_23",
+      "frame": { "x": 32, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_24",
+      "frame": { "x": 64, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_25",
+      "frame": { "x": 96, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_26",
+      "frame": { "x": 128, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_27",
+      "frame": { "x": 160, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_28",
+      "frame": { "x": 192, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_29",
+      "frame": { "x": 224, "y": 96, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_30",
+      "frame": { "x": 0, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_31",
+      "frame": { "x": 32, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_32",
+      "frame": { "x": 64, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_33",
+      "frame": { "x": 96, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_34",
+      "frame": { "x": 128, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_35",
+      "frame": { "x": 160, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_36",
+      "frame": { "x": 192, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_37",
+      "frame": { "x": 224, "y": 128, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_38",
+      "frame": { "x": 0, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_39",
+      "frame": { "x": 32, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_40",
+      "frame": { "x": 64, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_41",
+      "frame": { "x": 96, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_42",
+      "frame": { "x": 128, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_43",
+      "frame": { "x": 160, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_44",
+      "frame": { "x": 192, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_45",
+      "frame": { "x": 224, "y": 160, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_46",
+      "frame": { "x": 0, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_47",
+      "frame": { "x": 32, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_48",
+      "frame": { "x": 64, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_49",
+      "frame": { "x": 96, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_50",
+      "frame": { "x": 128, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_51",
+      "frame": { "x": 160, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_52",
+      "frame": { "x": 192, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_53",
+      "frame": { "x": 224, "y": 192, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_54",
+      "frame": { "x": 0, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_55",
+      "frame": { "x": 32, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_56",
+      "frame": { "x": 64, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_57",
+      "frame": { "x": 96, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_58",
+      "frame": { "x": 128, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_59",
+      "frame": { "x": 160, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_60",
+      "frame": { "x": 192, "y": 224, "w": 32, "h": 32 }
+    },
+    {
+      "filename": "object_61",
+      "frame": { "x": 224, "y": 224, "w": 32, "h": 32 }
+    }
+  ],
+  "meta": {
+    "image": "market_assets.png",
+    "size": { "w": 256, "h": 256 },
+    "scale": "1"
+  }
+}
