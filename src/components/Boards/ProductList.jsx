@@ -1,10 +1,36 @@
 // SidebarSection.js
-import React, { useState } from 'react';
-import './PL.css';
+import React, { useEffect, useState } from "react";
+import {
+  getAllProducts,
+  getProductById,
+  getProductFiles,
+} from "../../api/products";
+import "./PL.css";
+import { productDTO } from "../../api/dto/productDTO";
+import ProductDetail from "./ProductCreate";
 
-const ProductList = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const ProductList = ({ openPDModal, openPCModal }) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [sidebarItems, setSidebarItems] = useState([
+    { id: "item1", name: "아이폰", sender_name: "류강현" },
+    { id: "item2", name: "갤럭시", sender_name: "류강현" },
+    { id: "item3", name: "아이패드", sender_name: "류강현" },
+    { id: "item4", name: "갤럭시 탭", sender_name: "류강현" },
+  ]);
+
+  useEffect(() => {
+    getAllProducts().then((res) => {
+      const products = res.map((item) => {
+        return {
+          id: item.product_id,
+          name: item.name,
+          sender_name: item.member_id,
+        };
+      });
+      setSidebarItems(products);
+    });
+  }, []);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -12,14 +38,8 @@ const ProductList = () => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
+    openPDModal(selectedItem);
   };
-
-  const sidebarItems = [
-    { id: 'item1', name: '아이폰', sender_name : '류강현' },
-    { id: 'item2', name: '갤럭시', sender_name : '류강현'},
-    { id: 'item3', name: '아이패드',sender_name : '류강현' },
-    { id: 'item4', name: '갤럭시 탭',sender_name : '류강현' },
-  ];
 
   const filteredItems = sidebarItems.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -41,18 +61,21 @@ const ProductList = () => {
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`item-card ${selectedItem && selectedItem.id === item.id ? 'selected' : ''}`}
+            className={`item-card ${
+              selectedItem && selectedItem.id === item.id ? "selected" : ""
+            }`}
             onClick={() => handleItemClick(item)}
           >
-            <span><img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3cRO4gfN0IIwH2MW1HGVnxom4lmneHbfaOQ&s' /></span>
+            <span>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3cRO4gfN0IIwH2MW1HGVnxom4lmneHbfaOQ&s" />
+            </span>
             <span>{item.name}</span>
             <span>{item.sender_name}</span>
-            
           </div>
         ))}
       </div>
       <div className="item-details">
-        <h3>상품 등록</h3>
+        <button onClick={openPCModal}>상품 등록</button>
       </div>
     </>
     // </div>

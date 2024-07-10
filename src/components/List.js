@@ -7,9 +7,18 @@ import ProductList from "./Boards/ProductList";
 // 이걸로 유저목록 만들어서 포문돌릴것
 function getConnectedUser() {}
 
-const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsNotiOpen }) => {
+const List = ({
+  isOpen,
+  setIsOpen,
+  isChatOpen,
+  setIsChatOpen,
+  isNotiOpen,
+  setIsNotiOpen,
+  openPDModal,
+  openPCModal,
+}) => {
   getConnectedUser();
-  
+
   const [chatComponent, setChatComponent] = useState(null);
 
   // useEffect(() => {
@@ -18,14 +27,13 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
   //   }
   // }, [chatComponent]);
 
-
   const toggleMenu = (val, method) => {
     method(!val);
   };
   return (
     <>
       <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
-        <ProductList />
+        <ProductList openPDModal={openPDModal} openPCModal={openPCModal}/>
       </div>
 
       <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>
@@ -42,15 +50,11 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
             <h1>Chat</h1>
           </div>
         </div>
-        
-        <nav className="chat-content">
 
-            {chatComponent}
-
-        </nav>
+        <nav className="chat-content">{chatComponent}</nav>
         <div className="chat-rooms"></div>
       </div>
-      
+
       <div className={`side-menu-noti ${isNotiOpen ? "open" : ""}`}>
         <button
           className="menu-toggle"

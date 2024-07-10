@@ -4,6 +4,8 @@ import GameApp from "../games/GameApp";
 import Bottom from "../components/UI/Bottom.jsx";
 import List from "../components/List";
 import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
+import ProductDetail from "../components/Boards/ProductDetail.jsx";
+import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
@@ -11,12 +13,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
-  
+  const [isProductDetailOpen, setProductDetailOpen] = useState(false);
+  const [isProductCreateOpen, setProductCreateOpen] = useState(false);
+  const [productId, setProductId] = useState(null);
+
   useEffect(() => {
     if (isOpen || isChatOpen || isNotiOpen) {
-      if(!isListOpen) setIsListOpen(true);
+      if (!isListOpen) setIsListOpen(true);
     } else {
-      if(isListOpen) setIsListOpen(false);
+      if (isListOpen) setIsListOpen(false);
     }
   }, [isOpen, isChatOpen, isNotiOpen]);
 
@@ -24,6 +29,23 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     e.preventDefault();
     console.log("startVideoStream");
     isVideoOpen ? setIsVideoOpen(false) : setIsVideoOpen(true);
+  };
+
+  const openPDModal = (product) => {
+    setProductDetailOpen(true);
+    setProductId(product);
+  };
+
+  const closePDModal = () => {
+    setProductDetailOpen(false);
+  };
+
+  const openPCModal = () => {
+    setProductCreateOpen(true);
+  };
+
+  const closePCModal = () => {
+    setProductCreateOpen(false);
   };
 
   useEffect(() => {
@@ -42,6 +64,25 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ></button>
               {isVideoOpen ? <VideoCanvas /> : null}
             </div>
+            <div className="Modals">
+              {isProductDetailOpen ? (
+                <div className="modal-background">
+                  <div className="modal-content">
+                    <ProductDetail
+                      productId={productId}
+                      handleClose={closePDModal}
+                    />
+                  </div>
+                </div>
+              ) : null}
+              {isProductCreateOpen ? (
+                <div className="modal-background">
+                  <div className="modal-content">
+                    <ProductCreate handleClose={closePCModal} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
             <div id="gameMain" className="game">
               <GameApp />
             </div>
@@ -53,6 +94,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsChatOpen={setIsChatOpen}
                 isNotiOpen={isNotiOpen}
                 setIsNotiOpen={setIsNotiOpen}
+                openPDModal={openPDModal}
+                openPCModal={openPCModal}
               />
             </div>
           </div>
