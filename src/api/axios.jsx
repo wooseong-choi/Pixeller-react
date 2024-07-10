@@ -3,6 +3,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "https://api.pixeller.net", // Change this to Backend API URL
+  // baseURL: "http://192.168.0.96:3333", // Change this to Backend API URL
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
