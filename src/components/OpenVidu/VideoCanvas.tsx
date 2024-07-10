@@ -40,20 +40,24 @@ function configureUrls() {
   }
 }
 
-function VideoCanvas() {
+function VideoCanvas({ userName, auctionRoomId }) {
   const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
   const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
     undefined
   );
 
   const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
-  const Pname = sessionStorage.getItem("username");
-  const [participantName, setParticipantName] =
-    useState<string>("LocalParticipant"); // 참가자 이름
-  const [roomName, setRoomName] = useState<string>("LocalRoomss"); // 화상 회의 방 이름
+
+  const [participantName, setParticipantName] = useState<string>(userName); // 참가자 이름
+  const [roomName, setRoomName] = useState<string>(auctionRoomId); // 화상 회의 방 이름
 
   useEffect(() => {
-    setParticipantName(Pname!);
+    console.log(
+      "participantName: ",
+      participantName,
+      "is connecting to",
+      auctionRoomId
+    );
     joinRoom();
 
     return () => {
@@ -64,8 +68,6 @@ function VideoCanvas() {
   async function joinRoom() {
     const room = new Room();
     setRoom(room);
-
-    setParticipantName(Pname!);
 
     room.on(
       RoomEvent.TrackSubscribed,

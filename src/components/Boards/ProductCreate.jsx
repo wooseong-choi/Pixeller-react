@@ -3,7 +3,7 @@ import "./PC.css";
 // import productDTO from "../../api/dto/productDTO.js";
 import { createProduct } from "../../api/products";
 
-const ProductDetail = () => {
+const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   // const productDTO = new productDTO();
@@ -16,6 +16,9 @@ const ProductDetail = () => {
 
   return (
     <div className="container">
+      <button className="close-button" onClick={handleClose}>
+        ×
+      </button>
       <div className="left-section">
         <div className="photo-upload">
           <div className="upload-placeholder">

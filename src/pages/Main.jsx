@@ -4,26 +4,63 @@ import GameApp from "../games/GameApp";
 import Bottom from "../components/UI/Bottom.jsx";
 import List from "../components/List";
 import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
+import ProductDetail from "../components/Boards/ProductDetail.jsx";
+import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
+  const userName = sessionStorage.getItem("username");
+  const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-  
+  const [isViduOpen, setIsViduOpen] = useState(false);
+  const [isProductDetailOpen, setProductDetailOpen] = useState(false);
+  const [isProductCreateOpen, setProductCreateOpen] = useState(false);
+  const [productId, setProductId] = useState(null);
+  const [totalProductCounts, setTotalProductCounts] = useState(0);
+  const [isCamOpen, setIsCamOpen] = useState(false);
+  const [isMicOpen, setIsMicOpen] = useState(false);
+
   useEffect(() => {
     if (isOpen || isChatOpen || isNotiOpen) {
-      if(!isListOpen) setIsListOpen(true);
+      if (!isListOpen) setIsListOpen(true);
     } else {
-      if(isListOpen) setIsListOpen(false);
+      if (isListOpen) setIsListOpen(false);
     }
   }, [isOpen, isChatOpen, isNotiOpen]);
 
   const startVideoStream = (e) => {
     e.preventDefault();
     console.log("startVideoStream");
-    isVideoOpen ? setIsVideoOpen(false) : setIsVideoOpen(true);
+    isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
+  };
+
+  const openPDModal = (product) => {
+    setProductDetailOpen(true);
+    setProductId(product);
+  };
+
+  const closePDModal = () => {
+    setProductDetailOpen(false);
+  };
+
+  const openPCModal = () => {
+    setProductCreateOpen(true);
+  };
+
+  const closePCModal = () => {
+    setProductCreateOpen(false);
+  };
+
+  const toggleMIC = () => {
+    setIsMicOpen((prev) => !prev);
+    isMicOpen ? console.log("MIC ON") : console.log("MIC OFF");
+  };
+
+  const toggleCam = () => {
+    setIsCamOpen((prev) => !prev);
+    isCamOpen ? console.log("CAM ON") : console.log("CAM OFF");
   };
 
   useEffect(() => {
@@ -35,12 +72,36 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isVideoOpen ? "active" : ""}`}>
+            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-              {isVideoOpen ? <VideoCanvas /> : null}
+              {isViduOpen ? (
+                <VideoCanvas
+                  userName={userName}
+                  auctionRoomId={auctionRoomId}
+                />
+              ) : null}
+            </div>
+            <div className="Modals">
+              {isProductDetailOpen ? (
+                <div className="modal-background">
+                  <div className="modal-content">
+                    <ProductDetail
+                      productId={productId}
+                      handleClose={closePDModal}
+                    />
+                  </div>
+                </div>
+              ) : null}
+              {isProductCreateOpen ? (
+                <div className="modal-background">
+                  <div className="modal-content">
+                    <ProductCreate handleClose={closePCModal} />
+                  </div>
+                </div>
+              ) : null}
             </div>
             <div id="gameMain" className="game">
               <GameApp />
@@ -53,6 +114,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsChatOpen={setIsChatOpen}
                 isNotiOpen={isNotiOpen}
                 setIsNotiOpen={setIsNotiOpen}
+                openPDModal={openPDModal}
+                openPCModal={openPCModal}
+                setTotalProductCounts={setTotalProductCounts}
               />
             </div>
           </div>
@@ -63,6 +127,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsChatOpen={setIsChatOpen}
             isNotiOpen={isNotiOpen}
             setIsNotiOpen={setIsNotiOpen}
+            totalProductCounts={totalProductCounts}
+            setIsMicOpen={toggleMIC}
+            setIsCamOpen={toggleCam}
           />
         </div>
       </div>

@@ -4,7 +4,7 @@ import Scroll from "./scroll/scrollEventHandler.ts";
 import io from "socket.io-client";
 import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
-import axiosInstance from "../api/axios";
+import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
 const CHARACTER_HEIGHT = 16;
@@ -19,7 +19,6 @@ class GameScene extends Phaser.Scene {
 
     this.socket = io("wss://api.pixeller.net/ws", {
     // this.socket = io("ws://192.168.0.96/ws", {
-
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -175,7 +174,7 @@ class GameScene extends Phaser.Scene {
       if (error.message === "Unauthorized") {
         alert("Session expired. Redirecting to login page.");
         this.socket.disconnect();
-        window.location.href = '/';
+        window.location.href = "/";
       } else if (error.message === "Invalid token") {
         console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
@@ -241,10 +240,7 @@ class GameScene extends Phaser.Scene {
     // var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
     // 지금은 안쓰는데 지우지마
     // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
-    var Asset = map.addTilesetImage(
-      "object",
-      "object"
-    );
+    var Asset = map.addTilesetImage("object", "object");
     // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
@@ -297,6 +293,7 @@ class GameScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
 
     this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       const cam = this.cameras.main;
@@ -375,8 +372,7 @@ class GameScene extends Phaser.Scene {
       this.Player.moveTo(400, 300);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
-      console.log("Space key is pressed!");
+    if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
       window.dispatchEvent(
         new CustomEvent("start-video", {
           detail: {
