@@ -9,13 +9,18 @@ import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
+  const userName = sessionStorage.getItem("username");
+  const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isViduOpen, setIsViduOpen] = useState(false);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
   const [productId, setProductId] = useState(null);
+  const [totalProductCounts, setTotalProductCounts] = useState(0);
+  const [isCamOpen, setIsCamOpen] = useState(false);
+  const [isMicOpen, setIsMicOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen || isChatOpen || isNotiOpen) {
@@ -28,7 +33,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const startVideoStream = (e) => {
     e.preventDefault();
     console.log("startVideoStream");
-    isVideoOpen ? setIsVideoOpen(false) : setIsVideoOpen(true);
+    isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
 
   const openPDModal = (product) => {
@@ -48,6 +53,16 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     setProductCreateOpen(false);
   };
 
+  const toggleMIC = () => {
+    setIsMicOpen((prev) => !prev);
+    isMicOpen ? console.log("MIC ON") : console.log("MIC OFF");
+  };
+
+  const toggleCam = () => {
+    setIsCamOpen((prev) => !prev);
+    isCamOpen ? console.log("CAM ON") : console.log("CAM OFF");
+  };
+
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
   });
@@ -57,12 +72,17 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isVideoOpen ? "active" : ""}`}>
+            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-              {isVideoOpen ? <VideoCanvas /> : null}
+              {isViduOpen ? (
+                <VideoCanvas
+                  userName={userName}
+                  auctionRoomId={auctionRoomId}
+                />
+              ) : null}
             </div>
             <div className="Modals">
               {isProductDetailOpen ? (
@@ -96,6 +116,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsNotiOpen={setIsNotiOpen}
                 openPDModal={openPDModal}
                 openPCModal={openPCModal}
+                setTotalProductCounts={setTotalProductCounts}
               />
             </div>
           </div>
@@ -106,6 +127,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsChatOpen={setIsChatOpen}
             isNotiOpen={isNotiOpen}
             setIsNotiOpen={setIsNotiOpen}
+            totalProductCounts={totalProductCounts}
+            setIsMicOpen={toggleMIC}
+            setIsCamOpen={toggleCam}
           />
         </div>
       </div>

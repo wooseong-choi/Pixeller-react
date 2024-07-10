@@ -3,7 +3,6 @@ import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import GameApp from "./games/GameApp";
 import NotFound from "./pages/NotFound";
-import Board from "./components/UI/Bottom.jsx";
 import Main from "./pages/Main.jsx";
 import ProductCreate from "./components/Boards/ProductCreate.jsx";
 import ProductDetail from "./components/Boards/ProductDetail.jsx";

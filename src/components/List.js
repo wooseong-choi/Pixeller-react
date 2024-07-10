@@ -16,6 +16,7 @@ const List = ({
   setIsNotiOpen,
   openPDModal,
   openPCModal,
+  setTotalProductCounts,
 }) => {
   getConnectedUser();
 
@@ -33,7 +34,7 @@ const List = ({
   return (
     <>
       <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
-        <ProductList openPDModal={openPDModal} openPCModal={openPCModal}/>
+        <ProductList openPDModal={openPDModal} openPCModal={openPCModal} setTotalProductCounts={setTotalProductCounts}/>
       </div>
 
       <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>

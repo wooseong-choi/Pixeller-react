@@ -1,15 +1,9 @@
 // SidebarSection.js
 import React, { useEffect, useState } from "react";
-import {
-  getAllProducts,
-  getProductById,
-  getProductFiles,
-} from "../../api/products";
+import { getAllProducts } from "../../api/products";
 import "./PL.css";
-import { productDTO } from "../../api/dto/productDTO";
-import ProductDetail from "./ProductCreate";
 
-const ProductList = ({ openPDModal, openPCModal }) => {
+const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [sidebarItems, setSidebarItems] = useState([
@@ -23,13 +17,14 @@ const ProductList = ({ openPDModal, openPCModal }) => {
     getAllProducts().then((res) => {
       const products = res.map((item) => {
         return {
-          id: item.product_id,
+          id: item.productId,
           name: item.name,
-          sender_name: item.member_id,
+          sender_name: item.memberId,
         };
       });
       setSidebarItems(products);
     });
+    setTotalProductCounts(sidebarItems.length); // Product 갯수 다름 문제
   }, []);
 
   const handleSearch = (event) => {
@@ -38,7 +33,7 @@ const ProductList = ({ openPDModal, openPCModal }) => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    openPDModal(selectedItem);
+    openPDModal(item);
   };
 
   const filteredItems = sidebarItems.filter((item) =>

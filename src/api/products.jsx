@@ -27,12 +27,9 @@ export const createProduct = async (productDto, imgFiles) => {
 // 모든 상품 조회
 export const getAllProducts = async () => {
   try {
-    console.log("axiosCRUDInstance::: ", axiosCRUDInstance);
     const response = await axiosCRUDInstance.get("/api/products");
-    console.log("response::: ", response);
     return response.data;
   } catch (error) {
-    console.log("errrrrr: ", error);
     throw error;
   }
 };
