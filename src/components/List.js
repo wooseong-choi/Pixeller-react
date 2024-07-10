@@ -9,13 +9,13 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
   getConnectedUser();
   
   const [chatComponent, setChatComponent] = useState(null);
-  const [stompClient, setStompClient] = useState(null);
 
   // useEffect(() => {
   //   if (!chatComponent) {
-  //     setChatComponent(<Chat tempStompClient={stompClient} setStompClient={setStompClient} />);
+  //     setChatComponent(<Chat />);
   //   }
   // }, [chatComponent]);
+
 
   const toggleMenu = (val, method) => {
     method(!val);
@@ -101,45 +101,9 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
         </div>
         
         <nav className="chat-content">
-          <div>
-            <div className="chat-info">
-              <span className="chat-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="chat-name">최우성</span>
-              <span className="chat-message">안녕하세요</span>
-            </div>
-            <div className="chat-info me">
-              <span className="chat-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="chat-name">류강현</span>
-              <span className="chat-message">안녕하세요</span>
-            </div>
-            <div className="chat-info">
-              <span className="chat-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="chat-name">최우성</span>
-              <span className="chat-message">안녕하세요</span>
-            </div>
-          </div>
-          <div>
-            {/* {chatComponent} */}
 
-          </div>
+            {chatComponent}
+
         </nav>
         <div className="chat-rooms"></div>
       </div>

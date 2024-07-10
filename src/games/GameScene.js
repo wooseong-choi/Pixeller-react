@@ -6,8 +6,8 @@ import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
 import axiosInstance from "../api/axios";
 
-const CHARACTER_WIDTH = 32;
-const CHARACTER_HEIGHT = 32;
+const CHARACTER_WIDTH = 16;
+const CHARACTER_HEIGHT = 16;
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -220,9 +220,10 @@ class GameScene extends Phaser.Scene {
   preload() {
     this.Player.Preload("player", "./reddude.png", "./meta/move.json");
     this.load.tilemapTiledJSON("map", "./map/map.json");
+    this.load.image("object", "./gfx/object.png");
     // this.load.image("Classroom_A2", "./gfx/Classroom_A2.png");
     // this.load.image("Classroom_B", "./gfx/Classroom_B.png");
-    this.load.image("831c797a3ecf16fb1382c4c99d312f5b", "./gfx/831c797a3ecf16fb1382c4c99d312f5b.png");
+    // this.load.image("classroom_asset1", "./gfx/classroom_asset1.png");
     // this.load.image("Inner", "./gfx/Inner.png");
   }
 
@@ -239,42 +240,27 @@ class GameScene extends Phaser.Scene {
     // var tilesClassroomA2 = map.addTilesetImage("Classroom_A2", "Classroom_A2");
     // 지금은 안쓰는데 지우지마
     // var tilesClassroomB = map.addTilesetImage("Classroom_B", "Classroom_B");
-    var tilesclassroom_asset1 = map.addTilesetImage(
-      "831c797a3ecf16fb1382c4c99d312f5b",
-      "831c797a3ecf16fb1382c4c99d312f5b"
+    var Asset = map.addTilesetImage(
+      "object",
+      "object"
     );
     // var Inner = map.addTilesetImage("Inner", "Inner");
 
     // 레이어 생성
-    // var metaLayer = map.createLayer("Meta", tilesclassroom_asset1, 0, 0);
-    var tileLayer1 = map.createLayer(
-      "Map Tiles",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
-    // var areaLayer1 = map.createLayer(
-    //   "Area Layer 1",
-    //   tilesclassroom_asset1,
-    //   0,
-    //   0
-    // );
-    var objectLayer1 = map.createLayer(
-      "Objects",
-      tilesclassroom_asset1,
-      0,
-      0
-    );
+    var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
+    var tileLayer1 = map.createLayer("Tile Layer 1", [Asset], 0, 0);
+    var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
 
+    // test
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
     // areaLayer1.setCullPadding(2, 2);
-    // metaLayer.setCullPadding(2, 2);
+    metaLayer.setCullPadding(2, 2);
     objectLayer1.setCullPadding(2, 2);
 
-    tileLayer1.setCollisionByExclusion([-1]);
+    // tileLayer1.setCollisionByExclusion([-1]);
     // areaLayer1.setCollisionByExclusion([-1]);
-    objectLayer1.setCollisionByExclusion([-1]);
+    // objectLayer1.setCollisionByExclusion([-1]);
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
