@@ -17,9 +17,8 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-
-    this.socket = io("wss://api.pixeller.net/ws", {
-    // this.socket = io("ws://192.168.0.96/ws", {
+    this.socket = io("wss://localhost:3001/ws", {
+      // this.socket = io("ws://192.168.0.96/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -89,7 +88,6 @@ class GameScene extends Phaser.Scene {
             );
             this.OPlayer[data.user.uid].Create(data.user.x, data.user.y);
           }
-
           break;
 
         // 유저 움직임 처리
@@ -220,8 +218,15 @@ class GameScene extends Phaser.Scene {
    */
   preload() {
     this.Player.Preload("player", "./reddude.png", "./meta/move.json");
-    this.load.tilemapTiledJSON("map", "./projects/map.json");
+    this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
+
+    // font
+    this.load.bitmapFont(
+      "font",
+      "./fonts/MangoByeolbyeol.png",
+      "./fonts/MangoByeolbyeol.xml"
+    );
   }
 
   /**
@@ -240,7 +245,7 @@ class GameScene extends Phaser.Scene {
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
     var tileLayer1 = map.createLayer("Tile Layer 1", [Asset], 0, 0);
     var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
-    
+
     // 화면에 보이는 타일만 렌더링하도록 설정
     tileLayer1.setCullPadding(2, 2);
     metaLayer.setCullPadding(2, 2);
@@ -251,8 +256,16 @@ class GameScene extends Phaser.Scene {
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
+    this.player.nameText = this.add.bitmapText(
+      this.player.x - 10,
+      this.player.y - 15,
+      "font",
+      this.username,
+      12
+    ); // or 8
+
     this.player.setCollideWorldBounds(true);
-    
+
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     // this.cameras.main.setSize(CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -288,7 +301,7 @@ class GameScene extends Phaser.Scene {
     this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
 
-    this.scale.on('resize', this.resize, this);
+    this.scale.on("resize", this.resize, this);
 
     this.resize({ width: this.scale.width, height: this.scale.height });
 
@@ -327,7 +340,7 @@ class GameScene extends Phaser.Scene {
     const height = gameSize.height;
 
     this.cameras.main.setViewport(0, 0, width, height);
-    
+
     // 맵 크기 가져오기
     const map = this.make.tilemap({ key: "map" });
     const mapWidth = map.widthInPixels;
@@ -342,12 +355,18 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.setZoom(Math.max(zoom, minZoom));
   }
 
-
   create_OPlayer() {
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
       this.OPlayer[key].Create(user.x, user.y);
+      // this.OPlayer[key].nameText = this.add.bitmapText(
+      //   this.OPlayer[key].x,
+      //   this.OPlayer[key].y - 20,
+      //   "font",
+      //   user.username,
+      //   16
+      // ); // or 8
     }
   }
 
@@ -361,6 +380,9 @@ class GameScene extends Phaser.Scene {
   update(time, delta) {
     // 플레이어 이동
     this.Player.Move(this.cursors);
+
+    this.player.nameText.x = this.player.x - 10;
+    this.player.nameText.y = this.player.y - 30;
 
     if (!this.lastPositionUpdateTime) {
       this.lastPositionUpdateTime = time;

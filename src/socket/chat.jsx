@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import axios from 'axios';
 
 // STOMP 클라이언트 설정
-const URL = 'http://192.168.0.100:8080/chat';
+const URL = 'https://lionreport.pixeller.net/chat';
 const PUBLIC_ROOM = '/sub/message/1';
 const PRIVATE_ROOM_PREFIX = '/sub/message/private/';
 const DIRECT_ROOM_PREFIX = '/sub/message/member/';
