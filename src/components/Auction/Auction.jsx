@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import "./Auction.css";
-import { jwtDecode } from "jwt-decode";
 import UserInfo from "../UI/UserInfo";
 
 const Auction = ( {handleClose, auctionProduct} ) => {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./PC.css";
 // import productDTO from "../../api/dto/productDTO.js";
 import { createProduct } from "../../api/products";
+import UserInfo from "../UI/UserInfo";
 
 const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -13,7 +14,7 @@ const ProductDetail = ({ handleClose }) => {
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
-
+  const user = sessionStorage.getItem("user");
   return (
     <div className="container">
       <button className="close-button" onClick={handleClose}>
@@ -51,23 +52,20 @@ const ProductDetail = ({ handleClose }) => {
           </div>
         </div>
       </div>
-      <div className="right-section">
-        <div className="seller-info">
-          <div className="profile-icon"></div>
-          <div className="seller-name"></div>
+      <div className="product-detail">
+        <div className="product-seller">
+          <span>판매자:</span>
+          <UserInfo user={user}/>
         </div>
-        <div className="product-info">
-          <input
-            type="text"
-            className="product-title"
-            placeholder="상품 제목을 작성해주세요"
-          />
-          <textarea
-            className="product-description"
-            placeholder="상품 소개 글을 작성해주세요"
-          ></textarea>
+        <div className="product-container">
+          <div className="product-info">
+            <input className="title" type="text" name="title" placeholder="팬이에요!" />
+            <textarea className="content" name="content" placeholder="싸인해주세요!"></textarea>
+          </div>
+          <div className="product-button">
+            <button className="product-request">상품 등록</button>
+          </div>
         </div>
-        <button className="register-button">상품 등록</button>
       </div>
     </div>
   );
