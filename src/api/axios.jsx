@@ -2,8 +2,8 @@ import axios from "axios";
 // axios.defaults.withCredentials = true;
 
 const axiosInstance = axios.create({
-  baseURL: "https://api.pixeller.net", // Change this to Backend API URL
-  // baseURL: "http://192.168.0.96:3333", // Change this to Backend API URL
+  // baseURL: "https://api.pixeller.net", // Change this to Backend API URL
+  baseURL: "http://192.168.0.96:3333", // Change this to Backend API URL
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
@@ -26,17 +26,14 @@ axiosInstance.interceptors.request.use(
 );
 
 const axiosCRUDInstance = axios.create({
-  baseURL: "http://localhost:3333", // Change this to Backend API URL
+  baseURL: "http://lionreport.pixeller.net", // Change this to Backend API URL
   timeout: 1000,
-  Headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 axiosCRUDInstance.interceptors.request.use(
   (config) => {
     // Do something before request is sent
-    const token = localStorage.getItem("user");
+    const token = sessionStorage.getItem("user");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -48,4 +45,4 @@ axiosCRUDInstance.interceptors.request.use(
   }
 );
 
-export default axiosInstance;
+export { axiosInstance, axiosCRUDInstance };

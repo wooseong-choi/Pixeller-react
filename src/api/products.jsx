@@ -1,4 +1,4 @@
-import axiosCRUDInstance from "./axios";
+import { axiosCRUDInstance } from "./axios";
 
 // 상품 등록
 export const createProduct = async (productDto, imgFiles) => {

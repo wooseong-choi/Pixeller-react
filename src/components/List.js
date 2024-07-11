@@ -7,9 +7,19 @@ import ProductList from "./Boards/ProductList";
 // 이걸로 유저목록 만들어서 포문돌릴것
 function getConnectedUser() {}
 
-const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsNotiOpen }) => {
+const List = ({
+  isOpen,
+  setIsOpen,
+  isChatOpen,
+  setIsChatOpen,
+  // isNotiOpen,
+  // setIsNotiOpen,
+  openPDModal,
+  openPCModal,
+  setTotalProductCounts
+}) => {
   getConnectedUser();
-  
+
   const [chatComponent, setChatComponent] = useState(null);
 
   useEffect(() => {
@@ -18,14 +28,13 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
     }
   }, [chatComponent]);
 
-
   const toggleMenu = (val, method) => {
     method(!val);
   };
   return (
     <>
       <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
-        <ProductList />
+        <ProductList openPDModal={openPDModal} openPCModal={openPCModal} setTotalProductCounts={setTotalProductCounts}/>
       </div>
 
       <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>
@@ -42,68 +51,11 @@ const List = ({ isOpen, setIsOpen, isChatOpen, setIsChatOpen, isNotiOpen, setIsN
             <h1>Chat</h1>
           </div>
         </div>
-        
-        <nav className="chat-content">
 
-            {chatComponent}
-
-        </nav>
+        <nav className="chat-content">{chatComponent}</nav>
         <div className="chat-rooms"></div>
       </div>
-      
-      <div className={`side-menu-noti ${isNotiOpen ? "open" : ""}`}>
-        <button
-          className="menu-toggle"
-          onClick={() => {
-            toggleMenu(isNotiOpen, setIsNotiOpen);
-          }}
-        >
-          <img src="svg/exit.svg" />
-        </button>
-        <div className="notiDivWrap">
-          <div className="notiDiv">
-            <h1>noti</h1>
-          </div>
-        </div>
-        <nav className="noti-content">
-          <div>
-            <div className="noti-info">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">최우성</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-            <div className="noti-info me">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">류강현</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-            <div className="noti-info">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">최우성</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-          </div>
-        </nav>
-        <div className="noti-rooms"></div>
-      </div>
+
     </>
   );
 };

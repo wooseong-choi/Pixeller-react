@@ -1,16 +1,16 @@
-import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useRef, useState } from 'react';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
-const URL = 'http://192.168.0.100:8080/chat';
+// const URL = 'http://192.168.0.100:8080/chat';
+const URL = 'https://lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
 let didInit = false;
 
 const Chat = () => {
     const [stompClient, setStompClient] = useState(null);
     const [messages, setMessages] = useState([]);
-    const user = jwtDecode(sessionStorage.getItem('user'));
+    const user = sessionStorage.getItem('user');
 
     const messageEndRef = useRef(null);
 
@@ -34,7 +34,6 @@ const Chat = () => {
                             // alert('메세지왔다. 받아라.');
                             showMessage(JSON.parse(message.body));
                         });
-        
                     },
                     (error) => {
                         console.error('Connection error: ', error);
@@ -54,12 +53,12 @@ const Chat = () => {
     useEffect(() => {
         // 일단은 이걸로 했는데 나중에는 서버에서 채팅을 받아올거니 수정해야함
         if (messages.length > 0) {
-            console.log('sdfasdf');
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     },[messages]);
 
     const sendMessage = () => {
+        // alert('메세지 보내기');
         const msg = document.getElementById("message").value;
         if(msg === "") return;
         const message = {
@@ -74,6 +73,7 @@ const Chat = () => {
         // temp.push(message);
         // console.log("Direct Message: ", message);
         // setMessages(temp);
+        console.log(message);
         setMessages(prevMessages => [...prevMessages, message]);
     };
 
