@@ -12,7 +12,9 @@ const App = ({
   // setIsNotiOpen,
   totalProductCounts,
   setIsMicOpen,
+  isMicOpen,
   setIsCamOpen,
+  isCamOpen,
 }) => {
   const currentUser = sessionStorage.getItem("username");
 
@@ -28,15 +30,19 @@ const App = ({
         <UserInfo user={sessionStorage.getItem('user')} />
         {isLogoutClicked && <Logout setIsLogoutClicked={setIsLogoutClicked} />}
         <div className="center-section">
-          <button className="nav-button">
-            <img
-              src="svg/microphone-icon.svg"
-              alt="Microphone"
-              onClick={setIsMicOpen}
-            />
+          <button className="nav-button" onClick={setIsMicOpen}>
+            {isMicOpen ? (
+              <img src="svg/microphone-icon.svg" alt="Microphone" />
+            ) : (
+              <img src="svg/microphone-x-icon.svg" alt="Microphone" />
+            )}
           </button>
-          <button className="nav-button">
-            <img src="svg/video-icon.svg" alt="Video" onClick={setIsCamOpen} />
+          <button className="nav-button" onClick={setIsCamOpen}>
+            {isCamOpen ? (
+              <img src="svg/video-icon.svg" alt="Video" />
+            ) : (
+              <img src="svg/video-x-icon.svg" alt="Video" />
+            )}
           </button>
           <button className="nav-button">
             <img src="svg/emoji-icon.svg" alt="emoji" />

@@ -1,10 +1,6 @@
 .container {
   display: flex;
-  background-color: #a5d6a7;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 900px;
   /* 컨테이너 너비 조정 */
   margin: 20px auto;
   /* 페이지 중앙 정렬 */
@@ -35,8 +31,8 @@
 }
 
 .photo-upload {
-  width: 300px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   border: 2px dashed #ccc;
   border-radius: 10px;
   display: flex;
@@ -131,4 +127,42 @@
   cursor: pointer;
   align-self: flex-end;
   font-size: 16px;
+}
+
+.product-info .title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background-color: #CCCCCC;
+}
+
+.product-info .content {
+  font-size: 18px;
+  margin-bottom: 20px;
+  width: 100%;
+  padding: 0;
+  background-color: #CCCCCC;
+}
+
+.product-info .price {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background-color: #CCCCCC;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  max-width: 1300px;
+  background: rgba(161, 191, 163, 0.7)!important;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.left-section {
+  flex: 1 1;
 }

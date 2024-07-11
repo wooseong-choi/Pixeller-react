@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useRef, useState } from 'react';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
@@ -10,8 +11,7 @@ let didInit = false;
 const Chat = () => {
     const [stompClient, setStompClient] = useState(null);
     const [messages, setMessages] = useState([]);
-    const user = sessionStorage.getItem('user');
-
+    const user = jwtDecode(sessionStorage.getItem('user') );
     const messageEndRef = useRef(null);
 
 
