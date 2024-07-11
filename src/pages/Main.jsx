@@ -7,13 +7,14 @@ import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
+import Auction from "../components/Auction/Auction.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
   const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isNotiOpen, setIsNotiOpen] = useState(false);
+  // const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
@@ -21,14 +22,16 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [totalProductCounts, setTotalProductCounts] = useState(0);
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [isMicOpen, setIsMicOpen] = useState(false);
-
+  // 화상회의 모달
+  const [auctionProduct, setAuctionProductState] = useState(null);
+  // 화상회의 모달끗
   useEffect(() => {
-    if (isOpen || isChatOpen || isNotiOpen) {
+    if (isOpen || isChatOpen) {
       if (!isListOpen) setIsListOpen(true);
     } else {
       if (isListOpen) setIsListOpen(false);
     }
-  }, [isOpen, isChatOpen, isNotiOpen]);
+  }, [isOpen, isChatOpen]);
 
   const startVideoStream = (e) => {
     e.preventDefault();
@@ -52,6 +55,20 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const closePCModal = () => {
     setProductCreateOpen(false);
   };
+
+
+  const closeAuctionModal = () => {
+    const auctionContainer =document.getElementsByClassName("auction-wrapper");
+    if(auctionContainer.length > 0)
+      auctionContainer[0].classList.remove("on");
+  };
+
+  const setAuctionProduct = (product) => {
+    setAuctionProductState(product);
+    const auctionContainer =document.getElementsByClassName("auction-wrapper");
+    if(auctionContainer.length > 0)
+      auctionContainer[0].classList.add("on");
+  }
 
   const toggleMIC = () => {
     setIsMicOpen((prev) => !prev);
@@ -91,6 +108,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     <ProductDetail
                       productId={productId}
                       handleClose={closePDModal}
+                      setAuctionProduct={setAuctionProduct}
                     />
                   </div>
                 </div>
@@ -102,6 +120,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   </div>
                 </div>
               ) : null}
+              <Auction 
+                handleClose={closeAuctionModal} 
+                auctionProduct={auctionProduct}
+              />
             </div>
             <div id="gameMain" className="game">
               <GameApp />
@@ -112,8 +134,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsOpen={setIsOpen}
                 isChatOpen={isChatOpen}
                 setIsChatOpen={setIsChatOpen}
-                isNotiOpen={isNotiOpen}
-                setIsNotiOpen={setIsNotiOpen}
+                // isNotiOpen={isNotiOpen}
+                // setIsNotiOpen={setIsNotiOpen}
                 openPDModal={openPDModal}
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
@@ -125,8 +147,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
             setIsChatOpen={setIsChatOpen}
-            isNotiOpen={isNotiOpen}
-            setIsNotiOpen={setIsNotiOpen}
+            // isNotiOpen={isNotiOpen}
+            // setIsNotiOpen={setIsNotiOpen}
             totalProductCounts={totalProductCounts}
             setIsMicOpen={toggleMIC}
             setIsCamOpen={toggleCam}
