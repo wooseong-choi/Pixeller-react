@@ -12,11 +12,11 @@ const List = ({
   setIsOpen,
   isChatOpen,
   setIsChatOpen,
-  isNotiOpen,
-  setIsNotiOpen,
+  // isNotiOpen,
+  // setIsNotiOpen,
   openPDModal,
   openPCModal,
-  setTotalProductCounts,
+  setTotalProductCounts
 }) => {
   getConnectedUser();
 
@@ -56,59 +56,6 @@ const List = ({
         <div className="chat-rooms"></div>
       </div>
 
-      <div className={`side-menu-noti ${isNotiOpen ? "open" : ""}`}>
-        <button
-          className="menu-toggle"
-          onClick={() => {
-            toggleMenu(isNotiOpen, setIsNotiOpen);
-          }}
-        >
-          <img src="svg/exit.svg" />
-        </button>
-        <div className="notiDivWrap">
-          <div className="notiDiv">
-            <h1>noti</h1>
-          </div>
-        </div>
-        <nav className="noti-content">
-          <div>
-            <div className="noti-info">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">최우성</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-            <div className="noti-info me">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">류강현</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-            <div className="noti-info">
-              <span className="noti-profile">
-                <img
-                  src="svg/user-icon.svg"
-                  alt="User Icon"
-                  className="user-icon"
-                />
-              </span>
-              <span className="noti-name">최우성</span>
-              <span className="noti-message">안녕하세요</span>
-            </div>
-          </div>
-        </nav>
-        <div className="noti-rooms"></div>
-      </div>
     </>
   );
 };

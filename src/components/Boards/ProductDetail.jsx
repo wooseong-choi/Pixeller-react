@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
 import { getProductById } from "../../api/products";
 import "./PD.css";
+import UserInfo from "../UI/UserInfo";
 
-const ProductDetail = ({ productId, handleClose }) => {
+const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
   console.log("in PD: ", productId);
   useEffect(() => {
     // getProductById(productId).then((res) => {
     //   console.log("Product Detail: ", res);
     // });
   }, []);
-
-  return (
+  
+  const handleSetAuctionProduct = (productId) => {
+    setAuctionProduct(productId);
+  };
+  const user = sessionStorage.getItem("user");
+  return ( 
     <div className="board-wrapper">
       <div className="board-container">
         <button className="close-button" onClick={handleClose}>
@@ -21,27 +26,32 @@ const ProductDetail = ({ productId, handleClose }) => {
         </div>
         <div className="product-detail">
           <div className="product-seller">
-            판매자: <span>seller</span>{" "}
-            {/* seller 아이콘이 아직 없으니 수정이 필요 */}
+            <span>판매자:</span>
+            <UserInfo user={user}/>
           </div>
           <div className="product-container">
-            <div className="product-title">상품 제목</div>
-            <div className="product-price">상품 가격</div>
-            <div className="product-content">
-              상품 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Etiam auctor eros ac dapibus consectetur.
+            <div className="product-info">
+              <div className="product-title">상품 제목</div>
+              <div className="product-price">상품 가격</div>
+              <div className="product-content">
+                상품 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Etiam auctor eros ac dapibus consectetur.
+              </div>
             </div>
             <div className="product-wantBuyer">
-              구매 요청자 목록
+              <p>구매 요청자 목록</p>
               <div className="buyer-list">
-                <ul>
-                  <li>buyer1</li>
-                  <li>buyer2</li>
-                  <li>buyer3</li>
-                </ul>
+                
+                <UserInfo user={user}/>
+                <UserInfo user={user}/>
               </div>
             </div>
             <div className="product-button">
+              <button className="join-auction" onClick={() => {
+                  handleSetAuctionProduct(productId);
+              } }>
+                경매 참여하기
+              </button>
               <button className="product-request">구매 요청하기</button>
             </div>
           </div>

@@ -16,17 +16,17 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
   ]);
 
   useEffect(() => {
-    getAllProducts().then((res) => {
-      const products = res.map((item) => {
-        return {
-          id: item.productId,
-          name: item.name,
-          sender_name: item.memberId,
-        };
-      });
-      setSidebarItems(products);
-    });
-    setTotalProductCounts(sidebarItems.length); // Product 갯수 다름 문제
+    // getAllProducts().then((res) => {
+    //   const products = res.map((item) => {
+    //     return {
+    //       id: item.productId,
+    //       name: item.name,
+    //       sender_name: item.memberId,
+    //     };
+    //   });
+    //   setSidebarItems(products);
+    // });
+    // setTotalProductCounts(sidebarItems.length); // Product 갯수 다름 문제
   }, []);
 
   const handleSearch = (event) => {
@@ -74,8 +74,6 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
       <div className="item-details">
         <button onClick={openPCModal}>상품 등록</button>
       </div>
-      <Auction />
-
     </>
     // </div>
   );
