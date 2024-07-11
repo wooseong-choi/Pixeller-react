@@ -217,6 +217,7 @@
   border-radius: 1em;
   background-color: #CCCCCC;
   padding: 20px;
+  min-height: 500px;
 }
 
 .product-title, .product-price {
