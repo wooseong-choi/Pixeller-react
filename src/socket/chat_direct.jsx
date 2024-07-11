@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
-const URL = 'http://192.168.0.100:8080/chat';
+// const URL = 'http://192.168.0.100:8080/chat';
+const URL = 'https://lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
 let didInit = false;
 

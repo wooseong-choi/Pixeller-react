@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { getAllProducts } from "../../api/products";
 import "./PL.css";
+import Auction from '../Auction/Auction';
+
 
 const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,6 +74,8 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
       <div className="item-details">
         <button onClick={openPCModal}>상품 등록</button>
       </div>
+      <Auction />
+
     </>
     // </div>
   );
