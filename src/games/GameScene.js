@@ -225,7 +225,7 @@ class GameScene extends Phaser.Scene {
     this.load.bitmapFont(
       "font",
       "./fonts/MangoByeolbyeol.png",
-      "./fonts/MangoByeolbyeol.fnt"
+      "./fonts/MangoByeolbyeol.xml"
     );
   }
 
@@ -257,11 +257,11 @@ class GameScene extends Phaser.Scene {
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y);
     this.player.nameText = this.add.bitmapText(
-      this.player.x,
-      this.player.y - 20,
+      this.player.x - 10,
+      this.player.y - 15,
       "font",
       this.username,
-      16
+      12
     ); // or 8
 
     this.player.setCollideWorldBounds(true);
@@ -360,13 +360,13 @@ class GameScene extends Phaser.Scene {
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
       this.OPlayer[key].Create(user.x, user.y);
-      this.OPlayer[key].nameText = this.add.bitmapText(
-        this.OPlayer[key].x,
-        this.OPlayer[key].y - 20,
-        "font",
-        user.username,
-        16
-      ); // or 8
+      // this.OPlayer[key].nameText = this.add.bitmapText(
+      //   this.OPlayer[key].x,
+      //   this.OPlayer[key].y - 20,
+      //   "font",
+      //   user.username,
+      //   16
+      // ); // or 8
     }
   }
 
@@ -380,6 +380,9 @@ class GameScene extends Phaser.Scene {
   update(time, delta) {
     // 플레이어 이동
     this.Player.Move(this.cursors);
+
+    this.player.nameText.x = this.player.x - 10;
+    this.player.nameText.y = this.player.y - 30;
 
     if (!this.lastPositionUpdateTime) {
       this.lastPositionUpdateTime = time;

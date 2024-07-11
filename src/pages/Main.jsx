@@ -1,5 +1,5 @@
 // src/pages/Main.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GameApp from "../games/GameApp";
 import Bottom from "../components/UI/Bottom.jsx";
 import List from "../components/List";
@@ -22,6 +22,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [isMicOpen, setIsMicOpen] = useState(false);
 
+  const OpenViduRef = useRef(null);
+
   useEffect(() => {
     if (isOpen || isChatOpen || isNotiOpen) {
       if (!isListOpen) setIsListOpen(true);
@@ -30,9 +32,17 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     }
   }, [isOpen, isChatOpen, isNotiOpen]);
 
-  const startVideoStream = (e) => {
+  const handleLeaveRoom = () => {
+    if (OpenViduRef.current) {
+      OpenViduRef.current.leaveRoom();
+    }
+  };
+
+  const startVideoStream = async (e) => {
     e.preventDefault();
-    console.log("startVideoStream");
+    if (isViduOpen && OpenViduRef.current) {
+      handleLeaveRoom();
+    }
     isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
 
@@ -81,6 +91,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 <VideoCanvas
                   userName={userName}
                   auctionRoomId={auctionRoomId}
+                  isMicOpen={isMicOpen}
+                  isCamOpen={isCamOpen}
+                  ref={OpenViduRef}
                 />
               ) : null}
             </div>
@@ -128,7 +141,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             isNotiOpen={isNotiOpen}
             setIsNotiOpen={setIsNotiOpen}
             totalProductCounts={totalProductCounts}
+            isMicOpen={isMicOpen}
             setIsMicOpen={toggleMIC}
+            isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
           />
         </div>
