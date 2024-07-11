@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UserInfo from '../components/UI/UserInfo';
 
 const SideMenu = () => {
     return (
@@ -22,46 +23,7 @@ const SideMenu = () => {
         </div>
     </div>
     <nav className="menu-items">
-        <div className="user-info">
-        <img
-            src="svg/user-icon.svg"
-            alt="User Icon"
-            className="user-icon"
-        />
-        <span className="username">류강현</span>
-        <span className="status">활동중</span>
-        <span className="status-dot on"></span>
-        </div>
-        <div className="user-info">
-        <img
-            src="svg/user-icon.svg"
-            alt="User Icon"
-            className="user-icon"
-        />
-        <span className="username">류강현</span>
-        <span className="status">활동중</span>
-        <span className="status-dot on"></span>
-        </div>
-        <div className="user-info">
-        <img
-            src="svg/user-icon.svg"
-            alt="User Icon"
-            className="user-icon"
-        />
-        <span className="username">류강현</span>
-        <span className="status">활동중</span>
-        <span className="status-dot on"></span>
-        </div>
-        <div className="user-info">
-        <img
-            src="svg/user-icon.svg"
-            alt="User Icon"
-            className="user-icon"
-        />
-        <span className="username">류강현</span>
-        <span className="status">활동중</span>
-        <span className="status-dot on"></span>
-        </div>
+        <UserInfo user={user}/>
     </nav>
     </div>
     );

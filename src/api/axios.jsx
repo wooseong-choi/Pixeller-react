@@ -3,7 +3,7 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   // baseURL: "https://api.pixeller.net", // Change this to Backend API URL
-  baseURL: "http://localhost:3333", // Change this to Backend API URL
+  baseURL: "http://192.168.0.96:3333", // Change this to Backend API URL
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use(
 );
 
 const axiosCRUDInstance = axios.create({
-  baseURL: "https://lionreport.pixeller.net/", // Change this to Backend API URL
+  baseURL: "//lionreport.pixeller.net/", // Change this to Backend API URL
   timeout: 1000,
 });
 
