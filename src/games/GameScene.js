@@ -218,7 +218,7 @@ class GameScene extends Phaser.Scene {
    */
   preload() {
     this.Player.Preload("player", "./reddude.png", "./meta/move.json");
-    this.load.tilemapTiledJSON("map", "./projects/map.json");
+    this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
 
     // font
