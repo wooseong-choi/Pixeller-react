@@ -15,6 +15,16 @@ const ProductDetail = ({ handleClose }) => {
     setSelectedFile(event.target.files[0]);
   };
   const user = sessionStorage.getItem("user");
+
+
+  const [value, setValue] = useState('');
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
+    // Replace all non-numeric characters except for the first decimal point
+    const numericValue = inputValue.replace(/[^0-9.]/g, '');
+    setValue(numericValue);
+  };
+
   return (
     <div className="container">
       <button className="close-button" onClick={handleClose}>
@@ -61,6 +71,7 @@ const ProductDetail = ({ handleClose }) => {
           <div className="product-info">
             <input className="title" type="text" name="title" placeholder="팬이에요!" />
             <textarea className="content" name="content" placeholder="싸인해주세요!"></textarea>
+            <input className="price" type="text" name="price" placeholder="가격 입력" onChange={handleInputChange} value={value} />
           </div>
           <div className="product-button">
             <button className="product-request">상품 등록</button>
