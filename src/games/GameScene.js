@@ -232,7 +232,7 @@ class GameScene extends Phaser.Scene {
     for (let i = 0; i < chaArray.length; i++) {
       this.Player.Preload("player"+i, chaArray[i], "./meta/move.json");
     }
-      
+    
 
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
