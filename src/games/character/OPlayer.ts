@@ -43,6 +43,7 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
+  preset: string;
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
@@ -93,6 +94,53 @@ class OPlayer implements iChara {
     y: number,
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
+    this.preset = preset;
+    const playerWorkDConfig = {
+      key: preset+"_walk_down",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_0_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkLConfig = {
+      key: preset+"_walk_left",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_1_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkRConfig = {
+      key: preset+"_walk_right",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_2_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkUConfig = {
+      key: preset+"_walk_up",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_3_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+
+    this.obj.anims.create(playerWorkDConfig);
+    this.obj.anims.create(playerWorkLConfig);
+    this.obj.anims.create(playerWorkRConfig);
+    this.obj.anims.create(playerWorkUConfig);
+
     this.player = this.obj.physics.add.sprite(x, y, preset);
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(this.width, this.height, true);
@@ -149,7 +197,7 @@ class OPlayer implements iChara {
       });
 
       if (this.onMove) {
-        this.player.anims.play(`${direction}`, true);
+        this.player.anims.play(`${this.preset}_${direction}`, true);
       }
     });
   }
