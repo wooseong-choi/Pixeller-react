@@ -7,7 +7,7 @@ import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
-const CHARACTER_HEIGHT = 16;
+const CHARACTER_HEIGHT = 32;
 
 const chaArray = [
   "./character/reddude.png",
@@ -377,15 +377,17 @@ class GameScene extends Phaser.Scene {
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
+
       const rand_0_9 = Math.floor(Math.random() * 6);
       this.OPlayer[key].Create(user.x, user.y, "player"+rand_0_9);
-      // this.OPlayer[key].nameText = this.add.bitmapText(
-      //   this.OPlayer[key].x,
-      //   this.OPlayer[key].y - 20,
-      //   "font",
-      //   user.username,
-      //   16
-      // ); // or 8
+
+      this.OPlayer[key].nameText = this.add.bitmapText(
+        this.OPlayer[key].x - 10,
+        this.OPlayer[key].y - 30,
+        "font",
+        user.username,
+        12
+      ); // or 8
     }
   }
 
