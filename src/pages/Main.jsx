@@ -115,8 +115,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div>
             <div className="Modals">
               {isProductDetailOpen ? (
-                <div className="modal-background">
-                  <div className="modal-content">
+                <div className="modal-background" onClick={closePDModal}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <ProductDetail
                       productId={productId}
                       handleClose={closePDModal}
@@ -126,8 +126,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 </div>
               ) : null}
               {isProductCreateOpen ? (
-                <div className="modal-background">
-                  <div className="modal-content">
+                <div className="modal-background" onClick={closePCModal}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <ProductCreate handleClose={closePCModal} />
                   </div>
                 </div>

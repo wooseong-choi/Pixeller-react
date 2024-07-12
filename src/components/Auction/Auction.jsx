@@ -1,10 +1,24 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Auction.css";
 import UserInfo from "../UI/UserInfo";
 
 const Auction = ( {handleClose, auctionProduct} ) => {
   const [text, setText] = useState("경매 시작");
+
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        handleClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [handleClose]);
 
   const startAuction = (e) => {
     e.preventDefault();
@@ -18,7 +32,7 @@ const Auction = ( {handleClose, auctionProduct} ) => {
 
   return (
     <>
-      <div className="auction-wrapper">
+      <div className="auction-wrapper" onClick={(e) => e.stopPropagation()}>
         <div className="auction-container">
           <div className="auction-container-left">
             <div>
