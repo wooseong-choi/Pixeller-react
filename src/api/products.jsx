@@ -32,6 +32,7 @@ export const createProduct = async (productDto, imgFiles) => {
 export const getAllProducts = async () => {
   try {
     const response = await axiosCRUDInstance.get("/api/products");
+    console.log(response);
     return response.data;
   } catch (error) {
     throw error;
@@ -99,13 +100,16 @@ export const getProductFiles = async (productId) => {
 };
 
 // 구매 희망 등록
-export const createPurchaseWish = async (productId, memberInfo) => {
+export const createPurchaseWish = async (productId) => {
   try {
     const response = await axiosCRUDInstance.post("/api/purchase-wish", null, {
-      params: { productId },
-      headers: { "Member-Info": memberInfo },
+      productId: { productId },
     });
-    return response.data;
+    if (response.status === 201) {
+      return response.status;
+    } else {
+      return alert("구매 요청에 실패했습니다.");
+    }
   } catch (error) {
     throw error;
   }
