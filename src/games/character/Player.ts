@@ -117,7 +117,9 @@ class Player implements iChara {
     this.obj.anims.create(playerWorkRConfig);
     this.obj.anims.create(playerWorkUConfig);
 
-    this.player = this.obj.physics.add.sprite(x, y, "player");
+    this.player = this.obj.physics.add
+      .sprite(x, y, "player")
+      .setScale(0.8, 0.8);
     this.player.body.setSize(this.width, this.height, true);
     this.player.setCollideWorldBounds(true);
     this.oldPosition = { x: x, y: y };
@@ -131,11 +133,11 @@ class Player implements iChara {
    */
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys) {
     const { left, right, up, down } = cursor;
-  
+
     let velocityX = 0;
     let velocityY = 0;
     let animationKey: string | null = null;
-  
+
     if (left.isDown) {
       velocityX = -this.speed;
       animationKey = "walk_left";
@@ -143,7 +145,7 @@ class Player implements iChara {
       velocityX = this.speed;
       animationKey = "walk_right";
     }
-  
+
     if (up.isDown) {
       velocityY = -this.speed;
       animationKey = "walk_up";
@@ -151,16 +153,16 @@ class Player implements iChara {
       velocityY = this.speed;
       animationKey = "walk_down";
     }
-  
+
     // 대각선 이동 시 속도 정규화
     if (velocityX !== 0 && velocityY !== 0) {
       const factor = 1 / Math.sqrt(2);
       velocityX *= factor;
       velocityY *= factor;
     }
-    
+
     this.player.setVelocity(velocityX, velocityY);
-  
+
     if (animationKey) {
       this.player.play(animationKey, true);
       this.direction = animationKey;
@@ -168,7 +170,7 @@ class Player implements iChara {
       this.player.setVelocity(0, 0);
       this.player.anims.stop();
     }
-  
+
     // 위치를 정수로 반올림
     this.player.x = Math.round(this.player.x);
     this.player.y = Math.round(this.player.y);

@@ -7,7 +7,7 @@ import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
-const CHARACTER_HEIGHT = 16;
+const CHARACTER_HEIGHT = 32;
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
-    this.socket = io("wss://localhost:3001/ws", {
+    this.socket = io("//api.pixeller.net/ws", {
       // this.socket = io("ws://192.168.0.96/ws", {
       transportOptions: {
         polling: {
@@ -360,13 +360,13 @@ class GameScene extends Phaser.Scene {
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
       this.OPlayer[key].Create(user.x, user.y);
-      // this.OPlayer[key].nameText = this.add.bitmapText(
-      //   this.OPlayer[key].x,
-      //   this.OPlayer[key].y - 20,
-      //   "font",
-      //   user.username,
-      //   16
-      // ); // or 8
+      this.OPlayer[key].nameText = this.add.bitmapText(
+        this.OPlayer[key].x - 10,
+        this.OPlayer[key].y - 30,
+        "font",
+        user.username,
+        12
+      ); // or 8
     }
   }
 

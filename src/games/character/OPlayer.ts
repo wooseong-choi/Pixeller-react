@@ -42,6 +42,7 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
+  nameText: Phaser.GameObjects.Text;
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
@@ -91,7 +92,29 @@ class OPlayer implements iChara {
     x: number,
     y: number
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-    this.player = this.obj.physics.add.sprite(x, y, "player");
+    this.nameText = this.obj.add.text(
+      this.player.x,
+      this.player.y - 30,
+      this.name,
+      {
+        fontFamily: "Arial",
+        fontSize: "12px",
+        color: "#ffffff",
+        backgroundColor: "#000000",
+        padding: {
+          left: 5,
+          right: 5,
+          top: 2,
+          bottom: 2,
+        },
+      }
+    );
+    this.nameText.setOrigin(0.5, 1);
+    // this.player.add(nameText);
+
+    this.player = this.obj.physics.add
+      .sprite(x, y, "player")
+      .setScale(0.8, 0.8);
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(this.width, this.height, true);
     this.oldPosition = { x: x, y: y };
@@ -134,7 +157,7 @@ class OPlayer implements iChara {
     // Create a tween that updates the player's position
     return new Promise<void>((resolve) => {
       this.obj.tweens.add({
-        targets: this.player,
+        targets: [this.player, this.nameText],
         x: x,
         y: y,
         duration: duration,

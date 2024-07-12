@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getProductById } from "../../api/products";
-import "./PD.css";
 import UserInfo from "../UI/UserInfo";
+import { getProductById, createPurchaseWish } from "../../api/products";
+import "./PD.css";
+import { HttpStatusCode } from "axios";
 
 const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
   const [product, setProduct] = useState({
@@ -10,6 +11,12 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
     price: "",
     memberId: "",
   });
+
+  const handlePurchaseWish = () => {
+    if (createPurchaseWish(productId.id) === HttpStatusCode.Created) {
+      alert("구매 요청이 완료되었습니다.");
+    }
+  };
 
   useEffect(() => {
     getProductById(productId.id).then((res) => {
@@ -62,7 +69,9 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
               >
                 경매 참여하기
               </button>
-              <button className="product-request">구매 요청하기</button>
+              <button onClick={handlePurchaseWish} className="product-request">
+                구매 요청하기
+              </button>
             </div>
           </div>
         </div>
