@@ -135,8 +135,12 @@ class Player implements iChara {
    * Player's Move method along Keyboard Events.
    * @param cursor Keyboard Events
    */
-  Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys) {
-    const { left, right, up, down } = cursor;
+  Move(cursor: any) {
+    // const { left, right, up, down } = cursor;
+    const up:Phaser.Input.Keyboard.Key = cursor.up;
+    const down:Phaser.Input.Keyboard.Key = cursor.down;
+    const left:Phaser.Input.Keyboard.Key = cursor.left;
+    const right:Phaser.Input.Keyboard.Key = cursor.right;
 
     let velocityX = 0;
     let velocityY = 0;
@@ -149,7 +153,8 @@ class Player implements iChara {
       velocityX = this.speed;
       animationKey = "walk_right";
     }
-
+  
+    // if (up.isDown) {
     if (up.isDown) {
       velocityY = -this.speed;
       animationKey = "walk_up";
