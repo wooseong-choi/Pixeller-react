@@ -44,6 +44,8 @@ class OPlayer implements iChara {
   targetY: number;
   client_id: string;
   nameText: Phaser.GameObjects.Text;
+  preset: string;
+  
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
@@ -94,25 +96,53 @@ class OPlayer implements iChara {
     y: number,
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-    // this.nameText = this.obj.add.text(
-    //   this.player.x,
-    //   this.player.y - 30,
-    //   this.name,
-    //   {
-    //     fontFamily: "Arial",
-    //     fontSize: "12px",
-    //     color: "#ffffff",
-    //     backgroundColor: "#000000",
-    //     padding: {
-    //       left: 5,
-    //       right: 5,
-    //       top: 2,
-    //       bottom: 2,
-    //     },
-    //   }
-    // );
-    // this.nameText.setOrigin(0.5, 1);
-    // this.player.add(nameText);
+
+    this.preset = preset;
+    const playerWorkDConfig = {
+      key: preset+"_walk_down",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_0_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkLConfig = {
+      key: preset+"_walk_left",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_1_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkRConfig = {
+      key: preset+"_walk_right",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_2_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkUConfig = {
+      key: preset+"_walk_up",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_3_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+
+    this.obj.anims.create(playerWorkDConfig);
+    this.obj.anims.create(playerWorkLConfig);
+    this.obj.anims.create(playerWorkRConfig);
+    this.obj.anims.create(playerWorkUConfig);
 
     this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
@@ -171,7 +201,7 @@ class OPlayer implements iChara {
       });
 
       if (this.onMove) {
-        this.player.anims.play(`${direction}`, true);
+        this.player.anims.play(`${this.preset}_${direction}`, true);
       }
     });
   }
