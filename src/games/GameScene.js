@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import OPlayer from "./character/OPlayer.ts";
 import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
-//test
+
 const CHARACTER_WIDTH = 16;
 const CHARACTER_HEIGHT = 16;
 
