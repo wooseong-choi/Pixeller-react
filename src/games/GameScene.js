@@ -7,7 +7,7 @@ import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
-const CHARACTER_HEIGHT = 32;
+const CHARACTER_HEIGHT = 36;
 
 const chaArray = [
   "./character/reddude.png",

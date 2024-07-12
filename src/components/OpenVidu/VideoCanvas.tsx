@@ -71,6 +71,8 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 
     useImperativeHandle(ref, () => ({
       leaveRoom,
+      micController,
+      camController,
     }));
 
     useEffect(() => {
@@ -145,6 +147,38 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
           (error as Error).message
         );
         await leaveRoom();
+      }
+    }
+
+    async function micController(isMicOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isMuted && !isMicOpen) {
+          localTrack.unmute();
+        } else if (!localTrack.isMuted && isMicOpen) {
+          localTrack.mute();
+        } else {
+          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+        }
+      } else {
+        console.log("localTrack is undefined");
+      }
+    }
+
+    async function camController(isCamOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isUpstreamPaused && !isCamOpen) {
+          localTrack.resumeUpstream();
+        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+          localTrack.pauseUpstream();
+        } else {
+          console.log(
+            "undefined status: ",
+            localTrack.isUpstreamPaused,
+            isCamOpen
+          );
+        }
+      } else {
+        console.log("localTrack is undefined");
       }
     }
 
