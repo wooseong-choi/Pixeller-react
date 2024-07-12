@@ -84,6 +84,9 @@ const Chat = () => {
         setMessages(prevMessages => [...prevMessages, message]);
     };
 
+    const handleMessageChange = (e) => {
+        setMessage(e.target.value);
+    };
     return (
         <>
         <div>
@@ -105,7 +108,7 @@ const Chat = () => {
         <div className="inputBox">                
             <input type="text" id="message" placeholder="메세지를 입력하세요!"
             value={message}
-            onChange={(e) => {setMessage(e.target.value); console.log( e.target.value );}}
+            onChange={handleMessageChange}
             onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
         </div>
         </>

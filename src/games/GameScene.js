@@ -7,7 +7,7 @@ import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
-const CHARACTER_HEIGHT = 36;
+const CHARACTER_HEIGHT = 32;
 
 const chaArray = [
   "./character/reddude.png",
@@ -320,12 +320,21 @@ class GameScene extends Phaser.Scene {
       this
     );
 
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-    this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-    this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
+
+
+    // this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys(
+      {up:Phaser.Input.Keyboard.KeyCodes.UP,
+      down:Phaser.Input.Keyboard.KeyCodes.DOWN,
+      left:Phaser.Input.Keyboard.KeyCodes.LEFT,
+      right:Phaser.Input.Keyboard.KeyCodes.RIGHT},false);
+    console.log(this.cursors);
+
+    this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q,false);
+    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W,false);
+    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E,false);
+    this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R,false);
+    this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O,false);
 
     this.scale.on("resize", this.resize, this);
 
@@ -463,6 +472,10 @@ class GameScene extends Phaser.Scene {
         })
       );
     }
+
+    // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
+    //   console.log("space key down");
+    // }
   }
 
   handleCollision(player, obstacle) {

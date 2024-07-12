@@ -31,7 +31,7 @@ export type VideoCanvasHandle = {
   leaveRoom: () => void;
 };
 
-let APPLICATION_SERVER_URL = "http://localhost:6080/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "https://openvidu.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
