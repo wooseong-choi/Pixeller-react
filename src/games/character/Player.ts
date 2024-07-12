@@ -17,7 +17,8 @@ interface iChara {
 
   Create(
     x: number,
-    y: number
+    y: number,
+    preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys): void;
@@ -65,15 +66,17 @@ class Player implements iChara {
    * Creating Imgs, Anims, Colliders. it returns Object of player.
    * @param x x position of player
    * @param y y positioin of player
+   * @param preset shape of player
    * @returns object of player
    */
   Create(
     x: number,
-    y: number
+    y: number,
+    preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
     const playerWorkDConfig = {
       key: "walk_down",
-      frames: this.obj.anims.generateFrameNames("player", {
+      frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
         prefix: "frame_0_",
@@ -83,7 +86,7 @@ class Player implements iChara {
     };
     const playerWorkLConfig = {
       key: "walk_left",
-      frames: this.obj.anims.generateFrameNames("player", {
+      frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
         prefix: "frame_1_",
@@ -93,7 +96,7 @@ class Player implements iChara {
     };
     const playerWorkRConfig = {
       key: "walk_right",
-      frames: this.obj.anims.generateFrameNames("player", {
+      frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
         prefix: "frame_2_",
@@ -103,7 +106,7 @@ class Player implements iChara {
     };
     const playerWorkUConfig = {
       key: "walk_up",
-      frames: this.obj.anims.generateFrameNames("player", {
+      frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
         prefix: "frame_3_",
@@ -117,7 +120,7 @@ class Player implements iChara {
     this.obj.anims.create(playerWorkRConfig);
     this.obj.anims.create(playerWorkUConfig);
 
-    this.player = this.obj.physics.add.sprite(x, y, "player");
+    this.player = this.obj.physics.add.sprite(x, y, preset);
     this.player.body.setSize(this.width, this.height, true);
     this.player.setCollideWorldBounds(true);
     this.oldPosition = { x: x, y: y };

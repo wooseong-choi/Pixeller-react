@@ -4,13 +4,13 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 // const URL = 'http://192.168.0.100:8080/chat';
-const URL = 'https://lionreport.pixeller.net/chat';
+const URL = '//lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
-let didInit = false;
 
 const Chat = () => {
     const [stompClient, setStompClient] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState('');
     const user = jwtDecode(sessionStorage.getItem('user') );
     const messageEndRef = useRef(null);
 
@@ -61,13 +61,18 @@ const Chat = () => {
 
     const sendMessage = () => {
         // alert('메세지 보내기');
-        const msg = document.getElementById("message").value;
-        if(msg === "") return;
-        const message = {
-            content: msg,
+        // const msg = document.getElementById("message").value;
+        if(message.trim() === "") return;
+        const msg = {
+            content: message,
         };
-        stompClient.send("/pub/message/"+PUBLIC_ROOM_NO, {}, JSON.stringify(message));
-        document.getElementById("message").value = "";
+        try {
+            stompClient.send("/pub/message/"+PUBLIC_ROOM_NO, {}, JSON.stringify(msg));
+        } catch (error) {
+            console.error('Error sending message: ', error);
+        }
+        // document.getElementById("message").value = "";
+        setMessage(''); // 메시지 전송 후 입력 필드 초기화
     };
 
     const showMessage = (message) => {
@@ -99,6 +104,8 @@ const Chat = () => {
         </div>
         <div className="inputBox">                
             <input type="text" id="message" placeholder="메세지를 입력하세요!"
+            value={message}
+            onChange={(e) => {setMessage(e.target.value); console.log( e.target.value );}}
             onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
         </div>
         </>
