@@ -103,7 +103,13 @@ function VideoCanvas({ userName, auctionRoomId }) {
       await room.connect(LIVEKIT_URL, token);
 
       await room.localParticipant.enableCameraAndMicrophone();
-
+      console.log("room", room);
+      // room.on(RoomEvent.ParticipantConnected, (participant) => {
+      //   console.log("Participant connected: ", participant.identity);
+      // });
+      // room.on(RoomEvent.TrackSubscribed, (remoteTracks) => { 
+      //   console.log("Participant connected: ", remoteTracks);
+      // });
       setLocalTrack(
         room.localParticipant.videoTrackPublications.values().next().value
           .videoTrack
