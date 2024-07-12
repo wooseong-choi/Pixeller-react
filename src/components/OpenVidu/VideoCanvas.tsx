@@ -24,13 +24,14 @@ type TrackInfo = {
 type VideoCanvasProps = {
   userName: string;
   auctionRoomId: string;
+  isSeller: boolean;
 };
 
 export type VideoCanvasHandle = {
   leaveRoom: () => void;
 };
 
-let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "http://localhost:6080/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
@@ -66,6 +67,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       props.userName
     ); // 참가자 이름
     const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
+    const isSeller = props.isSeller; // 판매자 여부
 
     useImperativeHandle(ref, () => ({
       leaveRoom,
@@ -93,6 +95,11 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
           publication: RemoteTrackPublication,
           participant: RemoteParticipant
         ) => {
+          console.log(
+            "track subscribed: ",
+            publication.trackSid,
+            participant.identity
+          );
           setRemoteTracks((prev) => [
             ...prev,
             {
@@ -116,13 +123,18 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       );
 
       try {
-        const token = await getToken(roomName, participantName);
+        const token = await getToken(roomName, participantName, isSeller);
 
         await room.connect(LIVEKIT_URL, token);
         console.log("connected room: ", room);
 
         await room.localParticipant.enableCameraAndMicrophone();
 
+        console.log(room.localParticipant.videoTrackPublications);
+        console.log(room.localParticipant.audioTrackPublications.values());
+        console.log(
+          room.localParticipant.audioTrackPublications.values().next()
+        );
         setLocalTrack(
           room.localParticipant.videoTrackPublications.values().next().value
             .videoTrack
@@ -146,7 +158,11 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       setRemoteTracks([]);
     }
 
-    async function getToken(roomName: string, participantName: string) {
+    async function getToken(
+      roomName: string,
+      participantName: string,
+      isSeller: boolean
+    ) {
       const response = await fetch(APPLICATION_SERVER_URL + "token", {
         method: "POST",
         headers: {
@@ -155,6 +171,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
         body: JSON.stringify({
           roomName: roomName,
           participantName: participantName,
+          isSeller: isSeller,
         }),
       });
 
