@@ -120,7 +120,9 @@ class Player implements iChara {
     this.obj.anims.create(playerWorkRConfig);
     this.obj.anims.create(playerWorkUConfig);
 
-    this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
+    this.player = this.obj.physics.add
+      .sprite(x, y, preset)
+      .setScale(0.8, 0.8);
 
     this.player.body.setSize(this.width, this.height, true);
     this.player.setCollideWorldBounds(true);

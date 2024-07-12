@@ -23,7 +23,18 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
       console.log(res);
       setProduct(res);
     });
-  }, []);
+
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [handleClose, productId.id]);
 
   const handleSetAuctionProduct = (productId) => {
     setAuctionProduct(productId);

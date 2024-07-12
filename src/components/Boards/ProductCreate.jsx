@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import "./PC.css";
 // import productDTO from "../../api/dto/productDTO.js";
 import { createProduct } from "../../api/products";
@@ -10,6 +10,20 @@ const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const uri = "//lionreport.pixeller.net";
+
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+    
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [handleClose]);
 
   // const productDTO = new productDTO();
   const [imgFiles, setImgFiles] = useState([]);
