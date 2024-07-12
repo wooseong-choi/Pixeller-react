@@ -23,7 +23,18 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
       console.log(res);
       setProduct(res);
     });
-  }, []);
+
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [handleClose, productId.id]);
 
   const handleSetAuctionProduct = (productId) => {
     setAuctionProduct(productId);
@@ -32,8 +43,8 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
   const user = sessionStorage.getItem("user");
 
   return (
-    <div className="board-wrapper">
-      <div className="board-container">
+    <div className="board-wrapper" onClick={handleClose}>
+      <div className="board-container" onClick={(e) => e.stopPropagation()}>
         <button className="close-button" onClick={handleClose}>
           ×
         </button>

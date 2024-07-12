@@ -23,7 +23,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [isMicOpen, setIsMicOpen] = useState(false);
   const [auctionProduct, setAuctionProductState] = useState(null);
-  
+
   const OpenViduRef = useRef(null);
 
   useEffect(() => {
@@ -65,28 +65,25 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     setProductCreateOpen(false);
   };
 
-
   const closeAuctionModal = () => {
-    const auctionContainer =document.getElementsByClassName("auction-wrapper");
-    if(auctionContainer.length > 0)
-      auctionContainer[0].classList.remove("on");
+    const auctionContainer = document.getElementsByClassName("auction-wrapper");
+    if (auctionContainer.length > 0) auctionContainer[0].classList.remove("on");
   };
 
   const setAuctionProduct = (product) => {
     setAuctionProductState(product);
-    const auctionContainer =document.getElementsByClassName("auction-wrapper");
-    if(auctionContainer.length > 0)
-      auctionContainer[0].classList.add("on");
-  }
+    const auctionContainer = document.getElementsByClassName("auction-wrapper");
+    if (auctionContainer.length > 0) auctionContainer[0].classList.add("on");
+  };
 
   const toggleMIC = () => {
     setIsMicOpen((prev) => !prev);
-    isMicOpen ? console.log("MIC ON") : console.log("MIC OFF");
+    if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
     setIsCamOpen((prev) => !prev);
-    isCamOpen ? console.log("CAM ON") : console.log("CAM OFF");
+    if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
   };
 
   useEffect(() => {
@@ -115,8 +112,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div>
             <div className="Modals">
               {isProductDetailOpen ? (
-                <div className="modal-background">
-                  <div className="modal-content">
+                <div className="modal-background" onClick={closePDModal}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <ProductDetail
                       productId={productId}
                       handleClose={closePDModal}
@@ -126,14 +123,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 </div>
               ) : null}
               {isProductCreateOpen ? (
-                <div className="modal-background">
-                  <div className="modal-content">
+                <div className="modal-background" onClick={closePCModal}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                     <ProductCreate handleClose={closePCModal} />
                   </div>
                 </div>
               ) : null}
-              <Auction 
-                handleClose={closeAuctionModal} 
+              <Auction
+                handleClose={closeAuctionModal}
                 auctionProduct={auctionProduct}
               />
             </div>
