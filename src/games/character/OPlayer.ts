@@ -43,7 +43,9 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
+  nameText: Phaser.GameObjects.Text;
   preset: string;
+  
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
@@ -94,6 +96,7 @@ class OPlayer implements iChara {
     y: number,
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
+
     this.preset = preset;
     const playerWorkDConfig = {
       key: preset+"_walk_down",
@@ -141,7 +144,8 @@ class OPlayer implements iChara {
     this.obj.anims.create(playerWorkRConfig);
     this.obj.anims.create(playerWorkUConfig);
 
-    this.player = this.obj.physics.add.sprite(x, y, preset);
+    this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
+
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(this.width, this.height, true);
     this.oldPosition = { x: x, y: y };
@@ -184,14 +188,14 @@ class OPlayer implements iChara {
     // Create a tween that updates the player's position
     return new Promise<void>((resolve) => {
       this.obj.tweens.add({
-        targets: this.player,
+        targets: [this.player],
         x: x,
         y: y,
         duration: duration,
         ease: "Linear",
         onComplete: () => {
           this.onMove = false;
-          this.player.anims.pause();
+          if (this.player.anims) this.player.anims.pause();
           resolve();
         },
       });

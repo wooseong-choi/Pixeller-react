@@ -7,7 +7,7 @@ import { getCookie, setCookie } from "../components/Cookies.ts";
 import { axiosInstance } from "../api/axios";
 
 const CHARACTER_WIDTH = 16;
-const CHARACTER_HEIGHT = 16;
+const CHARACTER_HEIGHT = 32;
 
 const chaArray = [
   "./character/reddude.png",
@@ -82,7 +82,11 @@ class GameScene extends Phaser.Scene {
                 data.user.clientid
               );
               const rand_0_9 = Math.floor(Math.random() * 6);
-              this.OPlayer[data.user.uid].Create(data.user.x, data.user.y, "player"+rand_0_9);
+              this.OPlayer[data.user.uid].Create(
+                data.user.x,
+                data.user.y,
+                "player" + rand_0_9
+              );
             } else {
               this.OPlayer[data.user.uid].clientid = data.user.clientid;
               this.OPlayer[data.user.uid].x = data.user.x;
@@ -97,13 +101,17 @@ class GameScene extends Phaser.Scene {
               data.user.clientid
             );
             const rand_0_9 = Math.floor(Math.random() * 6);
-            this.OPlayer[data.user.uid].Create(data.user.x, data.user.y, "player"+rand_0_9);
+            this.OPlayer[data.user.uid].Create(
+              data.user.x,
+              data.user.y,
+              "player" + rand_0_9
+            );
           }
           break;
 
         // 유저 움직임 처리
         case "move":
-          console.log(data);
+          // console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
@@ -152,12 +160,14 @@ class GameScene extends Phaser.Scene {
             this.create_OPlayer();
           }
           break;
+
         case "syncMe":
           this.x = data.x;
           this.y = data.y;
           this.player.x = data.x;
           this.player.y = data.y;
           break;
+
         // 기타 이벤트 처리
         case "error":
 
@@ -228,11 +238,9 @@ class GameScene extends Phaser.Scene {
    * 게임 시작 전에 필요한 리소스를 미리 로드합니다.
    */
   preload() {
-    
     for (let i = 0; i < chaArray.length; i++) {
-      this.Player.Preload("player"+i, chaArray[i], "./meta/move.json");
+      this.Player.Preload("player" + i, chaArray[i], "./meta/move.json");
     }
-    
 
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
@@ -273,7 +281,7 @@ class GameScene extends Phaser.Scene {
     const rand_0_9 = Math.floor(Math.random() * 6);
 
     // 플레이어 생성
-    this.player = this.Player.Create(this.x, this.y, "player"+rand_0_9);
+    this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.player.nameText = this.add.bitmapText(
       this.player.x - 10,
       this.player.y - 15,
@@ -377,14 +385,16 @@ class GameScene extends Phaser.Scene {
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
+
       const rand_0_9 = Math.floor(Math.random() * 6);
-      this.OPlayer[key].Create(user.x, user.y, "player"+rand_0_9);
+      this.OPlayer[key].Create(user.x, user.y, "player" + rand_0_9);
+
       // this.OPlayer[key].nameText = this.add.bitmapText(
-      //   this.OPlayer[key].x,
-      //   this.OPlayer[key].y - 20,
+      //   this.OPlayer[key].x - 10,
+      //   this.OPlayer[key].y - 30,
       //   "font",
       //   user.username,
-      //   16
+      //   12
       // ); // or 8
     }
   }

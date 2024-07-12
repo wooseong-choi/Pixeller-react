@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllProducts } from "../../api/products";
 import "./PL.css";
-import Auction from '../Auction/Auction';
-
 
 const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,17 +14,18 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
   ]);
 
   useEffect(() => {
-    // getAllProducts().then((res) => {
-    //   const products = res.map((item) => {
-    //     return {
-    //       id: item.productId,
-    //       name: item.name,
-    //       sender_name: item.memberId,
-    //     };
-    //   });
-    //   setSidebarItems(products);
-    // });
-    // setTotalProductCounts(sidebarItems.length); // Product 갯수 다름 문제
+    getAllProducts().then((res) => {
+      console.log(res);
+      const products = res.map((item) => {
+        return {
+          id: item.productId,
+          name: item.name,
+          sender_name: item.memberId,
+        };
+      });
+      setSidebarItems(products);
+      setTotalProductCounts(products.length); // Product 갯수 다름 문제
+    });
   }, []);
 
   const handleSearch = (event) => {
