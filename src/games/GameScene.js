@@ -9,6 +9,15 @@ import { axiosInstance } from "../api/axios";
 const CHARACTER_WIDTH = 16;
 const CHARACTER_HEIGHT = 32;
 
+const chaArray = [
+  "./character/reddude.png",
+  "./character/cat.png",
+  "./character/flower_cat.png",
+  "./character/goat.png",
+  "./character/pig.png",
+  "./character/white_rabbit.png",
+];
+
 class GameScene extends Phaser.Scene {
   constructor() {
     super();
@@ -72,7 +81,8 @@ class GameScene extends Phaser.Scene {
                 CHARACTER_HEIGHT,
                 data.user.clientid
               );
-              this.OPlayer[data.user.uid].Create(data.user.x, data.user.y);
+              const rand_0_9 = Math.floor(Math.random() * 6);
+              this.OPlayer[data.user.uid].Create(data.user.x, data.user.y, "player"+rand_0_9);
             } else {
               this.OPlayer[data.user.uid].clientid = data.user.clientid;
               this.OPlayer[data.user.uid].x = data.user.x;
@@ -86,7 +96,8 @@ class GameScene extends Phaser.Scene {
               CHARACTER_HEIGHT,
               data.user.clientid
             );
-            this.OPlayer[data.user.uid].Create(data.user.x, data.user.y);
+            const rand_0_9 = Math.floor(Math.random() * 6);
+            this.OPlayer[data.user.uid].Create(data.user.x, data.user.y, "player"+rand_0_9);
           }
           break;
 
@@ -217,7 +228,12 @@ class GameScene extends Phaser.Scene {
    * 게임 시작 전에 필요한 리소스를 미리 로드합니다.
    */
   preload() {
-    this.Player.Preload("player", "./reddude.png", "./meta/move.json");
+    
+    for (let i = 0; i < chaArray.length; i++) {
+      this.Player.Preload("player"+i, chaArray[i], "./meta/move.json");
+    }
+      
+
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
 
@@ -254,8 +270,10 @@ class GameScene extends Phaser.Scene {
     // 월드 경계 설정
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
+    const rand_0_9 = Math.floor(Math.random() * 6);
+
     // 플레이어 생성
-    this.player = this.Player.Create(this.x, this.y);
+    this.player = this.Player.Create(this.x, this.y, "player"+rand_0_9);
     this.player.nameText = this.add.bitmapText(
       this.player.x - 10,
       this.player.y - 15,
@@ -359,7 +377,10 @@ class GameScene extends Phaser.Scene {
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
-      this.OPlayer[key].Create(user.x, user.y);
+
+      const rand_0_9 = Math.floor(Math.random() * 6);
+      this.OPlayer[key].Create(user.x, user.y, "player"+rand_0_9);
+
       this.OPlayer[key].nameText = this.add.bitmapText(
         this.OPlayer[key].x - 10,
         this.OPlayer[key].y - 30,

@@ -17,6 +17,10 @@ export const createProduct = async (productDto, imgFiles) => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      data: {
+        productDto : productDto,
+        imgFiles : imgFiles,
+      }
     });
     return response.data;
   } catch (error) {

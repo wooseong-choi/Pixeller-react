@@ -20,7 +20,8 @@ interface iChara {
 
   Create(
     x: number,
-    y: number
+    y: number,
+    preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys): void;
@@ -90,8 +91,10 @@ class OPlayer implements iChara {
    */
   Create(
     x: number,
-    y: number
+    y: number,
+    preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
+
     this.nameText = this.obj.add.text(
       this.player.x,
       this.player.y - 30,
@@ -113,8 +116,9 @@ class OPlayer implements iChara {
     // this.player.add(nameText);
 
     this.player = this.obj.physics.add
-      .sprite(x, y, "player")
+      .sprite(x, y, preset)
       .setScale(0.8, 0.8);
+
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(this.width, this.height, true);
     this.oldPosition = { x: x, y: y };
