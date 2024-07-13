@@ -318,3 +318,14 @@
   bottom: -28px;
   right: 0px;
 }
+
+.chat-room {
+  width: 100%;
+  height: 80px;
+  cursor: pointer;
+  background-color: aqua;
+}
+
+.chat-room:hover, .chat-room.active {
+  background-color: #6bab8d;
+}

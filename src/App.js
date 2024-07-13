@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
+import { 
+  Routes, BrowserRouter as Router, Route,
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import GameApp from "./games/GameApp";
 import NotFound from "./pages/NotFound";
@@ -7,14 +13,31 @@ import Main from "./pages/Main.jsx";
 import ProductCreate from "./components/Boards/ProductCreate.jsx";
 import ProductDetail from "./components/Boards/ProductDetail.jsx";
 import ProductList from "./components/Boards/ProductList.jsx";
-import Auction from "./components/Auction/Auction.jsx";
+import Auction from "./components/Auction/Auctions.tsx";
 import "./static/css/App.css";
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: "https://lionreport.pixeller.net/log",
+  integrations: [
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect: React.useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
+    }),
+  ],
+  tracesSampleRate: 1.0,
+});
+
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const [isListOpen, setIsListOpen] = useState(false);
   return (
     <Router>
-      <Routes>
+      <SentryRoutes>
         <Route path="/" element={<Login />} />
         <Route
           path="/main"
@@ -29,7 +52,7 @@ function App() {
         <Route path="/PL" element={<ProductList />} />
         <Route path="/AC" element={<Auction />} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
+      </SentryRoutes>
     </Router>
   );
 }

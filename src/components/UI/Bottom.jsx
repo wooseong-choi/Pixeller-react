@@ -44,9 +44,6 @@ const App = ({
               <img src="svg/video-x-icon.svg" alt="Video" />
             )}
           </button>
-          <button className="nav-button">
-            <img src="svg/emoji-icon.svg" alt="emoji" />
-          </button>
         </div>
       </div>
       <div className="right-section">
