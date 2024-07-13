@@ -242,6 +242,7 @@ class OPlayer implements iChara {
 
   Destroy() {
     this.player.destroy();
+    this.nameText.destroy();
   }
 }
 
