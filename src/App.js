@@ -7,7 +7,7 @@ import Main from "./pages/Main.jsx";
 import ProductCreate from "./components/Boards/ProductCreate.jsx";
 import ProductDetail from "./components/Boards/ProductDetail.jsx";
 import ProductList from "./components/Boards/ProductList.jsx";
-import Auction from "./components/Auction/Auction.jsx";
+import Auction from "./components/Auction/Auctions.tsx";
 import "./static/css/App.css";
 
 function App() {

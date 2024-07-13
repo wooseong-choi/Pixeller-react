@@ -7,7 +7,7 @@ import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
-import Auction from "../components/Auction/Auction.jsx";
+import Auction from "../components/Auction/Auctions.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
