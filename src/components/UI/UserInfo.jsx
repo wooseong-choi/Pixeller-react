@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import "../../static/css/bottom.css";
 
 function UserInfo({ user, logoutEvent }) {
-  const realUser = jwtDecode(user);
+  // const realUser = jwtDecode(user);
 
   const logout = () => {
     if (logoutEvent !== undefined) {
@@ -18,7 +18,7 @@ function UserInfo({ user, logoutEvent }) {
         className="user-icon"
         onClick={logout}
       />
-      <span className="username">{user.username}</span>
+      <span className="username">{user}</span>
       <span className="status">활동중</span>
       <span className="status-dot on"></span>
     </div>

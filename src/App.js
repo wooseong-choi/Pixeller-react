@@ -11,10 +11,6 @@ import {
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Main from "./pages/Main.jsx";
-import ProductCreate from "./components/Boards/ProductCreate.jsx";
-import ProductDetail from "./components/Boards/ProductDetail.jsx";
-import ProductList from "./components/Boards/ProductList.jsx";
-import Auction from "./components/Auction/Auction.jsx";
 import "./static/css/App.css";
 import * as Sentry from "@sentry/react";
 
@@ -40,18 +36,7 @@ function App() {
     <Router>
       <SentryRoutes>
         <Route path="/" element={<Login />} />
-        <Route
-          path="/main"
-          element={
-            <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} />
-          }
-        />
-        {/* <Route path="/board" element={<Board />} /> */}
-        {/* <Route path="/game" element={<GameApp />} /> */}
-        <Route path="/PC" element={<ProductCreate />} />
-        <Route path="/PD" element={<ProductDetail />} />
-        <Route path="/PL" element={<ProductList />} />
-        <Route path="/AC" element={<Auction />} />
+        <Route path="/main" element={ <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} /> }/>
         <Route path="*" element={<NotFound />} />
       </SentryRoutes>
     </Router>

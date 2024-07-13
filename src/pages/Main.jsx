@@ -34,16 +34,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     }
   }, [isOpen, isChatOpen]);
 
-  const handleLeaveRoom = () => {
-    if (OpenViduRef.current) {
-      OpenViduRef.current.leaveRoom();
-    }
-  };
-
   const startVideoStream = async (e) => {
     e.preventDefault();
     if (isViduOpen && OpenViduRef.current) {
-      handleLeaveRoom();
+      OpenViduRef.current.leaveRoom();
     }
     isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };

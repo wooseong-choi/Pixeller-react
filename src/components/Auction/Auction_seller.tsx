@@ -39,11 +39,17 @@ const user = sessionStorage.getItem("user");
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
-    console.log("Auction_OpenVidu props: ", props);
+    console.log("Auction_OpenVidu On");
+
     const handleClose = props.handleClose;
     const isSeller = props.isSeller; // 판매자 여부
 
+    // 경매 관련
     const [text, setText] = useState("경매 시작");
+    const [isAuctionStarted, setIsAuctionStarted] = useState(false);
+    const [everAuctionStarted, setEverAuctionStarted] = useState(false);
+
+    // OpenVidu 관련
     const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
     const [participantName, setParticipantName] = useState<string>(
       props.userName
@@ -60,12 +66,12 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       camController,
     }));
 
+    const join = async () => {
+      await joinRoom();
+    };
+
     useEffect(() => {
       console.log("component mount");
-      const join = async () => {
-        await joinRoom();
-      };
-      join();
 
       return () => {
         console.log("component unmount");
@@ -203,8 +209,18 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       e.preventDefault();
 
       if (isSeller) {
-        console.log("start auction");
-        setText("경매 중");
+        if (isAuctionStarted === false) {
+          setText("경매 중");
+          setIsAuctionStarted(true);
+          setEverAuctionStarted(true);
+          join();
+        } else if (isAuctionStarted === true && everAuctionStarted === true) {
+          setText("경매 종료");
+          setIsAuctionStarted(false);
+          // 경매 종료 로직 작성
+          //
+          //
+        }
       }
     };
 
