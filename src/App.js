@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { 
-  Routes, BrowserRouter as Router, Route,
+import {
+  Routes,
+  BrowserRouter as Router,
+  Route,
   useLocation,
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
 } from "react-router-dom";
 import Login from "./pages/Login";
-import GameApp from "./games/GameApp";
 import NotFound from "./pages/NotFound";
 import Main from "./pages/Main.jsx";
 import ProductCreate from "./components/Boards/ProductCreate.jsx";
 import ProductDetail from "./components/Boards/ProductDetail.jsx";
 import ProductList from "./components/Boards/ProductList.jsx";
-import Auction from "./components/Auction/Auctions.tsx";
+import Auction from "./components/Auction/Auction.jsx";
 import "./static/css/App.css";
 import * as Sentry from "@sentry/react";
 
