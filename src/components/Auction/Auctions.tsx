@@ -39,6 +39,7 @@ const user = sessionStorage.getItem("user");
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
+    console.log("Auction_OpenVidu props: ", props);
     const handleClose = props.handleClose;
     const isSeller = props.isSeller; // 판매자 여부
 
