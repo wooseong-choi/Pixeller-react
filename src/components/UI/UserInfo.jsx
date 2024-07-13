@@ -18,7 +18,7 @@ function UserInfo({ user, logoutEvent }) {
         className="user-icon"
         onClick={logout}
       />
-      <span className="username">{user}</span>
+      <span className="username">{user.username}</span>
       <span className="status">활동중</span>
       <span className="status-dot on"></span>
     </div>
