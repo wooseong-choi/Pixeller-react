@@ -4,11 +4,20 @@ import Header from "../components/Header";
 import ModalLogin from "../components/ModalLogin";
 import TextAnimation from "../components/TextAnimation";
 import ModalRegist from "../components/ModalRegist";
+import { Navigate } from "react-router-dom";
 
+// window.onload = function () {
+//   if( window.location.href.indexOf("main") === -1 ) {
+//     const user = sessionStorage.getItem("user");
+//     if(user) {
+//       Navigate("/main");
+//     }
+//   }
+// };
 const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRegistOpen, setIsRegistOpen] = useState(false);
-
+  
   return (
     <>
       <div

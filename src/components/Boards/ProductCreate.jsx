@@ -65,7 +65,7 @@ const ProductDetail = ({ handleClose }) => {
   };
 
   const user = sessionStorage.getItem("user");
-  // const userInfo = jwtDecode( sessionStorage.getItem("user") );
+  const userInfo = jwtDecode( sessionStorage.getItem("user") );
 
   const [value, setValue] = useState("");
   const handleInputChange = (event) => {
@@ -76,20 +76,7 @@ const ProductDetail = ({ handleClose }) => {
   };
 
   const submitHandle = async (event) => {
-    // const files = document.querySelector('input[name="imgFiles"]').files;
     const form = document.querySelector('form[name="create_form"');
-    // const user = jwtDecode( sessionStorage.getItem("user") );
-    // const userDto = {
-    //   product_name:form.title,
-    //   member_id: (user.uid).toString(),
-    //   price: (form.price).toString(),
-    //   description:form.content,
-    //   category:'카테고리',
-    // };
-    // const result = createProduct(userDto,selectedFiles);
-
-    // console.log(result);
-
     const formData = new FormData(form);
 
     // return false;
@@ -179,7 +166,7 @@ const ProductDetail = ({ handleClose }) => {
           </div>
           <div className="product-container">
             <div className="product-info">
-              {/* <input type="hidden" value={userInfo.uid} name="member_id"/> */}
+              <input type="hidden" value={userInfo.uid} name="member_id"/>
               <input
                 className="title"
                 type="text"
