@@ -32,7 +32,7 @@ export type VideoCanvasHandle = {
 };
 
 // let APPLICATION_SERVER_URL = "http://localhost:6080/"; // The URL of your application server
-let APPLICATION_SERVER_URL = "https://openvidu.pixeller.net/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 configureUrls();
 
@@ -72,8 +72,8 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 
     useImperativeHandle(ref, () => ({
       leaveRoom,
-      // micController,
-      // camController,
+      micController,
+      camController,
     }));
 
     useEffect(() => {
@@ -121,7 +121,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       );
 
       try {
-        const token = await getToken(roomName, participantName, isSeller);
+        const token = await getToken(roomName, participantName);
 
         await room.connect(LIVEKIT_URL, token);
         console.log("connected room: ", room);
@@ -141,37 +141,37 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       }
     }
 
-    // async function micController(isMicOpen: boolean) {
-    //   if (localTrack) {
-    //     if (localTrack.isMuted && !isMicOpen) {
-    //       localTrack.unmute();
-    //     } else if (!localTrack.isMuted && isMicOpen) {
-    //       localTrack.mute();
-    //     } else {
-    //       console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-    //     }
-    //   } else {
-    //     console.log("localTrack is undefined");
-    //   }
-    // }
+    async function micController(isMicOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isMuted && !isMicOpen) {
+          localTrack.unmute();
+        } else if (!localTrack.isMuted && isMicOpen) {
+          localTrack.mute();
+        } else {
+          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+        }
+      } else {
+        console.log("localTrack is undefined");
+      }
+    }
 
-    // async function camController(isCamOpen: boolean) {
-    //   if (localTrack) {
-    //     if (localTrack.isUpstreamPaused && !isCamOpen) {
-    //       localTrack.resumeUpstream();
-    //     } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-    //       localTrack.pauseUpstream();
-    //     } else {
-    //       console.log(
-    //         "undefined status: ",
-    //         localTrack.isUpstreamPaused,
-    //         isCamOpen
-    //       );
-    //     }
-    //   } else {
-    //     console.log("localTrack is undefined");
-    //   }
-    // }
+    async function camController(isCamOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isUpstreamPaused && !isCamOpen) {
+          localTrack.resumeUpstream();
+        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+          localTrack.pauseUpstream();
+        } else {
+          console.log(
+            "undefined status: ",
+            localTrack.isUpstreamPaused,
+            isCamOpen
+          );
+        }
+      } else {
+        console.log("localTrack is undefined");
+      }
+    }
 
     async function leaveRoom() {
       // Leave the room by calling 'disconnect' method over the Room object
@@ -183,11 +183,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       setRemoteTracks([]);
     }
 
-    async function getToken(
-      roomName: string,
-      participantName: string,
-      isSeller: boolean
-    ) {
+    async function getToken(roomName: string, participantName: string) {
       const response = await fetch(APPLICATION_SERVER_URL + "token", {
         method: "POST",
         headers: {
