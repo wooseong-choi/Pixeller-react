@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Game, GameObjects } from "phaser";
 
 interface iChara {
   player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -43,9 +43,10 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
-  nameText: Phaser.GameObjects.Text;
+  nameText: GameObjects.BitmapText;
+  nameTextT: Phaser.GameObjects.Text;
   preset: string;
-  
+
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
@@ -96,10 +97,9 @@ class OPlayer implements iChara {
     y: number,
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-
     this.preset = preset;
     const playerWorkDConfig = {
-      key: preset+"_walk_down",
+      key: preset + "_walk_down",
       frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
@@ -109,7 +109,7 @@ class OPlayer implements iChara {
       repeat: -1,
     };
     const playerWorkLConfig = {
-      key: preset+"_walk_left",
+      key: preset + "_walk_left",
       frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
@@ -119,7 +119,7 @@ class OPlayer implements iChara {
       repeat: -1,
     };
     const playerWorkRConfig = {
-      key: preset+"_walk_right",
+      key: preset + "_walk_right",
       frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
@@ -129,7 +129,7 @@ class OPlayer implements iChara {
       repeat: -1,
     };
     const playerWorkUConfig = {
-      key: preset+"_walk_up",
+      key: preset + "_walk_up",
       frames: this.obj.anims.generateFrameNames(preset, {
         start: 0,
         end: 3,
@@ -149,6 +149,15 @@ class OPlayer implements iChara {
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(this.width, this.height, true);
     this.oldPosition = { x: x, y: y };
+
+    // this.OPlayer[key].nameText = this.add.bitmapText(this.OPlayer[key].x - 10,this.OPlayer[key].y - 30,"font",user.username,12); // or 8
+    this.nameText = this.obj.add.bitmapText(
+      this.player.x - 10,
+      this.player.y - 30,
+      "font",
+      this.name,
+      12
+    );
 
     return this.player;
   }
@@ -187,6 +196,16 @@ class OPlayer implements iChara {
 
     // Create a tween that updates the player's position
     return new Promise<void>((resolve) => {
+      this.obj.tweens.add({
+        targets: [this.nameText],
+        x: x - 10,
+        y: y - 30,
+        duration: duration,
+        ease: "Linear",
+        onComplete: () => {
+          resolve();
+        },
+      });
       this.obj.tweens.add({
         targets: [this.player],
         x: x,

@@ -8,6 +8,7 @@ import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 import Auction from "../components/Auction/Auction.jsx";
+// import Auction_OpenVidu from "../components/Auction/Auctions.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -130,7 +131,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     className="modal-content"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {/* <ProductCreate handleClose={closePCModal} /> */}
+                    <ProductCreate handleClose={closePCModal} />
                   </div>
                 </div>
               ) : null}
