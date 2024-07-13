@@ -43,8 +43,8 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
   const user = sessionStorage.getItem("user");
 
   return (
-    <div className="board-wrapper">
-      <div className="board-container">
+    <div className="board-wrapper" onClick={handleClose}>
+      <div className="board-container" onClick={(e) => e.stopPropagation()}>
         <button className="close-button" onClick={handleClose}>
           ×
         </button>

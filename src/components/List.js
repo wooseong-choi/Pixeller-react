@@ -53,7 +53,10 @@ const List = ({
         </div>
 
         <nav className="chat-content">{chatComponent}</nav>
-        <div className="chat-rooms"></div>
+        <div className="chat-rooms">
+          <div className="chat-room public"></div>
+          <div className="chat-room private"></div>
+        </div>
       </div>
 
     </>

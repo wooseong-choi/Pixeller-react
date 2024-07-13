@@ -16,11 +16,12 @@ export const createProduct = async (productDto, imgFiles) => {
     const response = await axiosCRUDInstance.post("/api/products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        "Accept": "application/json",
       },
-      data: {
-        productDto : productDto,
-        imgFiles : imgFiles,
-      }
+      // data: {
+      //   productDto : productDto,
+      //   imgFiles : imgFiles,
+      // }
     });
     return response.data;
   } catch (error) {

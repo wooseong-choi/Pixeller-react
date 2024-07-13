@@ -5,6 +5,8 @@
   "dependencies": {
     "@pixi/react": "^7.1.2",
     "@react-oauth/google": "^0.12.1",
+    "@sentry/react": "^8.17.0",
+    "@sentry/tracing": "^7.114.0",
     "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

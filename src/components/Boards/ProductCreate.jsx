@@ -3,9 +3,8 @@ import "./PC.css";
 // import productDTO from "../../api/dto/productDTO.js";
 import { createProduct } from "../../api/products";
 import UserInfo from "../UI/UserInfo";
-// import { axiosCRUDInstance } from "./axios";
-
-
+import { jwtDecode } from "jwt-decode";
+import { axiosCRUDInstance } from "../../api/axios";
 const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -66,6 +65,7 @@ const ProductDetail = ({ handleClose }) => {
   }
 
   const user = sessionStorage.getItem("user");
+  const userInfo = jwtDecode( sessionStorage.getItem("user") );
 
 
   const [value, setValue] = useState('');
@@ -76,23 +76,47 @@ const ProductDetail = ({ handleClose }) => {
     setValue(numericValue);
   };
 
-  // const handleSubmit = async (event) => {
-  //   try {
-  //     const response = await axiosCRUDInstance.post("/api/products", formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-  //     return response.data;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
+
+
+  const submitHandle = async (event) => {
+    // const files = document.querySelector('input[name="imgFiles"]').files;
+    const form = document.querySelector('form[name="create_form"');
+    // const user = jwtDecode( sessionStorage.getItem("user") );
+    // const userDto = {
+    //   product_name:form.title,
+    //   member_id: (user.uid).toString(),
+    //   price: (form.price).toString(),
+    //   description:form.content,
+    //   category:'카테고리',
+    // };
+    // const result = createProduct(userDto,selectedFiles);
+
+    // console.log(result);
+
+    const formData = new FormData(form);
+
+
+    // return false;
+    try {
+      const response = await axiosCRUDInstance.post("/api/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "authorization": "Bearer " + sessionStorage.getItem("user"),
+        },
+      });
+
+      console.log(response);
+      // return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
 
   return (
     <div className="container">
-      <form className="container" id="create_form" name="create_form" method="POST" encType="multipart/form-data" action={ `${uri}/api/products`} >
+      <form className="container" id="create_form" name="create_form" method="POST" 
+        encType="multipart/form-data" action={`${uri}/api/products`} onSubmit={()=>{return false}}>
         <button className="close-button" onClick={handleClose}>
           ×
         </button>
@@ -142,12 +166,14 @@ const ProductDetail = ({ handleClose }) => {
           </div>
           <div className="product-container">
             <div className="product-info">
-              <input className="title" type="text" name="title" placeholder="팬이에요!" />
-              <textarea className="content" name="content" placeholder="싸인해주세요!"></textarea>
+              <input type="hidden" value={userInfo.uid} name="member_id"/>
+              <input className="title" type="text" name="name" placeholder="팬이에요!" />
+              <textarea className="content" name="description" placeholder="싸인해주세요!"></textarea>
               <input className="price" type="text" name="price" placeholder="가격 입력" onChange={handleInputChange} value={value} />
+              <input className="category" type="text" name="category" placeholder="카테고리입력" />
             </div>
             <div className="product-button">
-              <button className="product-request">상품 등록</button>
+              <div className="product-request" onClick={submitHandle}>상품 등록</div>
             </div>
           </div>
         </div>
