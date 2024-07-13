@@ -14,7 +14,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  // const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
@@ -113,7 +112,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div className="Modals">
               {isProductDetailOpen ? (
                 <div className="modal-background" onClick={closePDModal}>
-                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="modal-content"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <ProductDetail
                       productId={productId}
                       handleClose={closePDModal}
@@ -124,7 +126,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ) : null}
               {isProductCreateOpen ? (
                 <div className="modal-background" onClick={closePCModal}>
-                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="modal-content"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <ProductCreate handleClose={closePCModal} />
                   </div>
                 </div>
@@ -143,8 +148,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setIsOpen={setIsOpen}
                 isChatOpen={isChatOpen}
                 setIsChatOpen={setIsChatOpen}
-                // isNotiOpen={isNotiOpen}
-                // setIsNotiOpen={setIsNotiOpen}
                 openPDModal={openPDModal}
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
@@ -156,8 +159,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
             setIsChatOpen={setIsChatOpen}
-            // isNotiOpen={isNotiOpen}
-            // setIsNotiOpen={setIsNotiOpen}
             totalProductCounts={totalProductCounts}
             isMicOpen={isMicOpen}
             setIsMicOpen={toggleMIC}
