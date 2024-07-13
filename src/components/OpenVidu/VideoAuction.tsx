@@ -32,29 +32,8 @@ export type VideoCanvasHandle = {
 };
 
 // let APPLICATION_SERVER_URL = "http://localhost:6080/"; // The URL of your application server
-let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "//openvidu.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
-configureUrls();
-
-function configureUrls() {
-  // If APPLICATION_SERVER_URL is not configured, use default value from local development
-  if (!APPLICATION_SERVER_URL) {
-    if (window.location.hostname === "localhost") {
-      APPLICATION_SERVER_URL = "http://localhost:6080/";
-    } else {
-      APPLICATION_SERVER_URL = "http://" + window.location.hostname + ":6443/";
-    }
-  }
-
-  // If LIVEKIT_URL is not configured, use default value from local development
-  if (!LIVEKIT_URL) {
-    if (window.location.hostname === "localhost") {
-      LIVEKIT_URL = "ws://localhost:7880/";
-    } else {
-      LIVEKIT_URL = "wss://" + window.location.hostname + ":7443/";
-    }
-  }
-}
 
 const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
@@ -98,6 +77,11 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
           publication: RemoteTrackPublication,
           participant: RemoteParticipant
         ) => {
+          console.log(
+            "track subscribed: ",
+            publication.trackSid,
+            participant.identity
+          );
           setRemoteTracks((prev) => [
             ...prev,
             {
@@ -121,7 +105,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       );
 
       try {
-        const token = await getToken(roomName, participantName);
+        const token = await getToken(roomName, participantName, isSeller);
 
         await room.connect(LIVEKIT_URL, token);
         console.log("connected room: ", room);
@@ -183,17 +167,20 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       setRemoteTracks([]);
     }
 
-    async function getToken(roomName: string, participantName: string) {
+    async function getToken(
+      roomName: string,
+      participantName: string,
+      isSeller: boolean
+    ) {
       const response = await fetch(APPLICATION_SERVER_URL + "token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: "Bearer " + localStorage.getItem("token") || "",
-          // "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
           roomName: roomName,
           participantName: participantName,
+          isSeller: isSeller,
         }),
       });
 
