@@ -14,7 +14,6 @@ const Chat = () => {
     const user = jwtDecode(sessionStorage.getItem('user') );
     const messageEndRef = useRef(null);
 
-
     useEffect(() => {
         if (!stompClient) {
             const connect = () => {
