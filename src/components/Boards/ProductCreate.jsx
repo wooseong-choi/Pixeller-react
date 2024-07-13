@@ -65,7 +65,7 @@ const ProductDetail = ({ handleClose }) => {
   };
 
   const user = sessionStorage.getItem("user");
-  // const userInfo = jwtDecode( sessionStorage.getItem("user") );
+  const userInfo = jwtDecode( sessionStorage.getItem("user") );
 
   const [value, setValue] = useState("");
   const handleInputChange = (event) => {
@@ -179,7 +179,7 @@ const ProductDetail = ({ handleClose }) => {
           </div>
           <div className="product-container">
             <div className="product-info">
-              {/* <input type="hidden" value={userInfo.uid} name="member_id"/> */}
+              <input type="hidden" value={userInfo.uid} name="member_id"/>
               <input
                 className="title"
                 type="text"
