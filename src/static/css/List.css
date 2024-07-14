@@ -326,6 +326,13 @@
   background-color: aqua;
 }
 
+.chat-room.public{
+  background-image: url('../../../public/icon/public_speaking.png');
+  background-size: 70% 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .chat-room:hover, .chat-room.active {
   background-color: #6bab8d;
 }
