@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserInfo from '../components/UI/UserInfo';
 
 const SideMenu = () => {
+    const user = sessionStorage.getItem('user');
     return (
     <div className={`side-menu ${isOpen ? "open" : ""}`}>
     <button
