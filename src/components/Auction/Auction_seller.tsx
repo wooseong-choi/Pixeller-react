@@ -35,33 +35,11 @@ export type VideoCanvasHandle = {
 
 let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
-configureUrls();
-
-function configureUrls() {
-  // If APPLICATION_SERVER_URL is not configured, use default value from local development
-  if (!APPLICATION_SERVER_URL) {
-    if (window.location.hostname === "localhost") {
-      APPLICATION_SERVER_URL = "http://localhost:6080/";
-    } else {
-      APPLICATION_SERVER_URL = "http://" + window.location.hostname + ":6443/";
-    }
-  }
-
-  // If LIVEKIT_URL is not configured, use default value from local development
-  if (!LIVEKIT_URL) {
-    if (window.location.hostname === "localhost") {
-      LIVEKIT_URL = "ws://localhost:7880/";
-    } else {
-      LIVEKIT_URL = "wss://" + window.location.hostname + ":7443/";
-    }
-  }
-}
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
     console.log("Auction_OpenVidu Seller On");
 
-    const user = sessionStorage.getItem("user");
     const username = props.userName;
     const isSeller = props.isSeller; // 판매자 여부
     const handleClose = props.handleClose;
@@ -255,42 +233,56 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                     현재 가격 <span className="rtp"></span>
                   </p>
                 </div>
-                <div className="auction-seller-video-container">
-                  {localTrack && (
-                    <VideoComponent
-                      track={localTrack}
-                      participantId={participantName}
-                      local={true}
-                    />
-                  )}
-                  {/* <div className="auction-seller-video-icon"></div> */}
-                  <div className="auction-seller-video-name"></div>
+
+                {localTrack && (
+                  <VideoComponent
+                    track={localTrack}
+                    participantId={participantName}
+                    local={true}
+                  />
+                )}
+                {!localTrack && (
+                  <div className="auction-seller-video-container">
+                    <div className="auction-seller-video-icon"></div>
+                  </div>
+                )}
+                {/* <div className="auction-seller-video-name"></div> */}
+                <div className="auction-seller-local-userinfo">
+                  <UserInfo user={username} logoutEvent={null} />
                 </div>
-                <UserInfo user={user} logoutEvent={null} />
               </div>
             </div>
             <div className="auction-container-right">
               {remoteTracks.map((remoteTrack) => (
                 <div>
-                  <div className="auction-buyer-video-container">
-                    {remoteTrack.trackPublication.kind === "video" ? (
-                      <VideoComponent
-                        key={remoteTrack.trackPublication.trackSid}
-                        track={remoteTrack.trackPublication.videoTrack!}
-                        participantId={remoteTrack.participantIdentity}
-                      />
-                    ) : (
-                      <AudioComponent
-                        key={remoteTrack.trackPublication.trackSid}
-                        track={remoteTrack.trackPublication.audioTrack!}
-                      />
-                    )}
-                    {/* <div className="auction-buyer-video-icon"></div> */}
-                    <div className="auction-buyer-video-name"></div>
-                  </div>
-                  <UserInfo user={user} logoutEvent={null} />
+                  {remoteTrack.trackPublication.kind === "video" ? (
+                    <div>
+                      <div className="auction-buyer-video-container">
+                        <VideoComponent
+                          key={remoteTrack.trackPublication.trackSid}
+                          track={remoteTrack.trackPublication.videoTrack!}
+                          participantId={remoteTrack.participantIdentity}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <AudioComponent
+                      key={remoteTrack.trackPublication.trackSid}
+                      track={remoteTrack.trackPublication.audioTrack!}
+                    />
+                  )}
+                  <UserInfo user={username} logoutEvent={null} />
                 </div>
               ))}
+              {remoteTracks.length === 0 && (
+                <div className="no-one-is-here">
+                  <div className="auction-buyer-video-container">
+                    <div className="auction-buyer-video-icon"></div>
+                    <div className="auction-buyer-video-name"></div>
+                  </div>
+                  <UserInfo user={"waiting..."} logoutEvent={null} />
+                </div>
+              )}
             </div>
             <div>
               <button className="close-button" onClick={handleClose}>

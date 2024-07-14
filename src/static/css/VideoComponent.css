@@ -1,59 +1,56 @@
 .video-container {
-    /* position: relative; */
-    background: #3b3b3b;
-    border-radius: 6px;
-    overflow: hidden;
-    /* width: 100%;
+  /* position: relative; */
+  background: #3b3b3b;
+  border-radius: 6px;
+  overflow: hidden;
+  /* width: 100%;
     height: 100%; */
-    z-index: 2;
+  z-index: 2;
 }
 
 .video-container video {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .video-container .participant-data {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .participant-data p {
-    background: #f8f8f8;
-    margin: 0;
-    padding: 0 5px;
-    color: #777777;
-    font-weight: bold;
-    border-bottom-right-radius: 4px;
+  background: #f8f8f8;
+  margin: 0;
+  padding: 0 5px;
+  color: #777777;
+  font-weight: bold;
+  border-bottom-right-radius: 4px;
 }
 
 /* Media Queries */
 @media screen and (max-width: 480px) {
 }
 
-.cam-div{
-    /* position: relative; */
-    /* 3b in decimal */ 
-    background: rgba(59, 59, 59, 0.5);
-    overflow: hidden;
-    position: absolute;
-    width: 100%;
-    height: 25%;
-    z-index: 2;
-    display: none;
-    padding: 0 1em;
+.cam-div {
+  /* position: relative; */
+  /* 3b in decimal */
+  background: rgba(59, 59, 59, 0.5);
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 25%;
+  z-index: 2;
+  display: none;
+  padding: 0 1em;
+}
+
+.cam-div.active {
+  display: block;
 }
 
 
-.cam-div.active{
-    display: block;
-}
-
-.video-container {
-    max-width: 30%;
-}
-#room-header{
-    display: flex;
-    justify-content: center;
+#room-header {
+  display: flex;
+  justify-content: center;
 }
