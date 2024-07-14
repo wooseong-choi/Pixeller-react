@@ -1,76 +1,100 @@
 element.style {
-    width: 50%;
-    /* margin: auto; */
-    position: absolute;
-    right: 0px;
+  width: 50%;
+  /* margin: auto; */
+  position: absolute;
+  right: 0px;
 }
 
+/* 전체 스크롤바 스타일 */
+.item-list::-webkit-scrollbar {
+  width: 12px; /* 스크롤바의 너비 */
+  height: 12px; /* 수평 스크롤바의 높이 */
+}
+
+/* 스크롤바 트랙 스타일 */
+.item-list::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 트랙의 배경색 */
+  border-radius: 10px; /* 트랙의 둥근 모서리 */
+}
+
+/* 스크롤바 핸들(thumb) 스타일 */
+.item-list::-webkit-scrollbar-thumb {
+  background: #888; /* 핸들의 배경색 */
+  border-radius: 10px; /* 핸들의 둥근 모서리 */
+}
+
+/* 스크롤바 핸들을 호버했을 때의 스타일 */
+.item-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 호버 시 핸들의 배경색 */
+}
 
 .sidebar-container {
-    background-color: #519C79;
-    display: flex;
-    flex-direction: column;
-    padding: 12px 20px;
-    /* position: fixed; */
-    top: 0;
-    bottom: 0;
-    border-right: 1px solid #ccc;
+  background-color: #519c79;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 20px;
+  /* position: fixed; */
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid #ccc;
 }
 
 .search-container {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .search-input {
-    width: 100%;
-    padding: 6px 8px;
-    border: 1px solid #ccc;
-    border-radius: 1em;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 1em;
 }
-.search-input::placeholder { text-align: center; }
+.search-input::placeholder {
+  text-align: center;
+}
 .item-list {
-    flex-grow: 1;
-    overflow-y: auto;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 .item-list::-webkit-scrollbar {
     display: none;
 }
 
 .item-card {
-    background-color: transparent;
-    padding: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    background-color: #f0f0f0;
-    margin-bottom: 10px;
-    box-shadow: 5px 5px 0px #222;
-    border-radius: 1em;
+  background-color: transparent;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+  box-shadow: 5px 5px 0px #222;
+  border-radius: 1em;
 }
 
 .item-card.selected,
 .item-card:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .item-details {
-    margin-top: 12px;
-    padding: 8px;
-    background-color: #f0f0f0;
-    border-radius: 1em;
-    text-align: center;
-    width: 60%;
-    margin: auto;
-    line-height: 40px;
+  margin-top: 12px;
+  padding: 8px;
+  background-color: #f0f0f0;
+  border-radius: 1em;
+  text-align: center;
+  width: 60%;
+  margin: auto;
+  line-height: 40px;
 }
 
 .item-card > span:first-child {
-    display: inline-block;
+  display: inline-block;
 }
 .item-card > span {
-    max-width: 30px;
-    line-height: 40px;
+  max-width: 30px;
+  line-height: 40px;
 }
 .item-card > span > img {
-    /* vertical-align: bottom!important; */
-    display: inline !important;
+  /* vertical-align: bottom!important; */
+  display: inline !important;
 }
