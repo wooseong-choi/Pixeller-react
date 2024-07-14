@@ -61,7 +61,7 @@ body {
   position: relative;
   /* 고려해주셈 - 화면 작은 모니터에서는 모달창 밑에 부분 짤림 */
   height: 90%;
-  min-width: 1000;
+  min-width: 1000px;
   width: 90%;
 }
 
