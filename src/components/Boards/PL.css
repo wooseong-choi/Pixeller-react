@@ -55,6 +55,7 @@ element.style {
 .item-list {
   flex-grow: 1;
   overflow-y: auto;
+  -ms-overflow-style: none;
 }
 .item-list::-webkit-scrollbar {
     display: none;

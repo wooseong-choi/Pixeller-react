@@ -251,6 +251,8 @@ class GameScene extends Phaser.Scene {
       "./fonts/MangoByeolbyeol.png",
       "./fonts/MangoByeolbyeol.xml"
     );
+
+    this.load.audio('ppyok', [ './sounds/ppyok.mp3' ]);
   }
 
   /**
