@@ -76,22 +76,37 @@ const ProductDetail = ({ handleClose }) => {
   };
 
   const submitHandle = async (event) => {
-    // const files = document.querySelector('input[name="imgFiles"]').files;
     const form = document.querySelector('form[name="create_form"');
-    // const user = jwtDecode( sessionStorage.getItem("user") );
-    // const userDto = {
-    //   product_name:form.title,
-    //   member_id: (user.uid).toString(),
-    //   price: (form.price).toString(),
-    //   description:form.content,
-    //   category:'카테고리',
-    // };
-    // const result = createProduct(userDto,selectedFiles);
-
-    // console.log(result);
-
     const formData = new FormData(form);
 
+    // validation check
+    if (!formData.get("name")) {
+      alert("제목을 입력해주세요");
+      return false;
+    }
+    if (!formData.get("description")) {
+      alert("내용을 입력해주세요");
+      return false;
+    }
+    if (!formData.get("price")) {
+      alert("가격을 입력해주세요");
+      return false;
+    }
+    if (!formData.get("category")) {
+      alert("카테고리를 입력해주세요");
+      return false;
+    }
+    // if (!formData.get("imgFiles")) {
+    if (selectedFiles.length === 0) {
+      alert("사진을 등록해주세요");
+      return false;
+    }
+    // 이거 작동안하는데 왜인지 아시는분?
+    if (!formData.get("member_id")) {
+      alert("판매자 정보가 없습니다.");
+      return false;
+    }
+    
     // return false;
     try {
       const response = await axiosCRUDInstance.post("/api/products", formData, {
@@ -101,7 +116,10 @@ const ProductDetail = ({ handleClose }) => {
         },
       });
 
-      console.log(response);
+      if(response.status === 201){
+        alert("상품이 등록되었습니다.");
+        handleClose();
+      }
       // return response.data;
     } catch (error) {
       throw error;
@@ -184,18 +202,18 @@ const ProductDetail = ({ handleClose }) => {
                 className="title"
                 type="text"
                 name="name"
-                placeholder="팬이에요!"
+                placeholder="제목을 입력해주세요"
               />
               <textarea
                 className="content"
                 name="description"
-                placeholder="싸인해주세요!"
+                placeholder="내용을 입력해주세요"
               ></textarea>
               <input
                 className="price"
                 type="text"
                 name="price"
-                placeholder="가격 입력"
+                placeholder="가격을 입력해주세요"
                 onChange={handleInputChange}
                 value={value}
               />
@@ -203,7 +221,7 @@ const ProductDetail = ({ handleClose }) => {
                 className="category"
                 type="text"
                 name="category"
-                placeholder="카테고리입력"
+                placeholder="카테고리를 입력해주세요"
               />
             </div>
             <div className="product-button">
