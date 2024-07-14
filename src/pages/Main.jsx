@@ -130,7 +130,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     className="modal-content"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {/* <ProductCreate handleClose={closePCModal} /> */}
+                    <ProductCreate handleClose={closePCModal} />
                   </div>
                 </div>
               ) : null}

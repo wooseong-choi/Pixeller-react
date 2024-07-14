@@ -32,6 +32,9 @@ element.style {
     flex-grow: 1;
     overflow-y: auto;
 }
+.item-list::-webkit-scrollbar {
+    display: none;
+}
 
 .item-card {
     background-color: transparent;
@@ -40,7 +43,7 @@ element.style {
     transition: background-color 0.3s;
     background-color: #f0f0f0;
     margin-bottom: 10px;
-    box-shadow: 10px 5px 5px #222;
+    box-shadow: 5px 5px 0px #222;
     border-radius: 1em;
 }
 
