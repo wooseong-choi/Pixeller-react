@@ -8,6 +8,7 @@ import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 import Auction from "../components/Auction/Auction.jsx";
+import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 // import Auction_OpenVidu from "../components/Auction/Auctions.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
@@ -129,9 +130,12 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   </div>
                 </div>
               ) : null}
-              <Auction
+              <Auction_OpenVidu
+                isSeller={true}
+                auctionRoomId={auctionProduct}
                 handleClose={closeAuctionModal}
                 auctionProduct={auctionProduct}
+                userName={userName}
               />
             </div>
             <div id="gameMain" className="game">
