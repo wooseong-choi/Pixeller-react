@@ -15,7 +15,6 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
 
   useEffect(() => {
     getAllProducts().then((res) => {
-      console.log(res);
       const products = res.map((item) => {
         return {
           id: item.productId,
