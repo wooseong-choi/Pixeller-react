@@ -16,7 +16,7 @@ export const createProduct = async (productDto, imgFiles) => {
     const response = await axiosCRUDInstance.post("/api/products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
       // data: {
       //   productDto : productDto,
@@ -33,7 +33,6 @@ export const createProduct = async (productDto, imgFiles) => {
 export const getAllProducts = async () => {
   try {
     const response = await axiosCRUDInstance.get("/api/products");
-    console.log(response);
     return response.data;
   } catch (error) {
     throw error;
