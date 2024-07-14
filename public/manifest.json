@@ -1,11 +1,21 @@
 {
   "short_name": "PIXELLER",
-  "name": "Create React App Sample",
+  "name": "PIXELLER - Team Olympus",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "white_rabbit_16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    },
+    {
+      "src": "white_rabbit_32.png",
+      "type": "image/png",
+      "sizes": "32x32"
     },
     {
       "src": "white_rabbit_192.png",
