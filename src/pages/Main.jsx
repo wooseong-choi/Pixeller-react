@@ -68,7 +68,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const setAuctionProduct = (product) => {
-    setAuctionProductState(product);
+    setAuctionProductState(product.id);
     // const auctionContainer = document.getElementsByClassName("auction-wrapper");
     // if (auctionContainer.length > 0) auctionContainer[0].classList.add("on");
   };
@@ -108,40 +108,46 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ) : null}
             </div>
             <div className="Modals">
-              {isProductDetailOpen ? (
-                <div className="modal-background" onClick={closePDModal}>
-                  <div
-                    className="modal-content"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ProductDetail
-                      productId={productId}
-                      handleClose={closePDModal}
-                      setAuctionProduct={setAuctionProduct}
-                      setIsAuctionOpen={setIsAuctionOpen}
-                    />
+              <div>
+                {isProductDetailOpen ? (
+                  <div className="modal-background" onClick={closePDModal}>
+                    <div
+                      className="modal-content"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ProductDetail
+                        productId={productId}
+                        handleClose={closePDModal}
+                        setAuctionProduct={setAuctionProduct}
+                        setIsAuctionOpen={setIsAuctionOpen}
+                      />
+                    </div>
                   </div>
-                </div>
-              ) : null}
-              {isProductCreateOpen ? (
-                <div className="modal-background" onClick={closePCModal}>
-                  <div
-                    className="modal-content"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ProductCreate handleClose={closePCModal} />
+                ) : null}
+              </div>
+              <div>
+                {isProductCreateOpen ? (
+                  <div className="modal-background" onClick={closePCModal}>
+                    <div
+                      className="modal-content"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ProductCreate handleClose={closePCModal} />
+                    </div>
                   </div>
-                </div>
-              ) : null}
-              {isAuctionOpen ? (
-                <Auction
-                  isSeller={true}
-                  auctionRoomId={auctionProduct}
-                  handleClose={closeAuctionModal}
-                  auctionProduct={auctionProduct}
-                  userName={userName}
-                />
-              ) : null}
+                ) : null}
+              </div>
+              <div>
+                {isAuctionOpen ? (
+                  <Auction_OpenVidu
+                    isSeller={true}
+                    auctionRoomId={auctionProduct}
+                    handleClose={closeAuctionModal}
+                    auctionProduct={auctionProduct}
+                    userName={userName}
+                  />
+                ) : null}
+              </div>
             </div>
             <div id="gameMain" className="game">
               <GameApp />

@@ -35,6 +35,27 @@ export type VideoCanvasHandle = {
 
 let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
+configureUrls();
+
+function configureUrls() {
+  // If APPLICATION_SERVER_URL is not configured, use default value from local development
+  if (!APPLICATION_SERVER_URL) {
+    if (window.location.hostname === "localhost") {
+      APPLICATION_SERVER_URL = "http://localhost:6080/";
+    } else {
+      APPLICATION_SERVER_URL = "http://" + window.location.hostname + ":6443/";
+    }
+  }
+
+  // If LIVEKIT_URL is not configured, use default value from local development
+  if (!LIVEKIT_URL) {
+    if (window.location.hostname === "localhost") {
+      LIVEKIT_URL = "ws://localhost:7880/";
+    } else {
+      LIVEKIT_URL = "wss://" + window.location.hostname + ":7443/";
+    }
+  }
+}
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
@@ -51,7 +72,9 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
 
     // OpenVidu 토큰 요청 정보
-    const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
+    const [roomName, setRoomName] = useState<string>(
+      props.auctionRoomId + "auction"
+    ); // 화상 회의 방 이름
     const [participantName, setParticipantName] = useState<string>(username!); // 참가자 이름
 
     // OpenVidu token 세션 접속 정보
@@ -70,14 +93,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     const join = async () => {
       await joinRoom();
     };
-
-    useEffect(() => {
-      console.log("component mount");
-
-      return () => {
-        console.log("component unmount");
-      };
-    }, []);
 
     async function joinRoom() {
       const room = new Room();
@@ -118,7 +133,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       );
 
       try {
-        console.log("testing:: ", roomName, participantName);
         const token = await getToken(roomName, participantName);
 
         await room.connect(LIVEKIT_URL, token);
@@ -214,6 +228,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setText("경매 종료");
           setIsAuctionStarted(false);
+          setEverAuctionStarted(false);
 
           // 경매 종료 로직 작성
           //
@@ -276,34 +291,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                   <UserInfo user={user} logoutEvent={null} />
                 </div>
               ))}
-              {/* <div>
-                <div className="auction-buyer-video-container">
-                  <div className="auction-buyer-video-icon"></div>
-                  <div className="auction-buyer-video-name"></div>
-                </div>
-                <UserInfo user={user} logoutEvent={null} />
-              </div>
-              <div>
-                <div className="auction-buyer-video-container">
-                  <div className="auction-buyer-video-icon"></div>
-                  <div className="auction-buyer-video-name"></div>
-                </div>
-                <UserInfo user={user} logoutEvent={null} />
-              </div>
-              <div>
-                <div className="auction-buyer-video-container">
-                  <div className="auction-buyer-video-icon"></div>
-                  <div className="auction-buyer-video-name"></div>
-                </div>
-                <UserInfo user={user} logoutEvent={null} />
-              </div>
-              <div>
-                <div className="auction-buyer-video-container">
-                  <div className="auction-buyer-video-icon"></div>
-                  <div className="auction-buyer-video-name"></div>
-                </div>
-                <UserInfo user={user} logoutEvent={null} />
-              </div> */}
             </div>
             <div>
               <button className="close-button" onClick={handleClose}>
