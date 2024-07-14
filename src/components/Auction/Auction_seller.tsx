@@ -17,6 +17,9 @@ import React, {
 import AudioComponent from "../OpenVidu/AudioComponent.tsx";
 import VideoComponent from "../OpenVidu/VideoComponent.tsx";
 
+import useSpeechRecognition from "./useSpeechRecognition.js";
+import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
+
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
   participantIdentity: string;
@@ -40,6 +43,9 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
     console.log("Auction_OpenVidu Seller On");
 
+    // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
+
+    // init data
     const username = props.userName;
     const isSeller = props.isSeller; // 판매자 여부
     const handleClose = props.handleClose;
@@ -48,6 +54,20 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     const [text, setText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
+    const initialPrice = 5000; // 초기 경매 시작 가격
+
+    // bid analyzer
+    const {
+      listening,
+      lastResult,
+      confidence,
+      currentPrice,
+      handleStart,
+      handleStop,
+      resetTranscript,
+      resetPrice,
+      browserSupportsSpeechRecognition,
+    } = useSpeechRecognition(initialPrice);
 
     // OpenVidu 토큰 요청 정보
     const [roomName, setRoomName] = useState<string>(
@@ -71,6 +91,12 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     const join = async () => {
       await joinRoom();
     };
+
+    useEffect(() => {
+      return () => {
+        leaveRoom();
+      };
+    }, []);
 
     async function joinRoom() {
       const room = new Room();
@@ -202,7 +228,10 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
           setText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
+          handleStart();
           join();
+
+          // 경매 시작 로직 작성
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setText("경매 종료");
           setIsAuctionStarted(false);
@@ -211,12 +240,26 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
           // 경매 종료 로직 작성
           //
           //
+          handleStop();
 
           leaveRoom();
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       }
     };
+
+    // 금액을 올바른 형식으로 표시하는 함수
+    const formatAmount = (amount) => {
+      const wonAmount =
+        typeof amount === "number" ? amount : convertToWon(amount);
+      return wonAmount.toLocaleString() + "원";
+    };
+
+    const bidAnalysis = analyzeBid(lastResult);
+
+    if (!browserSupportsSpeechRecognition) {
+      return <span>크롬을 사용해 주세요</span>;
+    }
 
     return (
       <>
@@ -230,7 +273,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                   </button>
                   <p className="bid-price">
                     <img src="svg/Dollar.svg" />
-                    현재 가격 <span className="rtp"></span>
+                    현재 가격{" "}
+                    <span className="rtp">{formatAmount(currentPrice)}</span>
                   </p>
                 </div>
 
@@ -254,7 +298,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
             </div>
             <div className="auction-container-right">
               {remoteTracks.map((remoteTrack) => (
-                <div>
+                <>
                   {remoteTrack.trackPublication.kind === "video" ? (
                     <div>
                       <div className="auction-buyer-video-container">
@@ -263,6 +307,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                           track={remoteTrack.trackPublication.videoTrack!}
                           participantId={remoteTrack.participantIdentity}
                         />
+                        <UserInfo user={username} logoutEvent={null} />
                       </div>
                     </div>
                   ) : (
@@ -271,8 +316,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                       track={remoteTrack.trackPublication.audioTrack!}
                     />
                   )}
-                  <UserInfo user={username} logoutEvent={null} />
-                </div>
+                </>
               ))}
               {remoteTracks.length === 0 && (
                 <div className="no-one-is-here">
