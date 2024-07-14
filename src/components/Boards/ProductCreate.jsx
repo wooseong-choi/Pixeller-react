@@ -65,8 +65,8 @@ const ProductDetail = ({ handleClose }) => {
     inputFile.files = dataTransfer.files;
   };
 
-  const user = sessionStorage.getItem("user");
-  const userInfo = jwtDecode( sessionStorage.getItem("user") );
+  const user = sessionStorage.getItem("username");
+  const userInfo = jwtDecode(sessionStorage.getItem("user"));
 
   const [value, setValue] = useState("");
   const handleInputChange = (event) => {
@@ -165,7 +165,7 @@ const ProductDetail = ({ handleClose }) => {
         },
       });
 
-      if(response.status === 201){
+      if (response.status === 201) {
         alert("상품이 등록되었습니다.");
         form.reset();
         handleClose();
@@ -247,7 +247,7 @@ const ProductDetail = ({ handleClose }) => {
           </div>
           <div className="product-container">
             <div className="product-info">
-              <input type="hidden" value={userInfo.uid} name="member_id"/>
+              <input type="hidden" value={userInfo.uid} name="member_id" />
               <input
                 className="title"
                 type="text"
