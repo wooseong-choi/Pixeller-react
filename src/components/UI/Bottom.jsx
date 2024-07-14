@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logout from "./Logout";
 import "../../static/css/bottom.css";
 import UserInfo from "./UserInfo";
@@ -8,8 +8,6 @@ const App = ({
   setIsOpen,
   isChatOpen,
   setIsChatOpen,
-  // isNotiOpen,
-  // setIsNotiOpen,
   totalProductCounts,
   setIsMicOpen,
   isMicOpen,
@@ -17,7 +15,6 @@ const App = ({
   isCamOpen,
 }) => {
   const currentUser = sessionStorage.getItem("username");
-
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
 
   const toggleLogout = () => {
@@ -27,7 +24,7 @@ const App = ({
   return (
     <div className="navbar">
       <div className="left-section">
-        <UserInfo user={sessionStorage.getItem('user')} />
+        <UserInfo user={currentUser} />
         {isLogoutClicked && <Logout setIsLogoutClicked={setIsLogoutClicked} />}
         <div className="center-section">
           <button className="nav-button" onClick={setIsMicOpen}>

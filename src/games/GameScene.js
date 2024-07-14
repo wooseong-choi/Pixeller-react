@@ -320,21 +320,38 @@ class GameScene extends Phaser.Scene {
       this
     );
 
-
-
     // this.cursors = this.input.keyboard.createCursorKeys();
     this.cursors = this.input.keyboard.addKeys(
-      {up:Phaser.Input.Keyboard.KeyCodes.UP,
-      down:Phaser.Input.Keyboard.KeyCodes.DOWN,
-      left:Phaser.Input.Keyboard.KeyCodes.LEFT,
-      right:Phaser.Input.Keyboard.KeyCodes.RIGHT},false);
+      {
+        up: Phaser.Input.Keyboard.KeyCodes.UP,
+        down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+        left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+        right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+      },
+      false
+    );
     console.log(this.cursors);
 
-    this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q,false);
-    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W,false);
-    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E,false);
-    this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R,false);
-    this.oKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O,false);
+    this.qKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.Q,
+      false
+    );
+    this.wKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.W,
+      false
+    );
+    this.eKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.E,
+      false
+    );
+    this.rKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.R,
+      false
+    );
+    this.oKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.O,
+      false
+    );
 
     this.scale.on("resize", this.resize, this);
 
@@ -397,14 +414,6 @@ class GameScene extends Phaser.Scene {
 
       const rand_0_9 = Math.floor(Math.random() * 6);
       this.OPlayer[key].Create(user.x, user.y, "player" + rand_0_9);
-
-      // this.OPlayer[key].nameText = this.add.bitmapText(
-      //   this.OPlayer[key].x - 10,
-      //   this.OPlayer[key].y - 30,
-      //   "font",
-      //   user.username,
-      //   12
-      // ); // or 8
     }
   }
 

@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import "../../static/css/bottom.css";
 
 function UserInfo({ user, logoutEvent }) {
-  const realUser = jwtDecode(user);
+  // const realUser = jwtDecode(user);
 
   const logout = () => {
     if (logoutEvent !== undefined) {

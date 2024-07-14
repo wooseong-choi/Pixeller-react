@@ -37,171 +37,190 @@ let APPLICATION_SERVER_URL = "https://openvidu.pixeller.net/"; // The URL of you
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 const user = sessionStorage.getItem("user");
 
-const Auctions = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
+const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
-    const handleClose = props.handleClose;
-    // const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
-    // const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
-    //   undefined
-    // );
+    console.log("Auction_OpenVidu On");
 
-    // const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
-    // const [participantName, setParticipantName] = useState<string>(
-    //   props.userName
-    // ); // 참가자 이름
-    // const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
+    const handleClose = props.handleClose;
     const isSeller = props.isSeller; // 판매자 여부
 
-    // useImperativeHandle(ref, () => ({
-    //   leaveRoom,
-    //   micController,
-    //   camController,
-    // }));
-
-    // useEffect(() => {
-    //   const join = async () => {
-    //     await joinRoom();
-    //   };
-    //   join();
-
-    //   return () => {
-    //     console.log("component unmount");
-    //   };
-    // }, []);
-
-    // async function joinRoom() {
-    //   const room = new Room();
-    //   setRoom(room);
-
-    //   room.on(
-    //     RoomEvent.TrackSubscribed,
-    //     (
-    //       _track: RemoteTrack,
-    //       publication: RemoteTrackPublication,
-    //       participant: RemoteParticipant
-    //     ) => {
-    //       console.log(
-    //         "track subscribed: ",
-    //         publication.trackSid,
-    //         participant.identity
-    //       );
-    //       setRemoteTracks((prev) => [
-    //         ...prev,
-    //         {
-    //           trackPublication: publication,
-    //           participantIdentity: participant.identity,
-    //         },
-    //       ]);
-    //     }
-    //   );
-
-    //   room.on(
-    //     RoomEvent.TrackUnsubscribed,
-    //     (_track: RemoteTrack, publication: RemoteTrackPublication) => {
-    //       setRemoteTracks((prev) =>
-    //         prev.filter(
-    //           (track) =>
-    //             track.trackPublication.trackSid !== publication.trackSid
-    //         )
-    //       );
-    //     }
-    //   );
-
-    //   try {
-    //     const token = await getToken(roomName, participantName, isSeller);
-
-    //     await room.connect(LIVEKIT_URL, token);
-    //     console.log("connected room: ", room);
-
-    //     await room.localParticipant.enableCameraAndMicrophone();
-
-    //     setLocalTrack(
-    //       room.localParticipant.videoTrackPublications.values().next().value
-    //         .videoTrack
-    //     );
-    //   } catch (error) {
-    //     console.log(
-    //       "There was an error connecting to the room: ",
-    //       (error as Error).message
-    //     );
-    //     await leaveRoom();
-    //   }
-    // }
-
-    // async function micController(isMicOpen: boolean) {
-    //   if (localTrack) {
-    //     if (localTrack.isMuted && !isMicOpen) {
-    //       localTrack.unmute();
-    //     } else if (!localTrack.isMuted && isMicOpen) {
-    //       localTrack.mute();
-    //     } else {
-    //       console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-    //     }
-    //   } else {
-    //     console.log("localTrack is undefined");
-    //   }
-    // }
-
-    // async function camController(isCamOpen: boolean) {
-    //   if (localTrack) {
-    //     if (localTrack.isUpstreamPaused && !isCamOpen) {
-    //       localTrack.resumeUpstream();
-    //     } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-    //       localTrack.pauseUpstream();
-    //     } else {
-    //       console.log(
-    //         "undefined status: ",
-    //         localTrack.isUpstreamPaused,
-    //         isCamOpen
-    //       );
-    //     }
-    //   } else {
-    //     console.log("localTrack is undefined");
-    //   }
-    // }
-
-    // async function leaveRoom() {
-    //   // Leave the room by calling 'disconnect' method over the Room object
-    //   await room?.disconnect();
-
-    //   // Reset the state
-    //   setRoom(undefined);
-    //   setLocalTrack(undefined);
-    //   setRemoteTracks([]);
-    // }
-
-    // async function getToken(
-    //   roomName: string,
-    //   participantName: string,
-    //   isSeller: boolean
-    // ) {
-    //   const response = await fetch(APPLICATION_SERVER_URL + "token", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       roomName: roomName,
-    //       participantName: participantName,
-    //       isSeller: isSeller,
-    //     }),
-    //   });
-
-    //   if (!response.ok) {
-    //     const error = await response.json();
-    //     throw new Error(`Failed to get token: ${error.errorMessage}`);
-    //   }
-
-    //   const data = await response.json();
-    //   return data.token;
-    // }
+    // 경매 관련
     const [text, setText] = useState("경매 시작");
+    const [isAuctionStarted, setIsAuctionStarted] = useState(false);
+    const [everAuctionStarted, setEverAuctionStarted] = useState(false);
+
+    // OpenVidu 관련
+    const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
+    const [participantName, setParticipantName] = useState<string>(
+      props.userName
+    ); // 참가자 이름
+    const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
+    const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
+      undefined
+    );
+    const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
+
+    useImperativeHandle(ref, () => ({
+      leaveRoom,
+      micController,
+      camController,
+    }));
+
+    const join = async () => {
+      await joinRoom();
+    };
+
+    useEffect(() => {
+      console.log("component mount");
+
+      return () => {
+        console.log("component unmount");
+      };
+    }, []);
+
+    async function joinRoom() {
+      const room = new Room();
+      setRoom(room);
+
+      room.on(
+        RoomEvent.TrackSubscribed,
+        (
+          _track: RemoteTrack,
+          publication: RemoteTrackPublication,
+          participant: RemoteParticipant
+        ) => {
+          console.log(
+            "track subscribed: ",
+            publication.trackSid,
+            participant.identity
+          );
+          setRemoteTracks((prev) => [
+            ...prev,
+            {
+              trackPublication: publication,
+              participantIdentity: participant.identity,
+            },
+          ]);
+        }
+      );
+
+      room.on(
+        RoomEvent.TrackUnsubscribed,
+        (_track: RemoteTrack, publication: RemoteTrackPublication) => {
+          setRemoteTracks((prev) =>
+            prev.filter(
+              (track) =>
+                track.trackPublication.trackSid !== publication.trackSid
+            )
+          );
+        }
+      );
+
+      try {
+        const token = await getToken(roomName, participantName, isSeller);
+
+        await room.connect(LIVEKIT_URL, token);
+        console.log("connected room: ", room);
+
+        await room.localParticipant.enableCameraAndMicrophone();
+
+        setLocalTrack(
+          room.localParticipant.videoTrackPublications.values().next().value
+            .videoTrack
+        );
+      } catch (error) {
+        console.log(
+          "There was an error connecting to the room: ",
+          (error as Error).message
+        );
+        await leaveRoom();
+      }
+    }
+
+    async function micController(isMicOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isMuted && !isMicOpen) {
+          localTrack.unmute();
+        } else if (!localTrack.isMuted && isMicOpen) {
+          localTrack.mute();
+        } else {
+          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+        }
+      } else {
+        console.log("localTrack is undefined");
+      }
+    }
+
+    async function camController(isCamOpen: boolean) {
+      if (localTrack) {
+        if (localTrack.isUpstreamPaused && !isCamOpen) {
+          localTrack.resumeUpstream();
+        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+          localTrack.pauseUpstream();
+        } else {
+          console.log(
+            "undefined status: ",
+            localTrack.isUpstreamPaused,
+            isCamOpen
+          );
+        }
+      } else {
+        console.log("localTrack is undefined");
+      }
+    }
+
+    async function leaveRoom() {
+      // Leave the room by calling 'disconnect' method over the Room object
+      await room?.disconnect();
+
+      // Reset the state
+      setRoom(undefined);
+      setLocalTrack(undefined);
+      setRemoteTracks([]);
+    }
+
+    async function getToken(
+      roomName: string,
+      participantName: string,
+      isSeller: boolean
+    ) {
+      const response = await fetch(APPLICATION_SERVER_URL + "token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          roomName: roomName,
+          participantName: participantName,
+          isSeller: isSeller,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`Failed to get token: ${error.errorMessage}`);
+      }
+
+      const data = await response.json();
+      return data.token;
+    }
+
     const startAuction = (e) => {
       e.preventDefault();
 
       if (isSeller) {
-        console.log("start auction");
-        setText("경매 중");
+        if (isAuctionStarted === false) {
+          setText("경매 중");
+          setIsAuctionStarted(true);
+          setEverAuctionStarted(true);
+          join();
+        } else if (isAuctionStarted === true && everAuctionStarted === true) {
+          setText("경매 종료");
+          setIsAuctionStarted(false);
+          // 경매 종료 로직 작성
+          //
+          //
+        }
       }
     };
 
@@ -345,4 +364,4 @@ const Auctions = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 //   );
 // };
 
-export default Auctions;
+export default Auction_OpenVidu;
