@@ -33,27 +33,28 @@ export type VideoCanvasHandle = {
   leaveRoom: () => void;
 };
 
-let APPLICATION_SERVER_URL = "https://openvidu.pixeller.net/"; // The URL of your application server
+let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
-const user = sessionStorage.getItem("user");
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
-    console.log("Auction_OpenVidu On");
+    console.log("Auction_OpenVidu Seller On");
 
-    const handleClose = props.handleClose;
+    const user = sessionStorage.getItem("user");
+    const username = props.userName;
     const isSeller = props.isSeller; // 판매자 여부
+    const handleClose = props.handleClose;
 
     // 경매 관련
     const [text, setText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
 
-    // OpenVidu 관련
+    // OpenVidu 토큰 요청 정보
     const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
-    const [participantName, setParticipantName] = useState<string>(
-      props.userName
-    ); // 참가자 이름
+    const [participantName, setParticipantName] = useState<string>(username!); // 참가자 이름
+
+    // OpenVidu token 세션 접속 정보
     const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
     const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
       undefined
@@ -117,7 +118,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       );
 
       try {
-        const token = await getToken(roomName, participantName, isSeller);
+        console.log("testing:: ", roomName, participantName);
+        const token = await getToken(roomName, participantName);
 
         await room.connect(LIVEKIT_URL, token);
         console.log("connected room: ", room);
@@ -179,11 +181,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       setRemoteTracks([]);
     }
 
-    async function getToken(
-      roomName: string,
-      participantName: string,
-      isSeller: boolean
-    ) {
+    async function getToken(roomName: string, participantName: string) {
       const response = await fetch(APPLICATION_SERVER_URL + "token", {
         method: "POST",
         headers: {
@@ -192,7 +190,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
         body: JSON.stringify({
           roomName: roomName,
           participantName: participantName,
-          isSeller: isSeller,
         }),
       });
 
@@ -209,7 +206,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       e.preventDefault();
 
       if (isSeller) {
-        if (isAuctionStarted === false) {
+        if (isAuctionStarted === false && everAuctionStarted === false) {
           setText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
@@ -217,9 +214,13 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setText("경매 종료");
           setIsAuctionStarted(false);
+
           // 경매 종료 로직 작성
           //
           //
+
+          leaveRoom();
+          // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       }
     };
@@ -240,14 +241,42 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                   </p>
                 </div>
                 <div className="auction-seller-video-container">
-                  <div className="auction-seller-video-icon"></div>
+                  {localTrack && (
+                    <VideoComponent
+                      track={localTrack}
+                      participantId={participantName}
+                      local={true}
+                    />
+                  )}
+                  {/* <div className="auction-seller-video-icon"></div> */}
                   <div className="auction-seller-video-name"></div>
                 </div>
                 <UserInfo user={user} logoutEvent={null} />
               </div>
             </div>
             <div className="auction-container-right">
-              <div>
+              {remoteTracks.map((remoteTrack) => (
+                <div>
+                  <div className="auction-buyer-video-container">
+                    {remoteTrack.trackPublication.kind === "video" ? (
+                      <VideoComponent
+                        key={remoteTrack.trackPublication.trackSid}
+                        track={remoteTrack.trackPublication.videoTrack!}
+                        participantId={remoteTrack.participantIdentity}
+                      />
+                    ) : (
+                      <AudioComponent
+                        key={remoteTrack.trackPublication.trackSid}
+                        track={remoteTrack.trackPublication.audioTrack!}
+                      />
+                    )}
+                    {/* <div className="auction-buyer-video-icon"></div> */}
+                    <div className="auction-buyer-video-name"></div>
+                  </div>
+                  <UserInfo user={user} logoutEvent={null} />
+                </div>
+              ))}
+              {/* <div>
                 <div className="auction-buyer-video-container">
                   <div className="auction-buyer-video-icon"></div>
                   <div className="auction-buyer-video-name"></div>
@@ -274,7 +303,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                   <div className="auction-buyer-video-name"></div>
                 </div>
                 <UserInfo user={user} logoutEvent={null} />
-              </div>
+              </div> */}
             </div>
             <div>
               <button className="close-button" onClick={handleClose}>
@@ -287,81 +316,5 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     );
   }
 );
-
-// const Auction = ({ handleClose, auctionProduct }) => {
-//   const [text, setText] = useState("경매 시작");
-
-//   const startAuction = (e) => {
-//     e.preventDefault();
-
-//     // if (isSeller) {
-//     //   console.log("start auction");
-//     //   setText("경매 중");
-//     // }
-//   };
-//   const user = sessionStorage.getItem("user");
-
-//   return (
-//     <>
-//       <div className="auction-wrapper">
-//         <div className="auction-container">
-//           <div className="auction-container-left">
-//             <div>
-//               <div className="auction-product">
-//                 <button className="btn-auction-start" onClick={startAuction}>
-//                   {text}
-//                 </button>
-//                 <p className="bid-price">
-//                   <img src="svg/Dollar.svg" />
-//                   현재 가격 <span className="rtp"></span>
-//                 </p>
-//               </div>
-//               <div className="auction-seller-video-container">
-//                 <div className="auction-seller-video-icon"></div>
-//                 <div className="auction-seller-video-name"></div>
-//               </div>
-//               <UserInfo user={user} logoutEvent={null} />
-//             </div>
-//           </div>
-//           <div className="auction-container-right">
-//             <div>
-//               <div className="auction-buyer-video-container">
-//                 <div className="auction-buyer-video-icon"></div>
-//                 <div className="auction-buyer-video-name"></div>
-//               </div>
-//               <UserInfo user={user} logoutEvent={null} />
-//             </div>
-//             <div>
-//               <div className="auction-buyer-video-container">
-//                 <div className="auction-buyer-video-icon"></div>
-//                 <div className="auction-buyer-video-name"></div>
-//               </div>
-//               <UserInfo user={user} logoutEvent={null} />
-//             </div>
-//             <div>
-//               <div className="auction-buyer-video-container">
-//                 <div className="auction-buyer-video-icon"></div>
-//                 <div className="auction-buyer-video-name"></div>
-//               </div>
-//               <UserInfo user={user} logoutEvent={null} />
-//             </div>
-//             <div>
-//               <div className="auction-buyer-video-container">
-//                 <div className="auction-buyer-video-icon"></div>
-//                 <div className="auction-buyer-video-name"></div>
-//               </div>
-//               <UserInfo user={user} logoutEvent={null} />
-//             </div>
-//           </div>
-//           <div>
-//             <button className="close-button" onClick={handleClose}>
-//               <img src="svg/exit.svg" />
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
 
 export default Auction_OpenVidu;

@@ -331,7 +331,6 @@ class GameScene extends Phaser.Scene {
       },
       false
     );
-    console.log(this.cursors);
 
     this.qKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.Q,

@@ -4,7 +4,12 @@ import { getProductById, createPurchaseWish } from "../../api/products";
 import "./PD.css";
 import { HttpStatusCode } from "axios";
 
-const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
+const ProductDetail = ({
+  productId,
+  handleClose,
+  setAuctionProduct,
+  setIsAuctionOpen,
+}) => {
   const [product, setProduct] = useState({
     productId: "",
     name: "",
@@ -38,6 +43,11 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
 
   const handleSetAuctionProduct = (productId) => {
     setAuctionProduct(productId);
+    setIsAuctionOpen(true);
+  };
+
+  const handleSetIsAuctionOpen = () => {
+    setIsAuctionOpen(true);
   };
 
   const user = sessionStorage.getItem("user");
@@ -76,6 +86,7 @@ const ProductDetail = ({ productId, handleClose, setAuctionProduct }) => {
                 className="join-auction"
                 onClick={() => {
                   handleSetAuctionProduct(productId);
+                  handleSetIsAuctionOpen();
                 }}
               >
                 경매 참여하기

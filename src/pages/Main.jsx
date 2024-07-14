@@ -8,6 +8,7 @@ import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 import Auction from "../components/Auction/Auction.jsx";
+import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 // import Auction_OpenVidu from "../components/Auction/Auctions.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
@@ -22,6 +23,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [totalProductCounts, setTotalProductCounts] = useState(0);
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [isMicOpen, setIsMicOpen] = useState(false);
+  const [isAuctionOpen, setIsAuctionOpen] = useState(false);
   const [auctionProduct, setAuctionProductState] = useState(null);
 
   const OpenViduRef = useRef(null);
@@ -60,14 +62,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const closeAuctionModal = () => {
-    const auctionContainer = document.getElementsByClassName("auction-wrapper");
-    if (auctionContainer.length > 0) auctionContainer[0].classList.remove("on");
+    setIsAuctionOpen(false);
+    // const auctionContainer = document.getElementsByClassName("auction-wrapper");
+    // if (auctionContainer.length > 0) auctionContainer[0].classList.remove("on");
   };
 
   const setAuctionProduct = (product) => {
     setAuctionProductState(product);
-    const auctionContainer = document.getElementsByClassName("auction-wrapper");
-    if (auctionContainer.length > 0) auctionContainer[0].classList.add("on");
+    // const auctionContainer = document.getElementsByClassName("auction-wrapper");
+    // if (auctionContainer.length > 0) auctionContainer[0].classList.add("on");
   };
 
   const toggleMIC = () => {
@@ -115,6 +118,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                       productId={productId}
                       handleClose={closePDModal}
                       setAuctionProduct={setAuctionProduct}
+                      setIsAuctionOpen={setIsAuctionOpen}
                     />
                   </div>
                 </div>
@@ -129,10 +133,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   </div>
                 </div>
               ) : null}
-              <Auction
-                handleClose={closeAuctionModal}
-                auctionProduct={auctionProduct}
-              />
+              {isAuctionOpen ? (
+                <Auction
+                  isSeller={true}
+                  auctionRoomId={auctionProduct}
+                  handleClose={closeAuctionModal}
+                  auctionProduct={auctionProduct}
+                  userName={userName}
+                />
+              ) : null}
             </div>
             <div id="gameMain" className="game">
               <GameApp />
