@@ -61,7 +61,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
   (props, ref) => {
     console.log("Auction_OpenVidu Seller On");
 
-    const user = sessionStorage.getItem("user");
     const username = props.userName;
     const isSeller = props.isSeller; // 판매자 여부
     const handleClose = props.handleClose;
@@ -266,7 +265,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                   {/* <div className="auction-seller-video-icon"></div> */}
                   <div className="auction-seller-video-name"></div>
                 </div>
-                <UserInfo user={user} logoutEvent={null} />
+                <UserInfo user={username} logoutEvent={null} />
               </div>
             </div>
             <div className="auction-container-right">
@@ -288,7 +287,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                     {/* <div className="auction-buyer-video-icon"></div> */}
                     <div className="auction-buyer-video-name"></div>
                   </div>
-                  <UserInfo user={user} logoutEvent={null} />
+                  <UserInfo user={username} logoutEvent={null} />
                 </div>
               ))}
             </div>

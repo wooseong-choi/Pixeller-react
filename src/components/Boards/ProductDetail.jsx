@@ -50,7 +50,7 @@ const ProductDetail = ({
     setIsAuctionOpen(true);
   };
 
-  const user = sessionStorage.getItem("user");
+  const user = sessionStorage.getItem("username");
 
   return (
     <div className="board-wrapper" onClick={handleClose}>
