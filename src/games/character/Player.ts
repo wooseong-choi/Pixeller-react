@@ -1,3 +1,4 @@
+import { flush } from "@sentry/react";
 import Phaser from "phaser";
 
 interface iChara {
@@ -21,7 +22,13 @@ interface iChara {
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-  Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys): void;
+  Move(
+    cursor: Phaser.Types.Input.Keyboard.CursorKeys,
+    move_soundEffect:
+      | Phaser.Sound.NoAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | Phaser.Sound.WebAudioSound
+  ): void;
   Effect(): void;
 }
 
@@ -120,9 +127,7 @@ class Player implements iChara {
     this.obj.anims.create(playerWorkRConfig);
     this.obj.anims.create(playerWorkUConfig);
 
-    this.player = this.obj.physics.add
-      .sprite(x, y, preset)
-      .setScale(0.8, 0.8);
+    this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
     this.player.body.setSize(this.width, this.height, true);
     this.player.setCollideWorldBounds(true);
@@ -135,12 +140,18 @@ class Player implements iChara {
    * Player's Move method along Keyboard Events.
    * @param cursor Keyboard Events
    */
-  Move(cursor: any) {
+  Move(
+    cursor: any,
+    move_soundEffect:
+      | Phaser.Sound.NoAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | Phaser.Sound.WebAudioSound
+  ) {
     // const { left, right, up, down } = cursor;
-    const up:Phaser.Input.Keyboard.Key = cursor.up;
-    const down:Phaser.Input.Keyboard.Key = cursor.down;
-    const left:Phaser.Input.Keyboard.Key = cursor.left;
-    const right:Phaser.Input.Keyboard.Key = cursor.right;
+    const up: Phaser.Input.Keyboard.Key = cursor.up;
+    const down: Phaser.Input.Keyboard.Key = cursor.down;
+    const left: Phaser.Input.Keyboard.Key = cursor.left;
+    const right: Phaser.Input.Keyboard.Key = cursor.right;
 
     let velocityX = 0;
     let velocityY = 0;
@@ -153,7 +164,7 @@ class Player implements iChara {
       velocityX = this.speed;
       animationKey = "walk_right";
     }
-  
+
     // if (up.isDown) {
     if (up.isDown) {
       velocityY = -this.speed;
@@ -173,16 +184,21 @@ class Player implements iChara {
     this.player.setVelocity(velocityX, velocityY);
 
     if (animationKey) {
+      move_soundEffect.play({
+        loop: false,
+      });
+
       this.player.play(animationKey, true);
       this.direction = animationKey;
     } else {
+      // move_soundEffect.stop();
       this.player.setVelocity(0, 0);
       this.player.anims.stop();
     }
 
     // 위치를 정수로 반올림
-    this.player.x = Math.round(this.player.x);
-    this.player.y = Math.round(this.player.y);
+    // this.player.x = Math.round(this.player.x);
+    // this.player.y = Math.round(this.player.y);
   }
 
   /**
