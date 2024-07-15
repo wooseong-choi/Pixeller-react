@@ -307,7 +307,10 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                           track={remoteTrack.trackPublication.videoTrack!}
                           participantId={remoteTrack.participantIdentity}
                         />
-                        <UserInfo user={username} logoutEvent={null} />
+                        <UserInfo
+                          user={remoteTrack.participantIdentity}
+                          logoutEvent={null}
+                        />
                       </div>
                     </div>
                   ) : (
