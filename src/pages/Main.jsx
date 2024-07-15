@@ -63,14 +63,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const closeAuctionModal = () => {
     setIsAuctionOpen(false);
-    // const auctionContainer = document.getElementsByClassName("auction-wrapper");
-    // if (auctionContainer.length > 0) auctionContainer[0].classList.remove("on");
   };
 
   const setAuctionProduct = (product) => {
-    setAuctionProductState(product.id);
-    // const auctionContainer = document.getElementsByClassName("auction-wrapper");
-    // if (auctionContainer.length > 0) auctionContainer[0].classList.add("on");
+    console.log("main product: ", product);
+    setAuctionProductState(product);
   };
 
   const toggleMIC = () => {
@@ -141,10 +138,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 {isAuctionOpen ? (
                   <Auction_OpenVidu
                     isSeller={true}
-                    auctionRoomId={auctionProduct}
+                    auctionRoomId={auctionProduct.id}
                     handleClose={closeAuctionModal}
-                    auctionProduct={auctionProduct}
+                    auctionProduct={auctionProduct.id}
                     userName={userName}
+                    auctionPrice={auctionProduct.price}
                   />
                 ) : null}
               </div>
