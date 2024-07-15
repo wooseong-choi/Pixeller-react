@@ -102,13 +102,13 @@ export const getProductFiles = async (productId) => {
 // 구매 희망 등록
 export const createPurchaseWish = async (productId) => {
   try {
-    const response = await axiosCRUDInstance.post("/api/purchase-wish", null, {
-      productId: { productId },
-    });
+    const response = await axiosCRUDInstance.post(
+      "/api/purchase-wish?productId=" + productId
+    );
     if (response.status === 201) {
-      return response.status;
+      return true;
     } else {
-      return alert("구매 요청에 실패했습니다.");
+      return false;
     }
   } catch (error) {
     throw error;
