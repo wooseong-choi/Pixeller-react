@@ -241,6 +241,7 @@
 .chat-content > div {
   width: 85%;
   margin: auto;
+  margin-right: 30px;
 }
 .chat-rooms {
   display: inline-block;

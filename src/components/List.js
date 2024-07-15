@@ -3,6 +3,8 @@ import "../static/css/List.css";
 import Chat from "../socket/chat_direct";
 import "../components/Boards/PL.css";
 import ProductList from "./Boards/ProductList";
+import { axiosCRUDInstance } from "../api/axios";
+import { jwtDecode } from "jwt-decode";
 
 // 이걸로 유저목록 만들어서 포문돌릴것
 function getConnectedUser() {}
@@ -22,9 +24,11 @@ const List = ({
 
   const [chatComponent, setChatComponent] = useState(null);
 
+  const [chatType, setChatType] = useState("public");
+
   useEffect(() => {
     if (!chatComponent) {
-      setChatComponent(<Chat />);
+      setChatComponent(<Chat openType={chatType}/>);
     }
   }, [chatComponent]);
 
@@ -33,8 +37,20 @@ const List = ({
   };
 
   const chatRoomHandler = (e) => {
-    console.log(e.target.className);
+    if(e.target.className.indexOf("public") > -1) {
+      document.getElementsByClassName("private")[0].classList.remove("active");
+      e.target.classList.add("active");
+      setChatType("public");
+    }else if(e.target.className.indexOf("private") > -1) {
+      document.getElementsByClassName("public")[0].classList.remove("active");
+      e.target.classList.add("active");
+
+      setChatType("private");
+    }
   };
+
+  const user = jwtDecode(sessionStorage.getItem("user"));
+
 
   return (
     <>

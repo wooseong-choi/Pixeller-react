@@ -140,6 +140,11 @@ const ProductDetail = ({ handleClose }) => {
       alert("사진을 등록해주세요");
       return false;
     }
+    if( !formData.get("auction_start_time")){
+      alert("경매 시작 시간을 입력해주세요");
+      return false;
+    }
+
     // 이거 작동안하는데 왜인지 아시는분?
     if (!formData.get("member_id")) {
       alert("판매자 정보가 없습니다.");
@@ -273,6 +278,7 @@ const ProductDetail = ({ handleClose }) => {
                 name="category"
                 placeholder="카테고리를 입력해주세요"
               />
+              <input type="datetime-local" className="aucion_start_time" name="aucion_start_time" />
             </div>
             <div className="product-button">
               <div className="product-request" onClick={submitHandle}>

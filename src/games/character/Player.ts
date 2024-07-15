@@ -184,10 +184,6 @@ class Player implements iChara {
     this.player.setVelocity(velocityX, velocityY);
 
     if (animationKey) {
-      // move_soundEffect.play({
-      //   loop: true,
-      // });
-
       this.player.play(animationKey, true);
       this.direction = animationKey;
     } else {
