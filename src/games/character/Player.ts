@@ -153,6 +153,13 @@ class Player implements iChara {
     const left: Phaser.Input.Keyboard.Key = cursor.left;
     const right: Phaser.Input.Keyboard.Key = cursor.right;
 
+    if (up || down || left || right) {
+      if (!move_soundEffect.isPlaying)
+        move_soundEffect.play({
+          loop: true,
+        });
+    }
+
     let velocityX = 0;
     let velocityY = 0;
     let animationKey: string | null = null;
