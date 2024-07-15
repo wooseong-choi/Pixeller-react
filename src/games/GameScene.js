@@ -1,4 +1,3 @@
-// test
 import Phaser from "phaser";
 import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
@@ -250,6 +249,7 @@ class GameScene extends Phaser.Scene {
 
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
+    this.load.image("tile_asset", "./gfx/tile_asset.png");
     this.load.audio("step", "./assets/move_sound_effect.mp3");
 
     // font
@@ -272,14 +272,14 @@ class GameScene extends Phaser.Scene {
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
     var Asset = map.addTilesetImage("object", "object");
+    this.add.image(0,0, 'tile_asset').setOrigin(0,0).setDisplaySize(3480, 1280);
 
     // 레이어 생성
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
-    var tileLayer1 = map.createLayer("Tile Layer 1", [Asset], 0, 0);
+    metaLayer.setVisible(false);
     var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
 
     // 화면에 보이는 타일만 렌더링하도록 설정
-    tileLayer1.setCullPadding(2, 2);
     metaLayer.setCullPadding(2, 2);
     objectLayer1.setCullPadding(2, 2);
 
