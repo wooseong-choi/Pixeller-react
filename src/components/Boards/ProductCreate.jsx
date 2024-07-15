@@ -147,7 +147,7 @@ const ProductDetail = ({ handleClose }) => {
     }
     
     const databody = {
-      file: files,
+      files: files,
       name: formData.get("name"),
       description: formData.get("description"),
       price:formData.get("price"),
@@ -155,7 +155,7 @@ const ProductDetail = ({ handleClose }) => {
       member_id:userInfo.uid,
     };
 
-    return false;
+    // return false;
     try {
       const response = await axiosCRUDInstance.post("/api/products", databody, {
         headers: {
