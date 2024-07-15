@@ -141,7 +141,7 @@ class Player implements iChara {
    * @param cursor Keyboard Events
    */
   Move(
-    cursor: any,
+    cursor: Phaser.Types.Input.Keyboard.CursorKeys,
     move_soundEffect:
       | Phaser.Sound.NoAudioSound
       | Phaser.Sound.HTML5AudioSound
@@ -184,21 +184,30 @@ class Player implements iChara {
     this.player.setVelocity(velocityX, velocityY);
 
     if (animationKey) {
-      move_soundEffect.play({
-        loop: false,
-      });
+      // move_soundEffect.play({
+      //   loop: true,
+      // });
 
       this.player.play(animationKey, true);
       this.direction = animationKey;
     } else {
-      // move_soundEffect.stop();
+      move_soundEffect.stop();
       this.player.setVelocity(0, 0);
       this.player.anims.stop();
     }
 
     // 위치를 정수로 반올림
-    // this.player.x = Math.round(this.player.x);
-    // this.player.y = Math.round(this.player.y);
+    this.player.x = Math.round(this.player.x);
+    this.player.y = Math.round(this.player.y);
+
+    if(this.oldPosition.x !== this.player.x || this.oldPosition.y !== this.player.y) {
+      if (up || down || left || right) {
+        if (!move_soundEffect.isPlaying)
+          move_soundEffect.play({
+            loop: true,
+          });
+      }
+    }
   }
 
   /**
