@@ -245,6 +245,7 @@ class GameScene extends Phaser.Scene {
 
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
+    this.load.audio("step", "./assets/move_sound_effect.mp3");
 
     // font
     this.load.bitmapFont(
@@ -282,8 +283,13 @@ class GameScene extends Phaser.Scene {
 
     const rand_0_9 = Math.floor(Math.random() * 6);
 
+    // 사운드 객체 생성
+    this.move_soundEffect = this.sound.add("step");
+    this.move_soundEffect.playTime = 0.5;
+
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
+    // 캐릭터 이름 생성
     this.player.nameText = this.add.bitmapText(
       this.player.x - 10,
       this.player.y - 15,
@@ -291,6 +297,8 @@ class GameScene extends Phaser.Scene {
       this.username,
       12
     ); // or 8
+
+    // 플레이어 움직임 사운드 이펙트
 
     this.player.setCollideWorldBounds(true);
 
@@ -427,7 +435,7 @@ class GameScene extends Phaser.Scene {
    */
   update(time, delta) {
     // 플레이어 이동
-    this.Player.Move(this.cursors);
+    this.Player.Move(this.cursors, this.move_soundEffect);
 
     this.player.nameText.x = this.player.x - 10;
     this.player.nameText.y = this.player.y - 30;
@@ -449,6 +457,7 @@ class GameScene extends Phaser.Scene {
         y: Math.round(this.player.y),
         direction: this.Player.direction,
       };
+
       this.Player.oldPosition = { x: this.player.x, y: this.player.y };
       this.socket.emit("move", user);
 
