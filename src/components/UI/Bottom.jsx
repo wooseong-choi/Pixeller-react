@@ -44,16 +44,6 @@ const App = ({
         </div>
       </div>
       <div className="right-section">
-        {/* <button
-          className="nav-button"
-          onClick={() => {
-            setIsNotiOpen((prev) => !prev);
-            if (isOpen) setIsOpen((prev) => !prev);
-            if (isChatOpen) setIsChatOpen((prev) => !prev);
-          }}
-        >
-          <img src="svg/bell-icon.svg" alt="Bell" />
-        </button> */}
         <button
           className="nav-button"
           onClick={() => {

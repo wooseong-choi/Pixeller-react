@@ -20,14 +20,17 @@ import VideoComponent from "../OpenVidu/VideoComponent.tsx";
 import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 
+import Auction_max_bid from "./Auction_max_bid.jsx";
+
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
   participantIdentity: string;
 };
 
-type VideoCanvasProps = {
+type AuctionSellerProps = {
   userName: string;
   auctionRoomId: string;
+  auctionPrice: number;
   isSeller: boolean;
   handleClose: () => void;
 };
@@ -39,9 +42,10 @@ export type VideoCanvasHandle = {
 let APPLICATION_SERVER_URL = "https://openvidu-token.pixeller.net/"; // The URL of your application server
 let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit server
 
-const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
+const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
     console.log("Auction_OpenVidu Seller On");
+    console.log(props);
 
     // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
 
@@ -54,7 +58,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     const [text, setText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
-    const initialPrice = 5000; // 초기 경매 시작 가격
+    const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
 
     // bid analyzer
     const {
@@ -264,6 +268,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     return (
       <>
         <div className="auction-wrapper">
+          <Auction_max_bid price={currentPrice} />
           <div className="auction-container">
             <div className="auction-container-left">
               <div>
@@ -277,7 +282,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                     <span className="rtp">{formatAmount(currentPrice)}</span>
                   </p>
                 </div>
-
                 {localTrack && (
                   <VideoComponent
                     track={localTrack}
@@ -296,6 +300,9 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                 </div>
               </div>
             </div>
+            <div className="auction-container-mid">
+              <div className="auction-container-mid-inner"></div>
+            </div>
             <div className="auction-container-right">
               {remoteTracks.map((remoteTrack) => (
                 <>
@@ -307,7 +314,10 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                           track={remoteTrack.trackPublication.videoTrack!}
                           participantId={remoteTrack.participantIdentity}
                         />
-                        <UserInfo user={username} logoutEvent={null} />
+                        <UserInfo
+                          user={remoteTrack.participantIdentity}
+                          logoutEvent={null}
+                        />
                       </div>
                     </div>
                   ) : (
