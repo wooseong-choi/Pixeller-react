@@ -253,6 +253,7 @@ class GameScene extends Phaser.Scene {
       "./fonts/MangoByeolbyeol.png",
       "./fonts/MangoByeolbyeol.xml"
     );
+
   }
 
   /**
@@ -435,7 +436,7 @@ class GameScene extends Phaser.Scene {
   update(time, delta) {
     // 플레이어 이동
     this.Player.Move(this.cursors, this.move_soundEffect);
-
+    
     this.player.nameText.x = this.player.x - 10;
     this.player.nameText.y = this.player.y - 30;
 

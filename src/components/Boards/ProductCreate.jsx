@@ -5,6 +5,7 @@ import { createProduct } from "../../api/products";
 import UserInfo from "../UI/UserInfo";
 import { jwtDecode } from "jwt-decode";
 import { axiosCRUDInstance } from "../../api/axios";
+import axios from "axios";
 const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -75,9 +76,46 @@ const ProductDetail = ({ handleClose }) => {
     setValue(numericValue);
   };
 
+  const getUploadUrl = async (file) => {
+    // const formData = new FormData();
+    // formData.append("file", file);
+    const axiosHingInstance = axios.create({
+      baseURL: "//192.168.0.46:8080", // Change this to Backend API URL
+      timeout: 1000,
+    });
+
+    const response = await axiosHingInstance.get("/api/presigned-url/"+file.name, {
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        authorization: "Bearer " + sessionStorage.getItem("user"),
+      },
+    });
+    return response.data;
+  };
+
   const submitHandle = async (event) => {
     const form = document.querySelector('form[name="create_form"');
     const formData = new FormData(form);
+    console.log(form.imgFiles.files);
+
+    const files = [];
+
+    for (let i = 0; i < form.imgFiles.files.length; i++) {
+      const file = form.imgFiles.files[i];
+      const uploadUrl = await getUploadUrl(file);
+      console.log(uploadUrl.data.url);
+      
+      const response = await axios.put(uploadUrl.data.url, file, {
+        headers: {
+          'Content-Type': 'image/png',
+          // authorization: "Bearer " + sessionStorage.getItem("user"),
+        },
+      });
+
+      files.push({path: uploadUrl.data.url, filename: file.name});
+
+      console.log(response);
+    }
 
     // validation check
     if (!formData.get("name")) {
@@ -97,7 +135,8 @@ const ProductDetail = ({ handleClose }) => {
       return false;
     }
     // if (!formData.get("imgFiles")) {
-    if (selectedFiles.length === 0) {
+    var fileCheck = document.getElementById("file-input").value;
+    if(!fileCheck){
       alert("사진을 등록해주세요");
       return false;
     }
@@ -106,18 +145,29 @@ const ProductDetail = ({ handleClose }) => {
       alert("판매자 정보가 없습니다.");
       return false;
     }
+    
+    const databody = {
+      files: files,
+      name: formData.get("name"),
+      description: formData.get("description"),
+      price:formData.get("price"),
+      category:formData.get("category"),
+      member_id:userInfo.uid,
+    };
 
     // return false;
     try {
-      const response = await axiosCRUDInstance.post("/api/products", formData, {
+      const response = await axiosCRUDInstance.post("/api/products", databody, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           authorization: "Bearer " + sessionStorage.getItem("user"),
         },
       });
 
       if (response.status === 201) {
         alert("상품이 등록되었습니다.");
+        form.reset();
         handleClose();
       }
       // return response.data;

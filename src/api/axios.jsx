@@ -26,8 +26,9 @@ axiosInstance.interceptors.request.use(
 );
 
 const axiosCRUDInstance = axios.create({
-  baseURL: "https://lionreport.pixeller.net", // Change this to Backend API URL
-  timeout: 1000,
+  baseURL: "//lionreport.pixeller.net", // Change this to Backend API URL
+  // baseURL: "//192.168.0.46:8080", // Change this to Backend API URL
+  timeout: 5000,
 });
 
 axiosCRUDInstance.interceptors.request.use(
