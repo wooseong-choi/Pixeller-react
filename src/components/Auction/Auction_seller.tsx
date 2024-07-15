@@ -277,7 +277,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                     <span className="rtp">{formatAmount(currentPrice)}</span>
                   </p>
                 </div>
-
                 {localTrack && (
                   <VideoComponent
                     track={localTrack}
@@ -296,6 +295,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
                 </div>
               </div>
             </div>
+            <div className="auction-container-mid"></div>
             <div className="auction-container-right">
               {remoteTracks.map((remoteTrack) => (
                 <>

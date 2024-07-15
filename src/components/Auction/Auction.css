@@ -9,8 +9,8 @@
   justify-content: center;
   align-items: center;
   z-index: 1001;
-  display: flex;
 }
+
 .auction-wrapper.on {
   display: flex;
 }
@@ -24,18 +24,44 @@
   border-radius: 15px;
   /* padding: 20px; */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  height: 100%;
-  max-height: 800px;
+  height: 90%;
+  /* max-height: 800px; */
   position: relative;
 }
 
 .auction-container-left {
-  flex: 1;
+  flex: 3; /* 30% */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.auction-container-mid {
+  flex: 1; /* 10% */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.5); /* 임시 배경색 */
+}
+
+.auction-container-right {
+  flex: 6; /* 60% */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.auction-container-right > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-auction-start {
@@ -79,20 +105,6 @@
   color: white;
 }
 
-.auction-container-right {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-}
-
-.auction-container-right > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .auction-buyer-video-container {
   background-color: #ffffff;
   border-radius: 15px;
@@ -129,6 +141,7 @@
   margin-bottom: 20px;
   line-height: 32px;
 }
+
 .bid-price img {
   display: inline;
 }
