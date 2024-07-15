@@ -206,6 +206,16 @@ class Player implements iChara {
     // 위치를 정수로 반올림
     this.player.x = Math.round(this.player.x);
     this.player.y = Math.round(this.player.y);
+
+    if(this.oldPosition.x !== this.player.x || this.oldPosition.y !== this.player.y) {
+      if (up || down || left || right) {
+        if (!move_soundEffect.isPlaying)
+          move_soundEffect.play({
+            volume: 0.5,
+            loop: true,
+          });
+      }
+    }
   }
 
   /**

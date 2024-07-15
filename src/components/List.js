@@ -31,6 +31,11 @@ const List = ({
   const toggleMenu = (val, method) => {
     method(!val);
   };
+
+  const chatRoomHandler = (e) => {
+    console.log(e.target.className);
+  };
+
   return (
     <>
       <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
@@ -54,8 +59,8 @@ const List = ({
 
         <nav className="chat-content">{chatComponent}</nav>
         <div className="chat-rooms">
-          <div className="chat-room public"></div>
-          <div className="chat-room private"></div>
+          <div className="chat-room public" onClick={chatRoomHandler}></div>
+          <div className="chat-room private" onClick={chatRoomHandler}></div>
         </div>
       </div>
 
