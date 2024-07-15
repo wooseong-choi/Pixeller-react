@@ -155,7 +155,7 @@ class OPlayer implements iChara {
       this.player.x - 10,
       this.player.y - 30,
       "font",
-      this.name,
+      this.name!,
       12
     );
 

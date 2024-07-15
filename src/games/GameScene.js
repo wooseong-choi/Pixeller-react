@@ -246,8 +246,8 @@ class GameScene extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
     this.load.audio("step", "./assets/move_sound_effect.mp3");
-    this.load.audio("bgm1", "./sounds/market_sound.mp3");
-    this.load.audio("bgm2", "./sounds/store_sound.mp3");
+    // this.load.audio("bgm1", "./sounds/market_sound.mp3");
+    // this.load.audio("bgm2", "./sounds/store_sound.mp3");
 
     // font
     this.load.bitmapFont(
@@ -289,8 +289,8 @@ class GameScene extends Phaser.Scene {
     this.move_soundEffect.playTime = 0.5;
 
     // BGM 객체 생성
-    var bgm1 = this.sound.add("bgm1");
-    var bgm2 = this.sound.add("bgm2");
+    // var bgm1 = this.sound.add("bgm1");
+    // var bgm2 = this.sound.add("bgm2");
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
@@ -400,13 +400,13 @@ class GameScene extends Phaser.Scene {
       });
     });
 
-    bgm1.on("complete", () => {
-      bgm2.play();
-    });
-    bgm2.on("complete", () => {
-      bgm1.play();
-    });
-    bgm1.play();
+    // bgm1.on("complete", () => {
+    //   bgm2.play();
+    // });
+    // bgm2.on("complete", () => {
+    //   bgm1.play();
+    // });
+    // bgm1.play();
   }
 
   resize(gameSize) {
