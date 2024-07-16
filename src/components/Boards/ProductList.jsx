@@ -20,6 +20,7 @@ const ProductList = ({ openPDModal, openPCModal, setTotalProductCounts }) => {
           id: item.productId,
           name: item.name,
           sender_name: item.memberId,
+          price: item.price,
         };
       });
       setSidebarItems(products);
