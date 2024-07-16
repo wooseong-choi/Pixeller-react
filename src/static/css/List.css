@@ -224,7 +224,7 @@
 }
 
 .chat-content {
-  display: inline-block;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -241,6 +241,7 @@
 .chat-content > div {
   width: 85%;
   margin: auto;
+  margin-right: 30px;
 }
 .chat-rooms {
   display: inline-block;
@@ -343,4 +344,8 @@
 .chat-room:hover, .chat-room.active {
   /* background-color: #6bab8d; */
   box-shadow: inset 0px 0px 5px 0px;
+}
+
+.chat-content.active {
+  display: inline-block;
 }
