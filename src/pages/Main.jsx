@@ -46,6 +46,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const openPDModal = (product) => {
     setProductDetailOpen(true);
+    // console.log("main에서 찍는 product: ", product);
     setProductId(product);
   };
 

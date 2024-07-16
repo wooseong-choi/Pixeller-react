@@ -18,7 +18,8 @@ const ProductDetail = ({
   });
 
   const handlePurchaseWish = () => {
-    if (createPurchaseWish(productId.id) === HttpStatusCode.Created) {
+    // console.log(createPurchaseWish(productId.id));
+    if (createPurchaseWish(productId.id)) {
       alert("구매 요청이 완료되었습니다.");
     }
   };
