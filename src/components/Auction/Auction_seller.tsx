@@ -44,8 +44,6 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
-    console.log("Auction_OpenVidu Seller On");
-    console.log(props);
 
     // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
 
