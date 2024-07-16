@@ -5,13 +5,14 @@ import Stomp from 'stompjs';
 import ChatDivComponent from './chat_div_component';
 
 const Chat = ({stompClient}) => {
-    // const [stompClient, setStompClient] = useState(null);
-    // const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [chatList, setChatList] = useState([]);
     const user = jwtDecode(sessionStorage.getItem('user') );
 
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
+
+    const [chatRoomId, setChatRoomId] = useState(null);
 
     useEffect(() => {
         if (stompClient) {
@@ -37,17 +38,27 @@ const Chat = ({stompClient}) => {
         // console.log(chatList);
     }; 
 
+    const joinRoomHandler = (e) => {
+        const roomId = e.currentTarget.getAttribute('id');
+        console.log(roomId);
+        setChatRoomId(roomId.split('-')[1]);
+    }
+
+
     return (
         <>
-            {/* <ChatDivComponent stompClient={stompClient} messages={messages} /> */}
+            {chatRoomId!=null?
+                <ChatDivComponent stompClient={stompClient} messages={messages} />
+            :
             <div>
                 {chatList.map((chat, index) => (
-                    <div key={index} id={`roomid-${chat.chatRoomId}`} className={`chatbox `}>
+                    <div key={index} id={`roomid-${chat.chatRoomId}`} className={`chatbox `} onClick={joinRoomHandler}>
                         <span className="chat-room-id">{chat.chatRoomId}</span>
                         <span className="chat-room-message">{chat.message}</span>
                     </div>
                 ))}
             </div>
+            }
         </>
     );
 };
