@@ -101,28 +101,30 @@ class OPlayer implements iChara {
     this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
     this.player.setCollideWorldBounds(true);
-    this.player.body.setSize(this.width, this.height, true);
-    this.oldPosition = { x: x, y: y };
+    if (this.player.body) {
+      this.player.body.setSize(this.width, this.height, true);
+    }
+    this.oldPosition = { x, y };
 
     this.nameText = this.obj.add.bitmapText(
       this.player.x - 10,
       this.player.y - 30,
       "font",
-      this.name!,
+      this.name,
       12
     );
 
-    // 애니메이션 로드 확인
-    directions.forEach(dir => {
-      if (!this.obj.anims.exists(`${preset}_walk_${dir}`)) {
-        // console.error(`Animation ${preset}_walk_${dir} not found`);
-      }
-    });
+    // // 애니메이션 로드 확인
+    // directions.forEach(dir => {
+    //   if (!this.obj.anims.exists(`${preset}_walk_${dir}`)) {
+    //     // console.error(`Animation ${preset}_walk_${dir} not found`);
+    //   }
+    // });
 
-    if (!this.player.anims) {
-      console.error('Animation component not initialized');
-      return null;
-    }
+    // if (!this.player.anims) {
+    //   console.error('Animation component not initialized');
+    //   return null;
+    // }
 
     return this.player;
   }
@@ -133,15 +135,17 @@ class OPlayer implements iChara {
 
   setMoving(isMoving: boolean) {
     this.onMove = isMoving;
-    if (!isMoving) {
-      this.player.anims.pause();
-    } else {
-      this.player.anims.resume();
+    if (this.player && this.player.anims) {
+      if (!isMoving) {
+        this.player.anims.pause();
+      } else {
+        this.player.anims.resume();
+      }
     }
   }
 
   playAnimation(direction: string) {
-    if (this.player.anims && this.player.anims.exists(`${this.preset}_walk_${direction}`)) {
+    if (this.player && this.player.anims && this.player.anims.exists(`${this.preset}_walk_${direction}`)) {
       this.player.anims.play(`${this.preset}_walk_${direction}`, true);
     // } else {
       // console.error(`Animation ${this.preset}_walk_${direction} not found`);
@@ -179,7 +183,7 @@ class OPlayer implements iChara {
           },
           onComplete: () => {
             this.onMove = false;
-            if (this.player.anims) this.player.anims.stop();
+            if (this.player && this.player.anims) this.player.anims.stop();
             resolve();
           },
         });
