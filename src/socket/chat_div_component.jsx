@@ -10,6 +10,8 @@ const ChatDivComponent = ({stompClient,messages}) => {
     const user = jwtDecode(sessionStorage.getItem('user') );
 
     const handleMessageChange = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         setMessage(e.target.value);
     };
     const sendMessage = () => {
