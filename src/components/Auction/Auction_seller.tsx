@@ -59,7 +59,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
     const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
-
+    console.log(props);
     // bid analyzer
     const {
       listening,
