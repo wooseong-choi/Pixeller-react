@@ -29,18 +29,18 @@ const App = ({
         <div className="center-section">
           <button className="nav-button" onClick={setIsMicOpen}>
             {isMicOpen ? (
-              <img src="svg/microphone-icon.svg" alt="Microphone" />
-            ) : (
-              <img src="svg/microphone-x-icon.svg" alt="Microphone" />
-            )}
-          </button>
-          <button className="nav-button" onClick={setIsCamOpen}>
-            {isCamOpen ? (
               <img src="svg/video-icon.svg" alt="Video" />
             ) : (
               <img src="svg/video-x-icon.svg" alt="Video" />
             )}
           </button>
+          {/* <button className="nav-button" onClick={setIsCamOpen}>
+            {isCamOpen ? (
+              <img src="svg/video-icon.svg" alt="Video" />
+            ) : (
+              <img src="svg/video-x-icon.svg" alt="Video" />
+            )}
+          </button> */}
         </div>
       </div>
       <div className="right-section">
