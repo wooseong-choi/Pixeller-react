@@ -21,7 +21,7 @@ const GameApp = () => {
   };
 
   window.addEventListener("resize", handleResize);
-  
+
   useEffect(() => {
     // Phaser.Game 인스턴스가 여러 번 생성되지 않도록 확인
     if (!window.game) {
@@ -38,7 +38,7 @@ const GameApp = () => {
           default: "arcade",
           arcade: {
             gravity: { y: 0, x: 0 },
-            debug: true,
+            debug: false,
             fps: 60,
           },
         },

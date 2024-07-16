@@ -52,7 +52,7 @@ class Player implements iChara {
     this.width = width;
     this.height = height;
     this.direction = "down";
-    this.speed = 160;
+    this.speed = 200;
   }
 
   /**
@@ -153,12 +153,83 @@ class Player implements iChara {
     const left: Phaser.Input.Keyboard.Key = cursor.left;
     const right: Phaser.Input.Keyboard.Key = cursor.right;
 
-    if (up || down || left || right) {
-      if (!move_soundEffect.isPlaying)
-        move_soundEffect.play({
-          loop: true,
-        });
+    let velocityX = 0;
+    let velocityY = 0;
+    let animationKey: string | null = null;
+
+    if (left.isDown) {
+      velocityX = -this.speed;
+      animationKey = "walk_left";
+    } else if (right.isDown) {
+      velocityX = this.speed;
+      animationKey = "walk_right";
     }
+
+    // if (up.isDown) {
+    if (up.isDown) {
+      velocityY = -this.speed;
+      animationKey = "walk_up";
+    } else if (down.isDown) {
+      velocityY = this.speed;
+      animationKey = "walk_down";
+    }
+
+    // 대각선 이동 시 속도 정규화
+    if (velocityX !== 0 && velocityY !== 0) {
+      const factor = 1 / Math.sqrt(2);
+      velocityX *= factor;
+      velocityY *= factor;
+    }
+
+    this.player.setVelocity(velocityX, velocityY);
+
+    if (animationKey) {
+      this.player.play(animationKey, true);
+      this.direction = animationKey;
+    } else {
+      move_soundEffect.stop();
+      this.player.setVelocity(0, 0);
+      this.player.anims.stop();
+    }
+
+    // 위치를 정수로 반올림
+    // this.player.x = Math.round(this.player.x);
+    // this.player.y = Math.round(this.player.y);
+
+    if (
+      this.oldPosition.x !== this.player.x ||
+      this.oldPosition.y !== this.player.y
+    ) {
+      if (up || down || left || right) {
+        if (!move_soundEffect.isPlaying)
+          move_soundEffect.play({
+            volume: 0.5,
+            loop: true,
+          });
+      }
+    }
+  }
+
+  Move_(
+    keyboard: Phaser.Input.Keyboard.KeyboardPlugin,
+    move_soundEffect:
+      | Phaser.Sound.NoAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | Phaser.Sound.WebAudioSound
+  ) {
+    // const { left, right, up, down } = cursor;
+    const up: Phaser.Input.Keyboard.Key = keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.W
+    );
+    const down: Phaser.Input.Keyboard.Key = keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.S
+    );
+    const left: Phaser.Input.Keyboard.Key = keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.A
+    );
+    const right: Phaser.Input.Keyboard.Key = keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.D
+    );
 
     let velocityX = 0;
     let velocityY = 0;
@@ -191,10 +262,6 @@ class Player implements iChara {
     this.player.setVelocity(velocityX, velocityY);
 
     if (animationKey) {
-      // move_soundEffect.play({
-      //   loop: true,
-      // });
-
       this.player.play(animationKey, true);
       this.direction = animationKey;
     } else {
@@ -204,10 +271,13 @@ class Player implements iChara {
     }
 
     // 위치를 정수로 반올림
-    this.player.x = Math.round(this.player.x);
-    this.player.y = Math.round(this.player.y);
+    // this.player.x = Math.round(this.player.x);
+    // this.player.y = Math.round(this.player.y);
 
-    if(this.oldPosition.x !== this.player.x || this.oldPosition.y !== this.player.y) {
+    if (
+      this.oldPosition.x !== this.player.x ||
+      this.oldPosition.y !== this.player.y
+    ) {
       if (up || down || left || right) {
         if (!move_soundEffect.isPlaying)
           move_soundEffect.play({

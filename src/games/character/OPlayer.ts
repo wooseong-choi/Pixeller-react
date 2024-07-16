@@ -58,7 +58,7 @@ class OPlayer implements iChara {
     this.obj = obj;
     this.width = width;
     this.height = height;
-    this.speed = 160;
+    this.speed = 200;
     this.name = name;
     this.direction = "down";
     this.uid = uid;
@@ -108,7 +108,7 @@ class OPlayer implements iChara {
       this.player.x - 10,
       this.player.y - 30,
       "font",
-      this.name,
+      this.name!,
       12
     );
 
@@ -198,6 +198,26 @@ class OPlayer implements iChara {
 
     this.player.x = targetX;
     this.player.y = targetY;
+  }
+
+  hit(bullet) {
+    const angle = Phaser.Math.Angle.Between(
+      bullet.x,
+      bullet.y,
+      this.player.x,
+      this.player.y
+    );
+    const offsetX = Math.cos(angle) * 10;
+    const offsetY = Math.sin(angle) * 10;
+
+    this.obj.tweens.add({
+      targets: this.player,
+      x: this.player.x + offsetX,
+      y: this.player.y + offsetY,
+      duration: 100,
+      ease: "Linear",
+      yoyo: true,
+    });
   }
 
   Effect() {}

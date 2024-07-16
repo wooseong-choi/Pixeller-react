@@ -82,11 +82,12 @@ class GameScene extends Phaser.Scene {
                 data.user.clientid
               );
               const rand_0_9 = Math.floor(Math.random() * 6);
-              this.OPlayer[data.user.uid].Create(
+              const oplayer_sprite = this.OPlayer[data.user.uid].Create(
                 data.user.x,
                 data.user.y,
                 "player" + rand_0_9
               );
+              this.players.add(oplayer_sprite);
             } else {
               this.OPlayer[data.user.uid].clientid = data.user.clientid;
               this.OPlayer[data.user.uid].x = data.user.x;
@@ -101,11 +102,12 @@ class GameScene extends Phaser.Scene {
               data.user.clientid
             );
             const rand_0_9 = Math.floor(Math.random() * 6);
-            this.OPlayer[data.user.uid].Create(
+            const oplayer_sprite = this.OPlayer[data.user.uid].Create(
               data.user.x,
               data.user.y,
               "player" + rand_0_9
             );
+            this.players.add(oplayer_sprite);
           }
           break;
 
@@ -132,6 +134,8 @@ class GameScene extends Phaser.Scene {
           if (this.OPlayer[data.uid]) {
             this.OPlayer[data.uid].Destroy();
             delete this.OPlayer[data.uid];
+            delete this.temp_OPlayer[data.uid];
+            delete this.players[data.uid]; // <- ?? 검증 필요
           }
           console.log(this.OPlayer);
           break;
@@ -245,7 +249,13 @@ class GameScene extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "./map/map.json");
     this.load.image("object", "./gfx/object.png");
     this.load.image("tile_asset", "./gfx/tile_asset.png");
-    this.load.audio("step", "./assets/move_sound_effect.mp3");
+    this.load.audio("step", "./sounds/move_sound_effect.mp3");
+    // this.load.audio("bgm1", "./sounds/market_sound.mp3");
+    // this.load.audio("bgm2", "./sounds/store_sound.mp3");
+
+    // bullet
+    this.load.image("bullet", "./assets/bullet_02.png");
+    this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // font
     this.load.bitmapFont(
@@ -253,7 +263,6 @@ class GameScene extends Phaser.Scene {
       "./fonts/MangoByeolbyeol.png",
       "./fonts/MangoByeolbyeol.xml"
     );
-
   }
 
   /**
@@ -267,7 +276,10 @@ class GameScene extends Phaser.Scene {
     // 맵 생성
     var map = this.make.tilemap({ key: "map" });
     var Asset = map.addTilesetImage("object", "object");
-    this.add.image(0,0, 'tile_asset').setOrigin(0,0).setDisplaySize(3480, 1280);
+    this.add
+      .image(0, 0, "tile_asset")
+      .setOrigin(0, 0)
+      .setDisplaySize(3480, 1280);
 
     // 레이어 생성
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
@@ -286,9 +298,18 @@ class GameScene extends Phaser.Scene {
     // 사운드 객체 생성
     this.move_soundEffect = this.sound.add("step");
     this.move_soundEffect.playTime = 0.5;
+    this.shoot_soundEffect = this.sound.add("shoot");
+
+    // BGM 객체 생성
+    // var bgm1 = this.sound.add("bgm1");
+    // var bgm2 = this.sound.add("bgm2");
 
     // 플레이어 생성
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
+
+    this.players = this.add.group();
+    this.players.add(this.player);
+
     // 캐릭터 이름 생성
     this.player.nameText = this.add.bitmapText(
       this.player.x - 10,
@@ -298,7 +319,20 @@ class GameScene extends Phaser.Scene {
       12
     ); // or 8
 
-    // 플레이어 움직임 사운드 이펙트
+    // 총알 생성
+    this.bullets = this.physics.add.group({
+      maxSize: 10,
+      defaultKey: "bullet",
+    });
+
+    // 총알과 플레이어의 충돌 설정
+    this.physics.add.overlap(
+      this.players,
+      this.bullets,
+      this.handlePlayerHit,
+      null,
+      this
+    );
 
     this.player.setCollideWorldBounds(true);
 
@@ -361,6 +395,10 @@ class GameScene extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.O,
       false
     );
+    // space key: shoot
+    this.spaceKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
 
     this.scale.on("resize", this.resize, this);
 
@@ -394,6 +432,14 @@ class GameScene extends Phaser.Scene {
         cam.startFollow(this.player, true, 0.05, 0.05);
       });
     });
+
+    // bgm1.on("complete", () => {
+    //   bgm2.play();
+    // });
+    // bgm2.on("complete", () => {
+    //   bgm1.play();
+    // });
+    // bgm1.play();
   }
 
   resize(gameSize) {
@@ -422,8 +468,51 @@ class GameScene extends Phaser.Scene {
       const user = this.temp_OPlayer[key];
 
       const rand_0_9 = Math.floor(Math.random() * 6);
-      this.OPlayer[key].Create(user.x, user.y, "player" + rand_0_9);
+      const oplayer_sprite = this.OPlayer[key].Create(
+        user.x,
+        user.y,
+        "player" + rand_0_9
+      );
+      this.players.add(oplayer_sprite);
     }
+
+    // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
+    // for (let key in this.OPlayer) {
+    //   this.players.add(this.OPlayer[key].sprite);
+    // }
+  }
+
+  handlePlayerHit(player, bullet) {
+    if (player.hit) {
+      // player.hit(bullet);
+    } else {
+      // OPlayer의 경우
+      const angle = Phaser.Math.Angle.Between(
+        bullet.x,
+        bullet.y,
+        player.x,
+        player.y
+      );
+      const offsetX = Math.cos(angle) * 10; // 밀려나는 거리 조절
+      const offsetY = Math.sin(angle) * 10; // 밀려나는 거리 조절
+
+      this.tweens.add({
+        targets: player,
+        x: player.x + offsetX,
+        y: player.y + offsetY,
+        duration: 100,
+        yoyo: true,
+      });
+    }
+
+    // 서버로 피격 정보 전송
+    // this.socket.emit("hit", {
+    //   uid: this.uid,
+    //   username: this.username,
+    //   target: player.uid,
+    // });
+
+    bullet.setActive(false).setVisible(false);
   }
 
   /**
@@ -435,8 +524,9 @@ class GameScene extends Phaser.Scene {
    */
   update(time, delta) {
     // 플레이어 이동
-    this.Player.Move(this.cursors, this.move_soundEffect);
-    
+    // this.Player.Move(this.cursors, this.move_soundEffect);
+    this.Player.Move_(this.input.keyboard, this.move_soundEffect);
+
     this.player.nameText.x = this.player.x - 10;
     this.player.nameText.y = this.player.y - 30;
 
@@ -464,22 +554,59 @@ class GameScene extends Phaser.Scene {
       this.lastPositionUpdateTime = time;
     }
 
+    // bullets
+    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+      const pointer = this.input.activePointer;
+      const bullet = this.bullets.get(this.player.x, this.player.y);
+      if (bullet) {
+        bullet.setActive(true).setVisible(true);
+
+        // 총알 각도 설정
+        const angle = Phaser.Math.Angle.Between(
+          this.player.x,
+          this.player.y,
+          pointer.worldX,
+          pointer.worldY
+        );
+        bullet.setRotation(angle).setScale(0.3, 0.3);
+
+        this.physics.moveTo(bullet, pointer.x, pointer.y, 2000);
+        // bullet.body.setVelocityY(-300);
+        // bullet.body.velocity.y = -300;
+        this.shoot_soundEffect.play({
+          volume: 0.5,
+        });
+      }
+    }
+
+    this.bullets.children.each((bullet) => {
+      if (
+        bullet.active &&
+        (bullet.y < 0 ||
+          bullet.y > 1280 || // map height로 변경할 것
+          bullet.x < 0 ||
+          bullet.x > 3480) // map width로 변경할 것
+      ) {
+        bullet.setActive(false).setVisible(false);
+      }
+    }, this);
+
     // 'Q' 키가 눌렸을 때 실행할 코드
-    if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
-      this.Player.moveTo(600, 320);
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.wKey)) {
-      this.Player.moveTo(1400, 320);
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-      this.Player.moveTo(2200, 320);
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
-      this.Player.moveTo(3000, 320);
-    }
+    // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
+    // this.Player.moveTo(600, 320);
+    // }
+    //
+    // if (Phaser.Input.Keyboard.JustDown(this.wKey)) {
+    // this.Player.moveTo(1400, 320);
+    // }
+    //
+    // if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+    // this.Player.moveTo(2200, 320);
+    // }
+    //
+    // if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
+    // this.Player.moveTo(3000, 320);
+    // }
 
     if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
       window.dispatchEvent(
