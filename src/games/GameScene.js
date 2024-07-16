@@ -22,12 +22,13 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
     this.uid = null;
+    this.players = null;
 
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-    // this.socket = io("ws://192.168.0.96:3333/ws", {
+      // this.socket = io("ws://192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -59,7 +60,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // 메인 통신 로직
-    this.socket.on("message", (data) => {
+    this.socket.on("message", async (data) => {
       // console.log(data);
       switch (data.type) {
         // 채팅 메시지 처리
@@ -71,61 +72,63 @@ class GameScene extends Phaser.Scene {
         case "join":
           console.log("New player connected: " + data);
           // console.log(data);
-          if (this.OPlayer[data.user.uid] !== undefined) {
-            if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
-              this.OPlayer[data.user.uid].Destroy();
-              this.OPlayer[data.user.uid] = new OPlayer(
-                this,
-                data.user.username,
-                CHARACTER_WIDTH,
-                CHARACTER_HEIGHT,
-                data.user.clientid
-              );
-              const rand_0_9 = Math.floor(Math.random() * 6);
-              const oplayer_sprite = this.OPlayer[data.user.uid].Create(
-                data.user.x,
-                data.user.y,
-                "player" + rand_0_9
-              );
-              this.players.add(oplayer_sprite);
-            } else {
-              this.OPlayer[data.user.uid].clientid = data.user.clientid;
-              this.OPlayer[data.user.uid].x = data.user.x;
-              this.OPlayer[data.user.uid].y = data.user.y;
-            }
-          } else {
-            this.OPlayer[data.user.uid] = new OPlayer(
-              this,
-              data.user.username,
-              CHARACTER_WIDTH,
-              CHARACTER_HEIGHT,
-              data.user.clientid
-            );
-            const rand_0_9 = Math.floor(Math.random() * 6);
-            const oplayer_sprite = this.OPlayer[data.user.uid].Create(
-              data.user.x,
-              data.user.y,
-              "player" + rand_0_9
-            );
-            this.players.add(oplayer_sprite);
-          }
+          // if (this.OPlayer[data.user.uid] !== undefined) {
+          //   if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
+          //     this.OPlayer[data.user.uid].Destroy();
+          //     this.OPlayer[data.user.uid] = new OPlayer(
+          //       this,
+          //       data.user.username,
+          //       CHARACTER_WIDTH,
+          //       CHARACTER_HEIGHT,
+          //       data.user.clientid
+          //     );
+          //     const rand_0_9 = Math.floor(Math.random() * 6);
+          //     const oplayer_sprite = this.OPlayer[data.user.uid].Create(
+          //       data.user.x,
+          //       data.user.y,
+          //       "player" + rand_0_9
+          //     );
+          //     this.players.add(oplayer_sprite);
+          //   } else {
+          //     this.OPlayer[data.user.uid].clientid = data.user.clientid;
+          //     this.OPlayer[data.user.uid].x = data.user.x;
+          //     this.OPlayer[data.user.uid].y = data.user.y;
+          //   }
+          // } else {
+          //   this.OPlayer[data.user.uid] = new OPlayer(
+          //     this,
+          //     data.user.username,
+          //     CHARACTER_WIDTH,
+          //     CHARACTER_HEIGHT,
+          //     data.user.clientid
+          //   );
+          //   const rand_0_9 = Math.floor(Math.random() * 6);
+          //   const oplayer_sprite = this.OPlayer[data.user.uid].Create(
+          //     data.user.x,
+          //     data.user.y,
+          //     "player" + rand_0_9
+          //   );
+          //   this.players.add(oplayer_sprite);
+          // }
+          await this.handleJoinEvent(data);
           break;
 
         // 유저 움직임 처리
         case "move":
           // console.log(data);
-          const user = data.user;
+          // const user = data.user;
 
-          // 움직인 유저 정보만 받아와서 갱신해주기
-          if (this.OPlayer[user.uid]) {
-            const otherPlayer = this.OPlayer[user.uid];
-            if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
-              otherPlayer.moveTo(user.x, user.y, user.direction);
-              otherPlayer.setMoving(true);
-            } else {
-              otherPlayer.setMoving(false);
-            }
-          }
+          // // 움직인 유저 정보만 받아와서 갱신해주기
+          // if (this.OPlayer[user.uid]) {
+          //   const otherPlayer = this.OPlayer[user.uid];
+          //   if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
+          //     otherPlayer.moveTo(user.x, user.y, user.direction);
+          //     otherPlayer.setMoving(true);
+          //   } else {
+          //     otherPlayer.setMoving(false);
+          //   }
+          // }
+          await this.handleMoveEvent(data);
           break;
 
         // 해당 유저 삭제
@@ -160,9 +163,9 @@ class GameScene extends Phaser.Scene {
               this.player.x = data.x;
               this.player.y = data.y;
             }
-            this.syncUserReceived = true;
-            this.create_OPlayer();
           }
+          this.syncUserReceived = true;
+          this.create_OPlayer();
           break;
 
         case "syncMe":
@@ -243,6 +246,59 @@ class GameScene extends Phaser.Scene {
 
   }
 
+  async handleJoinEvent(data) {
+    if (this.OPlayer[data.user.uid] !== undefined) {
+      if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
+        this.OPlayer[data.user.uid].Destroy();
+        await this.createAndInitializeOPlayer(data.user);
+      } else {
+        this.OPlayer[data.user.uid].clientid = data.user.clientid;
+        this.OPlayer[data.user.uid].moveToBlock(data.user.x, data.user.y);
+      }
+    } else {
+      await this.createAndInitializeOPlayer(data.user);
+    }
+  }
+
+  async createAndInitializeOPlayer(user) {
+    this.OPlayer[user.uid] = new OPlayer(
+      this,
+      user.username,
+      CHARACTER_WIDTH,
+      CHARACTER_HEIGHT,
+      user.uid,
+      user.clientid
+    );
+    const rand_0_9 = Math.floor(Math.random() * 6);
+    const oplayer_sprite = await this.OPlayer[user.uid].Create(
+      user.x,
+      user.y,
+      "player" + rand_0_9
+    );
+    if (oplayer_sprite && this.players) {
+      this.players.add(oplayer_sprite);
+    } else {
+      console.error("Failed to create or add OPlayer:", user.uid);
+    }
+  }
+
+  async handleMoveEvent(data) {
+    const user = data.user;
+    if (this.OPlayer[user.uid] && this.OPlayer[user.uid].player) {
+      const otherPlayer = this.OPlayer[user.uid];
+      if (otherPlayer.player.x !== user.x || otherPlayer.player.y !== user.y) {
+        await otherPlayer.moveTo(user.x, user.y, user.direction);
+        otherPlayer.setMoving(true);
+        // 애니메이션 설정 추가
+        otherPlayer.playAnimation(user.direction);
+      } else {
+        otherPlayer.setMoving(false);
+        // 애니메이션 정지
+        otherPlayer.player.anims.stop();
+      }
+    }
+  }
+
   /**
    * 게임 시작 전에 필요한 리소스를 미리 로드합니다.
    */
@@ -310,10 +366,10 @@ class GameScene extends Phaser.Scene {
     // var bgm2 = this.sound.add("bgm2");
 
     // 플레이어 생성
-    this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
-
     this.players = this.add.group();
+    this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
+
 
     // 캐릭터 이름 생성
     this.player.nameText = this.add.bitmapText(
@@ -467,18 +523,33 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.setZoom(Math.max(zoom, minZoom));
   }
 
-  create_OPlayer() {
+  async create_OPlayer() {
+
+    if (!this.players) {
+      console.error("players group is not initialized");
+      return;
+    }
+
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
 
-      const rand_0_9 = Math.floor(Math.random() * 6);
-      const oplayer_sprite = this.OPlayer[key].Create(
-        user.x,
-        user.y,
-        "player" + rand_0_9
-      );
-      this.players.add(oplayer_sprite);
+      // const rand_0_9 = Math.floor(Math.random() * 6);
+      // if (this.OPlayer[key]) {
+      //   const oplayer_sprite = this.OPlayer[key].Create(
+      //     user.x,
+      //    user.y,
+      //    "player" + rand_0_9
+      //   );
+      //   if (oplayer_sprite) {
+      //     this.players.add(oplayer_sprite);
+      //   } else {
+      //     console.error("Failed to create sprite for player", key);
+      //   }
+      // } else {
+      //   console.error("OPlayer not found for key", key);
+      // }
+      await this.createAndInitializeOPlayer(user);
     }
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
@@ -488,9 +559,9 @@ class GameScene extends Phaser.Scene {
   }
 
   handlePlayerHit(player, bullet) {
-    if (player.hit) {
-      // player.hit(bullet);
-    } else {
+    if (player && player.hit) {
+      player.hit(bullet);
+    } else if (player) {
       // OPlayer의 경우
       const angle = Phaser.Math.Angle.Between(
         bullet.x,
@@ -517,7 +588,9 @@ class GameScene extends Phaser.Scene {
     //   target: player.uid,
     // });
 
-    bullet.setActive(false).setVisible(false);
+    if (bullet) {
+      bullet.setActive(false).setVisible(false);
+    }
   }
 
   /**
