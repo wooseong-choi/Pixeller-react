@@ -73,7 +73,8 @@ const List = ({
           </div>
         </div>
 
-        <nav className="chat-content">{chatComponent}</nav>
+        <nav className="chat-content public active">{chatComponent}</nav>
+        <nav className="chat-content direct-message ">{chatComponent}</nav>
         <div className="chat-rooms">
           <div className="chat-room public" onClick={chatRoomHandler}></div>
           <div className="chat-room private" onClick={chatRoomHandler}></div>

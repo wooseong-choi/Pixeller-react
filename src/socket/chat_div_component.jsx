@@ -6,7 +6,7 @@ const PUBLIC_ROOM_NO = '1';
 const ChatDivComponent = ({stompClient,messages}) => {
     const [message, setMessage] = useState('');
     const messageEndRef = useRef(null);
-    
+
     const user = jwtDecode(sessionStorage.getItem('user') );
 
     const handleMessageChange = (e) => {
@@ -35,6 +35,8 @@ const ChatDivComponent = ({stompClient,messages}) => {
             }
         }
     },[messages]);
+
+
     return (
         <>
             <div>

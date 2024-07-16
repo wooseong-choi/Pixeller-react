@@ -4,15 +4,17 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ChatDivComponent from './chat_div_component';
 
-// const URL = 'http://192.168.0.100:8080/chat';
-const URL = '//lionreport.pixeller.net/chat';
+const URL = '//192.168.0.100:8080/chat';
+// const URL = '//lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
 
 const Chat = ({openType}) => {
     const [stompClient, setStompClient] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState('');
     const user = jwtDecode(sessionStorage.getItem('user') );
+
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(10);
 
     useEffect(() => {
         if (!stompClient) {
@@ -33,6 +35,13 @@ const Chat = ({openType}) => {
                             // alert('메세지왔다. 받아라.');
                             showMessage(JSON.parse(message.body));
                         });
+
+                        client.send(`/pub/message/1/enter`);
+                        client.subscribe(`/sub/message/1/enter`, (res) => {
+                            // console.log(res);
+                            showMessage(JSON.parse(res.body));
+                        });
+
                     },
                     (error) => {
                         console.error('Connection error: ', error);
@@ -58,37 +67,16 @@ const Chat = ({openType}) => {
         setMessages(prevMessages => [...prevMessages, message]);
     }; 
 
-    // stompClient.send(`/sub/chat-room/`+user.uid, {}, JSON.stringify({content: 'Hello'});
-
-    stompClient.subscribe(`/sub/chat-room/`+user.uid, (res) => {
-        console.log(res);
-    });
-
+    if( openType === 'public' ) {
+    }else if ( openType === 'private' ) {
+        stompClient.subscribe(`/sub/chat-room/`+user.uid+'?page='+page+'&size='+size, (res) => {
+            console.log(JSON.parse(res.body));
+        });
+    }
+        
     return (
         <>
             <ChatDivComponent stompClient={stompClient} messages={messages} />
-        {/* <div>
-            {messages.map((message, index) => (
-                <div key={index} className={`chat-info ${ message.senderName===user.id?"me":"" }`}>
-                    <span className="chat-profile">
-                    <img
-                        src="svg/user-icon.svg"
-                        alt="User Icon"
-                        className="user-icon"
-                    />
-                    </span>
-                    <span className="chat-name">{message.senderName}</span>
-                    <span className="chat-message">{message.message}</span>
-                </div>
-            ))}
-            <div ref={messageEndRef}></div>
-        </div>
-        <div className="inputBox">                
-            <input type="text" id="message" placeholder="메세지를 입력하세요!"
-            value={message}
-            onChange={handleMessageChange}
-            onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
-        </div> */}
         </>
     );
 };
