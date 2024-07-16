@@ -22,7 +22,7 @@ interface iChara {
     x: number,
     y: number,
     preset: string
-  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null;
 
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys): void;
   Effect(): void;
@@ -47,12 +47,6 @@ class OPlayer implements iChara {
   nameTextT: Phaser.GameObjects.Text;
   preset: string;
 
-  /**
-   * constructor of class Player
-   * @param obj Game Object of Phaser
-   * @param width of player Image width
-   * @param height of player Image height
-   */
   constructor(
     obj: globalThis.Phaser.Scene,
     name: string,
@@ -64,7 +58,7 @@ class OPlayer implements iChara {
     this.obj = obj;
     this.width = width;
     this.height = height;
-    this.speed = 160;
+    this.speed = 200;
     this.name = name;
     this.direction = "down";
     this.uid = uid;
@@ -72,12 +66,6 @@ class OPlayer implements iChara {
     this.client_id = client_id;
   }
 
-  /**
-   * Preload
-   * @param key object name to register on Phaser Game Object
-   * @param url img source(url or file path)
-   * @param xhrSettings meta data of img(frames...) or null
-   */
   Preload(
     key: string,
     url?: string,
@@ -86,63 +74,29 @@ class OPlayer implements iChara {
     this.obj.load.atlas(key, url, xhrSettings);
   }
 
-  /**
-   * Creating Imgs, Anims, Colliders. it returns Object of player.
-   * @param x x position of player
-   * @param y y positioin of player
-   * @returns object of player
-   */
   Create(
     x: number,
     y: number,
     preset: string
-  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
+  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null {
     this.preset = preset;
-    const playerWorkDConfig = {
-      key: preset + "_walk_down",
-      frames: this.obj.anims.generateFrameNames(preset, {
-        start: 0,
-        end: 3,
-        prefix: "frame_0_",
-      }),
-      frameRate: 10,
-      repeat: -1,
-    };
-    const playerWorkLConfig = {
-      key: preset + "_walk_left",
-      frames: this.obj.anims.generateFrameNames(preset, {
-        start: 0,
-        end: 3,
-        prefix: "frame_1_",
-      }),
-      frameRate: 10,
-      repeat: -1,
-    };
-    const playerWorkRConfig = {
-      key: preset + "_walk_right",
-      frames: this.obj.anims.generateFrameNames(preset, {
-        start: 0,
-        end: 3,
-        prefix: "frame_2_",
-      }),
-      frameRate: 10,
-      repeat: -1,
-    };
-    const playerWorkUConfig = {
-      key: preset + "_walk_up",
-      frames: this.obj.anims.generateFrameNames(preset, {
-        start: 0,
-        end: 3,
-        prefix: "frame_3_",
-      }),
-      frameRate: 10,
-      repeat: -1,
-    };
+    const directions = ['down', 'left', 'right', 'up'];
+    const frameIndexes = ['0', '1', '2', '3'];
 
-    this.obj.anims.create(playerWorkDConfig);
-    this.obj.anims.create(playerWorkLConfig);
-    this.obj.anims.create(playerWorkRConfig);
-    this.obj.anims.create(playerWorkUConfig);
+    directions.forEach((dir, index) => {
+      const config = {
+        key: `${preset}_walk_${dir}`,
+        frames: this.obj.anims.generateFrameNames(preset, {
+          start: 0,
+          end: 3,
+          prefix: `frame_${frameIndexes[index]}_`,
+        }),
+        frameRate: 10,
+        repeat: -1,
+        duration: 400 // 40프레임 * (1초 / 10프레임) = 400ms
+      };
+      this.obj.anims.create(config);
+    });
 
     this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
@@ -150,7 +104,6 @@ class OPlayer implements iChara {
     this.player.body.setSize(this.width, this.height, true);
     this.oldPosition = { x: x, y: y };
 
-    // this.OPlayer[key].nameText = this.add.bitmapText(this.OPlayer[key].x - 10,this.OPlayer[key].y - 30,"font",user.username,12); // or 8
     this.nameText = this.obj.add.bitmapText(
       this.player.x - 10,
       this.player.y - 30,
@@ -159,13 +112,21 @@ class OPlayer implements iChara {
       12
     );
 
+    // 애니메이션 로드 확인
+    directions.forEach(dir => {
+      if (!this.obj.anims.exists(`${preset}_walk_${dir}`)) {
+        // console.error(`Animation ${preset}_walk_${dir} not found`);
+      }
+    });
+
+    if (!this.player.anims) {
+      console.error('Animation component not initialized');
+      return null;
+    }
+
     return this.player;
   }
 
-  /**
-   * @deprecated Use moveTo instead
-   * @param cursor Keyboard Events
-   */
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys) {
     // deprecated method
   }
@@ -179,63 +140,84 @@ class OPlayer implements iChara {
     }
   }
 
-  /**
-   * Move the player to a specific coordinate.
-   * @param x The x-coordinate to move to.
-   * @param y The y-coordinate to move to.
-   */
-  async moveTo(x: number, y: number, direction: string) {
-    // Calculate the distance to the target
-    const dx = x - this.player.x;
-    const dy = y - this.player.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    this.direction = direction;
-
-    // Calculate the duration for the tween based on the distance to the target
-    const duration = (distance / this.speed) * 1000; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
-
-    // Create a tween that updates the player's position
-    return new Promise<void>((resolve) => {
-      this.obj.tweens.add({
-        targets: [this.nameText],
-        x: x - 10,
-        y: y - 30,
-        duration: duration,
-        ease: "Linear",
-        onComplete: () => {
-          resolve();
-        },
-      });
-      this.obj.tweens.add({
-        targets: [this.player],
-        x: x,
-        y: y,
-        duration: duration,
-        ease: "Linear",
-        onComplete: () => {
-          this.onMove = false;
-          if (this.player.anims) this.player.anims.pause();
-          resolve();
-        },
-      });
-
-      if (this.onMove) {
-        this.player.anims.play(`${this.preset}_${direction}`, true);
-      }
-    });
+  playAnimation(direction: string) {
+    if (this.player.anims && this.player.anims.exists(`${this.preset}_walk_${direction}`)) {
+      this.player.anims.play(`${this.preset}_walk_${direction}`, true);
+    } else {
+      // console.error(`Animation ${this.preset}_walk_${direction} not found`);
+    }
   }
 
-  // 플레이어의 위치를 블록 단위로 움직이게 하는 메서드
+  async moveTo(x: number, y: number, direction: string) {
+    try {
+      const dx = x - this.player.x;
+      const dy = y - this.player.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      this.direction = direction;
+
+      const duration = (distance / this.speed) * 10;
+
+      return new Promise<void>((resolve) => {
+        this.obj.tweens.add({
+          targets: [this.nameText],
+          x: x - 10,
+          y: y - 30,
+          duration: duration,
+          ease: "Linear",
+          onComplete: () => {
+            resolve();
+          },
+        });
+        this.obj.tweens.add({
+          targets: [this.player],
+          x: x,
+          y: y,
+          duration: duration,
+          ease: "Linear",
+          onUpdate: () => {
+            this.playAnimation(direction);
+          },
+          onComplete: () => {
+            this.onMove = false;
+            if (this.player.anims) this.player.anims.stop();
+            resolve();
+          },
+        });
+      });
+    } catch (error) {
+      console.error('Error in moveTo:', error);
+      console.log('Player object:', this.player);
+      console.log('Animation state:', this.player.anims);
+    }
+  }
+
   moveToBlock(x: number, y: number) {
-    // 블록 크기 정의
     const BLOCK_SIZE = 32;
-    // 블록 단위로 반올림
     const targetX = Math.round(x / BLOCK_SIZE) * BLOCK_SIZE;
     const targetY = Math.round(y / BLOCK_SIZE) * BLOCK_SIZE;
 
-    // 플레이어의 위치를 블록 단위로 업데이트
     this.player.x = targetX;
     this.player.y = targetY;
+  }
+
+  hit(bullet) {
+    const angle = Phaser.Math.Angle.Between(
+      bullet.x,
+      bullet.y,
+      this.player.x,
+      this.player.y
+    );
+    const offsetX = Math.cos(angle) * 10;
+    const offsetY = Math.sin(angle) * 10;
+
+    this.obj.tweens.add({
+      targets: this.player,
+      x: this.player.x + offsetX,
+      y: this.player.y + offsetY,
+      duration: 100,
+      ease: "Linear",
+      yoyo: true,
+    });
   }
 
   Effect() {}
