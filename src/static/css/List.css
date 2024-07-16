@@ -363,4 +363,9 @@
   width: 100%;
   height: 100%;
   background-color: #84ac99;
+  line-height: 100px;
+}
+
+.chat-room-id {
+  display: none;
 }
