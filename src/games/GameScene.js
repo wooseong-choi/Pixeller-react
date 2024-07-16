@@ -22,12 +22,13 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
     this.uid = null;
+    this.players = null;
 
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-    // this.socket = io("ws://192.168.0.96:3333/ws", {
+      // this.socket = io("ws://192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -160,9 +161,9 @@ class GameScene extends Phaser.Scene {
               this.player.x = data.x;
               this.player.y = data.y;
             }
-            this.syncUserReceived = true;
-            this.create_OPlayer();
           }
+          this.syncUserReceived = true;
+          this.create_OPlayer();
           break;
 
         case "syncMe":
@@ -310,10 +311,10 @@ class GameScene extends Phaser.Scene {
     // var bgm2 = this.sound.add("bgm2");
 
     // 플레이어 생성
-    this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
-
     this.players = this.add.group();
+    this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
+
 
     // 캐릭터 이름 생성
     this.player.nameText = this.add.bitmapText(
@@ -468,17 +469,31 @@ class GameScene extends Phaser.Scene {
   }
 
   create_OPlayer() {
+
+    if (!this.players) {
+      console.error("players group is not initialized");
+      return;
+    }
+
     // 다른 플레이어들 생성
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
 
       const rand_0_9 = Math.floor(Math.random() * 6);
-      const oplayer_sprite = this.OPlayer[key].Create(
-        user.x,
-        user.y,
-        "player" + rand_0_9
-      );
-      this.players.add(oplayer_sprite);
+      if (this.OPlayer[key]) {
+        const oplayer_sprite = this.OPlayer[key].Create(
+          user.x,
+         user.y,
+         "player" + rand_0_9
+        );
+        if (oplayer_sprite) {
+          this.players.add(oplayer_sprite);
+        } else {
+          console.error("Failed to create sprite for player", key);
+        }
+      } else {
+        console.error("OPlayer not found for key", key);
+      }
     }
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리

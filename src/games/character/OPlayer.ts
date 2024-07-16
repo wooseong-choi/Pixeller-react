@@ -143,7 +143,7 @@ class OPlayer implements iChara {
   playAnimation(direction: string) {
     if (this.player.anims && this.player.anims.exists(`${this.preset}_walk_${direction}`)) {
       this.player.anims.play(`${this.preset}_walk_${direction}`, true);
-    } else {
+    // } else {
       // console.error(`Animation ${this.preset}_walk_${direction} not found`);
     }
   }
