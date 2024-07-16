@@ -16,6 +16,7 @@ const ProductDetail = ({
     price: "",
     memberId: "",
     imageFileUrls: "",
+    memberDto: [],
   });
 
   const handlePurchaseWish = () => {
@@ -27,6 +28,7 @@ const ProductDetail = ({
 
   useEffect(() => {
     getProductById(productId.id).then((res) => {
+      console.log(res);
       setProduct(res);
     });
 
@@ -60,7 +62,7 @@ const ProductDetail = ({
           ×
         </button>
         <div className="img-container">
-          <img src={product.imageFileUrls} alt="product" />
+          <img src={product.imageFileUrls[0]} alt="product" />
         </div>
         <div className="product-detail">
           <div className="product-seller">
@@ -78,8 +80,10 @@ const ProductDetail = ({
             <div className="product-wantBuyer">
               <p>구매 요청자 목록</p>
               <div className="buyer-list">
-                <UserInfo user={user} />
-                <UserInfo user={user} />
+                {/* {product.memberDto &&
+                  product.memberDto.forEach((buyer) => (
+                    <UserInfo user={buyer.username} />
+                  ))} */}
               </div>
             </div>
             <div className="product-button">
