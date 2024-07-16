@@ -219,16 +219,16 @@ class Player implements iChara {
   ) {
     // const { left, right, up, down } = cursor;
     const up: Phaser.Input.Keyboard.Key = keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.W
+      Phaser.Input.Keyboard.KeyCodes.W, false
     );
     const down: Phaser.Input.Keyboard.Key = keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.S
+      Phaser.Input.Keyboard.KeyCodes.S, false
     );
     const left: Phaser.Input.Keyboard.Key = keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.A
+      Phaser.Input.Keyboard.KeyCodes.A, false
     );
     const right: Phaser.Input.Keyboard.Key = keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.D
+      Phaser.Input.Keyboard.KeyCodes.D, false
     );
 
     let velocityX = 0;
