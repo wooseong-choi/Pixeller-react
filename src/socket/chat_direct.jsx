@@ -4,8 +4,8 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ChatDivComponent from './chat_div_component';
 
-const URL = '//192.168.0.100:8080/chat';
-// const URL = '//lionreport.pixeller.net/chat';
+// const URL = '//192.168.0.100:8080/chat';
+const URL = '//lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
 
 const Chat = ({openType}) => {
