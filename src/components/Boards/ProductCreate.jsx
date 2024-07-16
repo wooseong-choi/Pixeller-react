@@ -77,13 +77,6 @@ const ProductDetail = ({ handleClose }) => {
   };
 
   const getUploadUrl = async (file) => {
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // const axiosHingInstance = axios.create({
-    //   baseURL: "//192.168.0.46:8080", // Change this to Backend API URL
-    //   timeout: 1000,
-    // });
-
     const response = await axiosCRUDInstance.get("/api/presigned-url/"+file.name, {
       headers: {
         // "Content-Type": "multipart/form-data",
@@ -134,22 +127,23 @@ const ProductDetail = ({ handleClose }) => {
       alert("카테고리를 입력해주세요");
       return false;
     }
-    // if (!formData.get("imgFiles")) {
+
     var fileCheck = document.getElementById("file-input").value;
     if(!fileCheck){
       alert("사진을 등록해주세요");
       return false;
     }
+
     if( !formData.get("auction_start_time")){
       alert("경매 시작 시간을 입력해주세요");
       return false;
     }
 
     // 이거 작동안하는데 왜인지 아시는분?
-    if (!formData.get("member_id")) {
-      alert("판매자 정보가 없습니다.");
-      return false;
-    }
+    // if (!formData.get("member_id")) {
+    //   alert("판매자 정보가 없습니다.");
+    //   return false;
+    // }
     
     const databody = {
       files: files,
@@ -157,14 +151,13 @@ const ProductDetail = ({ handleClose }) => {
       description: formData.get("description"),
       price:formData.get("price"),
       category:formData.get("category"),
-      member_id:userInfo.uid,
+      auctionStartTime:new Date(formData.get("auction_start_time")).getTime(),
     };
 
     // return false;
     try {
       const response = await axiosCRUDInstance.post("/api/products", databody, {
         headers: {
-          // "Content-Type": "multipart/form-data",
           "Content-Type": "application/json",
           authorization: "Bearer " + sessionStorage.getItem("user"),
         },
@@ -278,7 +271,7 @@ const ProductDetail = ({ handleClose }) => {
                 name="category"
                 placeholder="카테고리를 입력해주세요"
               />
-              <input type="datetime-local" className="aucion_start_time" name="aucion_start_time" />
+              <input type="datetime-local" className="auction_start_time" name="auction_start_time" />
             </div>
             <div className="product-button">
               <div className="product-request" onClick={submitHandle}>
