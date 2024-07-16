@@ -15,6 +15,7 @@ const ProductDetail = ({
     name: "",
     price: "",
     memberId: "",
+    imageFileUrls: "",
   });
 
   const handlePurchaseWish = () => {
@@ -26,7 +27,6 @@ const ProductDetail = ({
 
   useEffect(() => {
     getProductById(productId.id).then((res) => {
-      console.log(res);
       setProduct(res);
     });
 
@@ -60,7 +60,7 @@ const ProductDetail = ({
           ×
         </button>
         <div className="img-container">
-          <img src="https://via.placeholder.com/400x300" alt="product" />
+          <img src={product.imageFileUrls} alt="product" />
         </div>
         <div className="product-detail">
           <div className="product-seller">

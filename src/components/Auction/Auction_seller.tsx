@@ -21,6 +21,7 @@ import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 
 import Auction_max_bid from "./Auction_max_bid.jsx";
+import Auction from "../../socket/auctions.jsx";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -44,7 +45,6 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
-
     // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
 
     // init data
@@ -99,6 +99,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         leaveRoom();
       };
     }, []);
+
+    Auction(props.auctionRoomId, currentPrice);
 
     async function joinRoom() {
       const room = new Room();
