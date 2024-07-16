@@ -254,7 +254,7 @@ class GameScene extends Phaser.Scene {
     // this.load.audio("bgm2", "./sounds/store_sound.mp3");
 
     // bullet
-    this.load.image("bullet", "./assets/bullet_01.png");
+    this.load.image("bullet", "./assets/bullet_02.png");
     this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // font
@@ -503,13 +503,6 @@ class GameScene extends Phaser.Scene {
         duration: 100,
         yoyo: true,
       });
-
-      // 서버로 피격 정보를 전송
-      this.socket.emit("playerHit", {
-        playerId: player.id,
-        bulletId: bullet.id,
-        angle: angle,
-      });
     }
 
     // 서버로 피격 정보 전송
@@ -575,7 +568,7 @@ class GameScene extends Phaser.Scene {
           pointer.worldX,
           pointer.worldY
         );
-        bullet.setRotation(angle).setScale(0.2, 0.2);
+        bullet.setRotation(angle).setScale(0.3, 0.3);
 
         this.physics.moveTo(bullet, pointer.x, pointer.y, 2000);
         // bullet.body.setVelocityY(-300);
