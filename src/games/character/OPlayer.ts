@@ -23,6 +23,7 @@ interface iChara {
     y: number,
     preset: string
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null;
+  
 
   Move(cursor: Phaser.Types.Input.Keyboard.CursorKeys): void;
   Effect(): void;
@@ -100,6 +101,11 @@ class OPlayer implements iChara {
 
     this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
+    if (!this.player) {
+      console.error("Failed to create player sprite");
+      return null;
+    }
+
     this.player.setCollideWorldBounds(true);
     if (this.player.body) {
       this.player.body.setSize(this.width, this.height, true);
@@ -134,6 +140,10 @@ class OPlayer implements iChara {
   }
 
   setMoving(isMoving: boolean) {
+    if (!this.player){
+      console.error("Player not initialized");
+      return;
+    }
     this.onMove = isMoving;
     if (this.player && this.player.anims) {
       if (!isMoving) {
@@ -145,14 +155,44 @@ class OPlayer implements iChara {
   }
 
   playAnimation(direction: string) {
-    if (this.player && this.player.anims && this.player.anims.exists(`${this.preset}_walk_${direction}`)) {
-      this.player.anims.play(`${this.preset}_walk_${direction}`, true);
-    // } else {
-      // console.error(`Animation ${this.preset}_walk_${direction} not found`);
+    if (!this.player || !this.player.anims) {
+      console.error("Player or animations not initialized");
+      return;
+    }
+    let animationKey: string | null = null;
+
+    switch (direction) {
+      case 'walk_left':
+      case 'left':
+        animationKey = `${this.preset}_walk_left`;
+        break;
+      case 'walk_right':
+      case 'right':
+        animationKey = `${this.preset}_walk_right`;
+        break;
+      case 'walk_up':
+      case 'up':
+        animationKey = `${this.preset}_walk_up`;
+        break;
+      case 'walk_down':
+      case 'down':
+        animationKey = `${this.preset}_walk_down`;
+        break;
+      default:
+        console.warn(`Unknown direction: ${direction}`);
+        return;
+    }
+    
+    if (animationKey && this.player.anims.exists(animationKey)) {
+      this.player.play(animationKey, true);
     }
   }
 
   async moveTo(x: number, y: number, direction: string) {
+    if (!this.player) {
+      console.error("Player not initialized");
+      return;
+    }
     try {
       const dx = x - this.player.x;
       const dy = y - this.player.y;
@@ -160,6 +200,8 @@ class OPlayer implements iChara {
       this.direction = direction;
 
       const duration = (distance / this.speed) * 10;
+
+      this.playAnimation(direction);
 
       return new Promise<void>((resolve) => {
         this.obj.tweens.add({
@@ -190,12 +232,14 @@ class OPlayer implements iChara {
       });
     } catch (error) {
       console.error('Error in moveTo:', error);
-      console.log('Player object:', this.player);
-      console.log('Animation state:', this.player.anims);
     }
   }
 
   moveToBlock(x: number, y: number) {
+    if (!this.player) {
+      console.error("Player not initialized");
+      return;
+    }
     const BLOCK_SIZE = 32;
     const targetX = Math.round(x / BLOCK_SIZE) * BLOCK_SIZE;
     const targetY = Math.round(y / BLOCK_SIZE) * BLOCK_SIZE;
@@ -205,6 +249,10 @@ class OPlayer implements iChara {
   }
 
   hit(bullet) {
+    if (!this.player) {
+      console.error("Player not initialized");
+      return;
+    }
     const angle = Phaser.Math.Angle.Between(
       bullet.x,
       bullet.y,
@@ -227,8 +275,12 @@ class OPlayer implements iChara {
   Effect() {}
 
   Destroy() {
-    this.player.destroy();
-    this.nameText.destroy();
+    if (this.player) {
+      this.player.destroy();
+    }
+    if (this.nameText) {
+      this.nameText.destroy();
+    }
   }
 }
 
