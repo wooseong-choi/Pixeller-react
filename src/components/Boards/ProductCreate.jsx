@@ -79,12 +79,12 @@ const ProductDetail = ({ handleClose }) => {
   const getUploadUrl = async (file) => {
     // const formData = new FormData();
     // formData.append("file", file);
-    const axiosHingInstance = axios.create({
-      baseURL: "//192.168.0.46:8080", // Change this to Backend API URL
-      timeout: 1000,
-    });
+    // const axiosHingInstance = axios.create({
+    //   baseURL: "//192.168.0.46:8080", // Change this to Backend API URL
+    //   timeout: 1000,
+    // });
 
-    const response = await axiosHingInstance.get("/api/presigned-url/"+file.name, {
+    const response = await axiosCRUDInstance.get("/api/presigned-url/"+file.name, {
       headers: {
         // "Content-Type": "multipart/form-data",
         authorization: "Bearer " + sessionStorage.getItem("user"),
