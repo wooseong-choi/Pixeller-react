@@ -46,7 +46,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const openPDModal = (product) => {
     setProductDetailOpen(true);
-    // console.log("main에서 찍는 product: ", product);
     setProductId(product);
   };
 
@@ -95,7 +94,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-              {isViduOpen ? (
+              {/* {isViduOpen ? (
                 <VideoCanvas
                   userName={userName}
                   auctionRoomId={auctionRoomId}
@@ -103,7 +102,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   isCamOpen={isCamOpen}
                   ref={OpenViduRef}
                 />
-              ) : null}
+              ) : null} */}
             </div>
             <div className="Modals">
               <div>
@@ -144,6 +143,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     auctionProduct={auctionProduct.id}
                     userName={userName}
                     auctionPrice={auctionProduct.price}
+                    ref={OpenViduRef}
                   />
                 ) : null}
               </div>
