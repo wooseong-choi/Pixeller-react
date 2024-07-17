@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { io } from "socket.io-client";
 
 const Auction = (auctionId, productId, setMaxBidPrice, setText) => {
-  const URL = "ws://localhost:3333/auction";
+  // const URL = "ws://localhost:3333/auction";
+  const URL = "ws://api.pixeller.net/auction";
   const token = sessionStorage.getItem("user");
   const username = sessionStorage.getItem("username");
 
