@@ -3,13 +3,11 @@ import React, { useEffect, useState, useRef } from "react";
 import GameApp from "../games/GameApp";
 import Bottom from "../components/UI/Bottom.jsx";
 import List from "../components/List";
-import VideoCanvas from "./../components/OpenVidu/VideoCanvas.tsx";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 import Auction from "../components/Auction/Auction.jsx";
 import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
-// import Auction_OpenVidu from "../components/Auction/Auctions.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -94,15 +92,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-              {/* {isViduOpen ? (
-                <VideoCanvas
-                  userName={userName}
-                  auctionRoomId={auctionRoomId}
-                  isMicOpen={isMicOpen}
-                  isCamOpen={isCamOpen}
-                  ref={OpenViduRef}
-                />
-              ) : null} */}
             </div>
             <div className="Modals">
               <div>
