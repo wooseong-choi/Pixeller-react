@@ -1,4 +1,4 @@
-// test 
+// test
 import "./Auction.css";
 import UserInfo from "../UI/UserInfo.jsx";
 import {
@@ -25,7 +25,7 @@ import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 import Auction_max_bid from "./Auction_max_bid.jsx";
 // import Auction from "../../socket/auctions.jsx";
 import { io } from "socket.io-client";
-import { getProductById } from "../../api/products.jsx";
+import { getProductById, checkSellerTrueOrFalse } from "../../api/products.jsx";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
