@@ -133,7 +133,7 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
-  background-color: #CCCCCC;
+  background-color: #cccccc;
 }
 
 .product-info .content {
@@ -141,14 +141,14 @@
   margin-bottom: 20px;
   width: 100%;
   padding: 0;
-  background-color: #CCCCCC;
+  background-color: #cccccc;
 }
 
 .product-info .price {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
-  background-color: #CCCCCC;
+  background-color: #cccccc;
 }
 
 .modal-content {
@@ -156,7 +156,7 @@
   flex-direction: row;
   width: 80%;
   max-width: 1300px;
-  background: rgba(161, 191, 163, 0.7)!important;
+  background: rgba(161, 191, 163, 0.7) !important;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -165,4 +165,9 @@
 
 .left-section {
   flex: 1 1;
+}
+
+.category {
+  font-size: 16px;
+  margin-bottom: 10px;
 }
