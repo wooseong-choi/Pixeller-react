@@ -18,6 +18,10 @@ const chaArray = [
   "./character/white_rabbit.png",
 ];
 
+const getUserList = (socket) => {
+  socket.emit("userList");
+}
+
 class GameScene extends Phaser.Scene {
   constructor() {
     super();
@@ -30,7 +34,7 @@ class GameScene extends Phaser.Scene {
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-      // this.socket = io("ws://192.168.0.96/ws", {
+    // this.socket = io("//192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -59,6 +63,12 @@ class GameScene extends Phaser.Scene {
         position: { x: this.player.x, y: this.player.y },
       });
       await this.socket.disconnect();
+    });
+    
+    window.addEventListener("onload", async () => {
+      setTimeout(() => {
+        getUserList(this.socket);
+      }, 3000);
     });
 
     // 메인 통신 로직
@@ -110,6 +120,7 @@ class GameScene extends Phaser.Scene {
               "player" + rand_0_9
             );
           }
+          getUserList(this.socket);
           break;
 
         // 유저 움직임 처리
@@ -137,6 +148,7 @@ class GameScene extends Phaser.Scene {
             delete this.OPlayer[data.uid];
           }
           console.log(this.OPlayer);
+          getUserList(this.socket);
           break;
 
         // 유저 동기화
@@ -162,6 +174,7 @@ class GameScene extends Phaser.Scene {
             this.syncUserReceived = true;
             this.create_OPlayer();
           }
+          getUserList(this.socket);
           break;
 
         case "syncMe":
@@ -171,9 +184,17 @@ class GameScene extends Phaser.Scene {
           this.player.y = data.y;
           break;
 
+        case "userList":
+          // 채팅 nav에서 접속한 전체 유저의 목록을 받는 이벤트이다
+          console.log(data);
+          window.dispatchEvent(
+            new CustomEvent("receive-userlist", {detail: {users: data.users}})
+          );
+          break;
+
         // 기타 이벤트 처리
         case "error":
-
+        
         default:
           console.log("Error!: No msg event on Socket.");
           break;
@@ -235,6 +256,7 @@ class GameScene extends Phaser.Scene {
           });
       }
     });
+
   }
 
   /**
@@ -377,10 +399,10 @@ class GameScene extends Phaser.Scene {
     // this.cursors = this.input.keyboard.createCursorKeys();
     this.cursors = this.input.keyboard.addKeys(
       {
-        up: Phaser.Input.Keyboard.KeyCodes.UP,
-        down: Phaser.Input.Keyboard.KeyCodes.DOWN,
-        left: Phaser.Input.Keyboard.KeyCodes.LEFT,
-        right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+        up: Phaser.Input.Keyboard.KeyCodes.W,
+        down: Phaser.Input.Keyboard.KeyCodes.S,
+        left: Phaser.Input.Keyboard.KeyCodes.A,
+        right: Phaser.Input.Keyboard.KeyCodes.D,
       },
       false
     );
@@ -544,8 +566,7 @@ class GameScene extends Phaser.Scene {
   update(time, delta) {
     // 플레이어 이동
     // this.Player.Move(this.cursors, this.move_soundEffect);
-    this.Player.Move_(this.input.keyboard, this.move_soundEffect);
-
+    this.Player.Move(this.cursors, this.move_soundEffect);
     this.player.nameText.x = this.player.x;
     this.player.nameText.y = this.player.y - 28;
 
@@ -635,16 +656,16 @@ class GameScene extends Phaser.Scene {
     // this.Player.moveTo(3000, 320);
     // }
 
-    if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
-      window.dispatchEvent(
-        new CustomEvent("start-video", {
-          detail: {
-            uid: this.uid,
-            unsername: this.username,
-          },
-        })
-      );
-    }
+    // if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
+    //   window.dispatchEvent(
+    //     new CustomEvent("start-video", {
+    //       detail: {
+    //         uid: this.uid,
+    //         unsername: this.username,
+    //       },
+    //     })
+    //   );
+    // }
 
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");

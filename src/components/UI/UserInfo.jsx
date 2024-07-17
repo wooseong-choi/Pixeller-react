@@ -9,7 +9,6 @@ function UserInfo({ user, logoutEvent }) {
       logoutEvent();
     }
   };
-
   return (
     <div className="user-info">
       <img
