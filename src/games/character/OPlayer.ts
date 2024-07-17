@@ -44,8 +44,7 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
-  nameText: GameObjects.BitmapText;
-  nameTextT: Phaser.GameObjects.Text;
+  nameText: GameObjects.Text;
   preset: string;
 
   constructor(
@@ -134,13 +133,21 @@ class OPlayer implements iChara {
     this.oldPosition = { x: x, y: y };
 
     // this.OPlayer[key].nameText = this.add.bitmapText(this.OPlayer[key].x - 10,this.OPlayer[key].y - 30,"font",user.username,12); // or 8
-    this.nameText = this.obj.add.bitmapText(
-      this.player.x - 10,
-      this.player.y - 30,
-      "font",
+    this.nameText = this.obj.add.text(
+      this.player.x,
+      this.player.y - 28,
       this.name,
-      12
+      {
+        fontFamily: '"Nanum Gothic", sans-serif',
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#000000',
+        resolution: 4
+        // stroke: '#000000',
+        // strokeThickness: 3
+      }
     );
+    this.nameText.setOrigin(0.5, 1);
 
     return this.player;
   }
@@ -192,8 +199,8 @@ class OPlayer implements iChara {
     return new Promise<void>((resolve) => {
       this.obj.tweens.add({
         targets: [this.nameText],
-        x: x - 10,
-        y: y - 30,
+        x: x,
+        y: y - 28,
         duration: duration,
         ease: "Linear",
         onComplete: () => {

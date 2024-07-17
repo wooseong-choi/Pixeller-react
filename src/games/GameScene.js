@@ -23,6 +23,9 @@ class GameScene extends Phaser.Scene {
     super();
     this.uid = null;
 
+    this.aimLine = null;
+    this.isAiming = false;
+
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
@@ -254,11 +257,11 @@ class GameScene extends Phaser.Scene {
     this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // font
-    this.load.bitmapFont(
-      "font",
-      "./fonts/MangoByeolbyeol.png",
-      "./fonts/MangoByeolbyeol.xml"
-    );
+    // this.load.bitmapFont(
+    //   "font",
+    //   "./fonts/MangoByeolbyeol.png",
+    //   "./fonts/MangoByeolbyeol.xml"
+    // );
   }
 
   /**
@@ -307,13 +310,27 @@ class GameScene extends Phaser.Scene {
 
 
     // 캐릭터 이름 생성
-    this.player.nameText = this.add.bitmapText(
-      this.player.x - 10,
-      this.player.y - 15,
-      "font",
+    this.player.nameText = this.add.text(
+      this.player.x,
+      this.player.y - 28,
       this.username,
-      12
-    ); // or 8
+      {
+        fontFamily: '"Nanum Gothic", sans-serif',
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#000000',
+        resolution: 4
+        // stroke: '#000000',
+        // strokeThickness: 3
+      }
+    );
+    this.player.nameText.setOrigin(0.5, 1); 
+
+    // 조준선 그래픽 객체 생성
+    this.aimLine = this.add.graphics().setDepth(1);
+
+    // Tab 키 추가
+    this.tabKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
 
     // 총알 생성
     this.bullets = this.physics.add.group({
@@ -389,9 +406,9 @@ class GameScene extends Phaser.Scene {
       false
     );
     // space key: shoot
-    this.spaceKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
+    // this.spaceKey = this.input.keyboard.addKey(
+    //   Phaser.Input.Keyboard.KeyCodes.SPACE
+    // );
 
     this.scale.on("resize", this.resize, this);
 
@@ -529,8 +546,8 @@ class GameScene extends Phaser.Scene {
     // this.Player.Move(this.cursors, this.move_soundEffect);
     this.Player.Move_(this.input.keyboard, this.move_soundEffect);
 
-    this.player.nameText.x = this.player.x - 10;
-    this.player.nameText.y = this.player.y - 30;
+    this.player.nameText.x = this.player.x;
+    this.player.nameText.y = this.player.y - 28;
 
     if (!this.lastPositionUpdateTime) {
       this.lastPositionUpdateTime = time;
@@ -556,28 +573,36 @@ class GameScene extends Phaser.Scene {
       this.lastPositionUpdateTime = time;
     }
 
+    // 조준선 표시 / 숨김
+    if (Phaser.Input.Keyboard.JustDown(this.tabKey)) {
+      this.isAiming = !this.isAiming;
+      if (!this.isAiming) {
+        this.aimLine.clear();
+      }
+    }
+
+    // 조준선 업데이트
+    if (this.isAiming) {
+      this.updateAimLine();
+    }
+
     // bullets
-    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
-      const pointer = this.input.activePointer;
+    if (this.input.activePointer.isDown && this.isAiming) {
       const bullet = this.bullets.get(this.player.x, this.player.y);
       if (bullet) {
         bullet.setActive(true).setVisible(true);
-
-        // 총알 각도 설정
+  
         const angle = Phaser.Math.Angle.Between(
-          this.player.x,
-          this.player.y,
-          pointer.worldX,
-          pointer.worldY
+          this.player.x, this.player.y,
+          this.input.activePointer.worldX, this.input.activePointer.worldY
         );
+        const targetX = this.player.x + Math.cos(angle) * 1000; // 충분히 먼 거리
+        const targetY = this.player.y + Math.sin(angle) * 1000;
+  
         bullet.setRotation(angle).setScale(0.3, 0.3);
-
-        this.physics.moveTo(bullet, pointer.x, pointer.y, 2000);
-        // bullet.body.setVelocityY(-300);
-        // bullet.body.velocity.y = -300;
-        this.shoot_soundEffect.play({
-          volume: 0.5,
-        });
+  
+        this.physics.moveTo(bullet, targetX, targetY, 2000);
+        this.shoot_soundEffect.play({ volume: 0.5 });
       }
     }
 
@@ -629,6 +654,25 @@ class GameScene extends Phaser.Scene {
   handleCollision(player, obstacle) {
     // 충돌 시 실행할 코드
     console.log("플레이어와 장애물이 충돌했습니다!");
+  }
+
+  updateAimLine() {
+    this.aimLine.clear();
+    this.aimLine.lineStyle(1, 0xff0000);
+    
+    const angle = Phaser.Math.Angle.Between(
+      this.player.x, this.player.y,
+      this.input.activePointer.worldX, this.input.activePointer.worldY
+    );
+    
+    const lineLength = 1000; // 조준선의 길이
+    const endX = this.player.x + Math.cos(angle) * lineLength;
+    const endY = this.player.y + Math.sin(angle) * lineLength;
+    
+    this.aimLine.beginPath();
+    this.aimLine.moveTo(this.player.x, this.player.y);
+    this.aimLine.lineTo(endX, endY);
+    this.aimLine.strokePath();
   }
 }
 
