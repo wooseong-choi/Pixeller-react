@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import {} from "../../api/bidding";
 import { _config } from "gsap/gsap-core";
 
 const Auction_max_bid = ({ price }) => {

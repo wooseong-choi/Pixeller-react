@@ -21,6 +21,7 @@ const ProductDetail = ({
     price: "",
     memberId: "",
     imageFileUrls: [],
+
   });
   
   const handlePurchaseWish = () => {
@@ -32,7 +33,7 @@ const ProductDetail = ({
 
   useEffect(() => {
     getProductById(productId.id).then((res) => {
-      console.log(res);
+      // console.log(res);
       setProduct(res);
       console.log(product);
     });
@@ -77,6 +78,7 @@ const ProductDetail = ({
         <button className="close-button" onClick={handleClose}>
           ×
         </button>
+
         <div className="img-container swiper-container swiper">
           <div className="swiper-wrapper">
           {product.imageFileUrls.map((url, index) => (
@@ -104,8 +106,10 @@ const ProductDetail = ({
             <div className="product-wantBuyer">
               <p>구매 요청자 목록</p>
               <div className="buyer-list">
-                <UserInfo user={user} />
-                <UserInfo user={user} />
+                {/* {product.memberDto &&
+                  product.memberDto.forEach((buyer) => (
+                    <UserInfo user={buyer.username} />
+                  ))} */}
               </div>
             </div>
             <div className="product-button">
