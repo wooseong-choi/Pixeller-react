@@ -311,15 +311,17 @@ class GameScene extends Phaser.Scene {
 
     // 캐릭터 이름 생성
     this.player.nameText = this.add.text(
-      this.player.x - 10,
-      this.player.y - 15,
+      this.player.x,
+      this.player.y - 28,
       this.username,
       {
         fontFamily: '"Nanum Gothic", sans-serif',
         fontSize: '14px',
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 3
+        fontStyle: 'bold',
+        color: '#000000',
+        resolution: 4
+        // stroke: '#000000',
+        // strokeThickness: 3
       }
     );
     this.player.nameText.setOrigin(0.5, 1); 
@@ -545,7 +547,7 @@ class GameScene extends Phaser.Scene {
     this.Player.Move_(this.input.keyboard, this.move_soundEffect);
 
     this.player.nameText.x = this.player.x;
-    this.player.nameText.y = this.player.y - 30;
+    this.player.nameText.y = this.player.y - 28;
 
     if (!this.lastPositionUpdateTime) {
       this.lastPositionUpdateTime = time;
