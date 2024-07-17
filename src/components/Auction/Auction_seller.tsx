@@ -57,8 +57,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     // const isSeller = props.isSeller; // 판매자 여부
     const [isSeller, setIsSeller] = useState(props.isSeller);
     const handleClose = props.handleClose;
-    const URL = "ws://localhost:3333/auction";
-    // const URL = "ws://api.pixeller.net/auction";
+    // const URL = "ws://localhost:3333/auction";
+    const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
 
     // 경매 관련
@@ -110,9 +110,9 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     useEffect(() => {
       getProductById(props.auctionRoomId).then((res) => {
         if (username === res.name) {
-          setIsSeller(true);
+          // setIsSeller(true);
         } else {
-          setIsSeller(false);
+          // setIsSeller(false);
         }
       });
       socketRef.current = io(URL, {
