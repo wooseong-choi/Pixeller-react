@@ -201,7 +201,7 @@ const List = ({
           <div className="chat-room user-list " onClick={chatRoomHandler}></div>
         </div>
       </div>
-      <Alert/>
+      <Alert stompClient={stompClient}/>
     </>
   );
 };
