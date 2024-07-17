@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { io } from "socket.io-client";
 
-const URL = "http://localhost:3333/auction";
-
-const Auction = (auctionId, productId) => {
+const Auction = (auctionId, productId, setMaxBidPrice, setText) => {
+  const URL = "ws://localhost:3333/auction";
   const token = sessionStorage.getItem("user");
   const username = sessionStorage.getItem("username");
 
@@ -22,27 +21,31 @@ const Auction = (auctionId, productId) => {
   });
 
   useEffect(() => {
-    socket.emit("join", { payload: { username: username, room: auctionId } });
-
+    socket.emit("join", { username: username, room: auctionId });
+    console.log("DEBUG: Auction 서버에 join 실행", auctionId, username);
     return () => {
-      socket.emit("leave", { payload: { username: username } });
+      socket.emit("leave", { username: username });
       socket.disconnect();
     };
   }, []);
 
   socket.on("connect", () => {
-    console.log("*****Connected to server");
+    console.log("DEBUG: Connected to AUCTION server");
   });
 
   socket.on("disconnect", () => {
-    socket.emit("leave", { payload: { username: username } });
+    socket.emit("leave", { username: username });
     console.log("Disconnected from server");
   });
 
   socket.on("message", (data) => {
+    console.log("DEBUG: auction.jsx: message event received");
+    console.log(data);
+
     switch (data.type) {
       case "bid":
         console.log("Bid received");
+        setMaxBidPrice(data.bid_price);
         break;
       case "message":
         console.log("Message received");
@@ -58,16 +61,20 @@ const Auction = (auctionId, productId) => {
       case "start":
         console.log("Auction started");
         console.log(data.message);
+        setText("경매 중");
         break;
       case "end":
         console.log("Auction ended");
         console.log(data.message);
+        alert(
+          `경매가 종료되었습니다. 낙찰자: ${data.winner}, 낙찰가: ${data.bid_price}`
+        );
         break;
       default:
         break;
     }
   });
 
-  return <></>;
+  return socket;
 };
 export default Auction;

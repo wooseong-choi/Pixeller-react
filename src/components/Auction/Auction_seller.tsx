@@ -13,6 +13,7 @@ import React, {
   useState,
   useImperativeHandle,
   forwardRef,
+  useRef,
 } from "react";
 import AudioComponent from "../OpenVidu/AudioComponent.tsx";
 import VideoComponent from "../OpenVidu/VideoComponent.tsx";
@@ -21,7 +22,9 @@ import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 
 import Auction_max_bid from "./Auction_max_bid.jsx";
-import Auction from "../../socket/auctions.jsx";
+// import Auction from "../../socket/auctions.jsx";
+import { io } from "socket.io-client";
+import { getProductById } from "../../api/products.jsx";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -46,18 +49,24 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
     // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
+    // 현재 방이 경매중인지 확인
 
     // init data
     const username = props.userName;
-    const isSeller = props.isSeller; // 판매자 여부
+    // const isSeller = props.isSeller; // 판매자 여부
+    const [isSeller, setIsSeller] = useState(props.isSeller);
     const handleClose = props.handleClose;
+    const URL = "ws://localhost:3333/auction";
+    // const URL = "ws://api.pixeller.net/auction";
+    const token = sessionStorage.getItem("user");
 
     // 경매 관련
     const [text, setText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
     const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
-    console.log(props);
+    const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰 가격
+
     // bid analyzer
     const {
       listening,
@@ -72,16 +81,14 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     } = useSpeechRecognition(initialPrice);
 
     // OpenVidu 토큰 요청 정보
-    const [roomName, setRoomName] = useState<string>(
-      props.auctionRoomId + "auction"
-    ); // 화상 회의 방 이름
-    const [participantName, setParticipantName] = useState<string>(username!); // 참가자 이름
+    const roomName = props.auctionRoomId + "auction";
+    const participantName = username!;
 
     // OpenVidu token 세션 접속 정보
     const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
-    const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>( // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
+    const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>(
       undefined
-    );
+    ); // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
     const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
 
     useImperativeHandle(ref, () => ({
@@ -90,17 +97,117 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       camController,
     }));
 
-    const join = async () => {
-      await joinRoom();
-    };
-
     useEffect(() => {
       return () => {
-        leaveRoom();
+        room?.disconnect();
       };
     }, []);
 
-    Auction(props.auctionRoomId, currentPrice);
+    // socket 관련
+    const socketRef = useRef<any>();
+
+    useEffect(() => {
+      getProductById(props.auctionRoomId).then((res) => {
+        if (username === res.name) {
+          setIsSeller(true);
+        } else {
+          setIsSeller(false);
+        }
+      });
+      socketRef.current = io(URL, {
+        // autoConnect: false,
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              Authentication: "Bearer " + token,
+            },
+          },
+          auth: {
+            token: token,
+          },
+        },
+      });
+
+      return () => {
+        socketRef.current.disconnect();
+      };
+    }, []);
+
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    useEffect(() => {
+      if (isFirstRender) {
+        setIsFirstRender(false);
+      } else {
+        socketRef.current.emit("bid", {
+          room: props.auctionRoomId,
+          bid_price: currentPrice,
+          username: participantName,
+          product_id: props.auctionRoomId,
+          bid_time: new Date().toISOString(),
+        });
+      }
+    }, [currentPrice]);
+
+    useEffect(() => {
+      socketRef.current.emit("join", {
+        username: username,
+        room: props.auctionRoomId,
+      });
+      console.log(
+        "DEBUG: Auction 서버에 join 실행",
+        props.auctionRoomId,
+        username
+      );
+      socketRef.current.on("connect", () => {
+        console.log("DEBUG: Connected to AUCTION server");
+      });
+
+      socketRef.current.on("disconnect", () => {
+        socketRef.current.emit("leave", { username: username });
+        console.log("Disconnected from server");
+      });
+
+      socketRef.current.on("message", (data) => {
+        console.log(data);
+
+        switch (data.type) {
+          case "bid":
+            console.log("Bid received");
+            setMaxBidPrice(data.bid_price);
+            break;
+          case "message":
+            console.log("Message received");
+            break;
+          case "join":
+            console.log("User joined");
+            console.log(data.message);
+            if (data.started) setText("경매 중");
+            break;
+          case "leave":
+            console.log("User left");
+            console.log(data.message);
+            break;
+          case "start":
+            console.log("Auction started");
+            console.log(data.message);
+            setText("경매 중");
+            break;
+          case "end":
+            console.log("Auction ended");
+            console.log(data.message);
+            alert(
+              `경매가 종료되었습니다. 낙찰자: ${data.winner}, 낙찰가: ${data.bid_price}`
+            );
+            break;
+          default:
+            break;
+        }
+      });
+      return () => {
+        socketRef.current.emit("leave", { username: username });
+        socketRef.current.disconnect();
+      };
+    }, []);
 
     async function joinRoom() {
       const room = new Room();
@@ -224,31 +331,37 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       return data.token;
     }
 
-    const startAuction = (e) => {
+    const startAuction = async (e) => {
       e.preventDefault();
 
       if (isSeller) {
+        // 경매 시작 로직 작성
         if (isAuctionStarted === false && everAuctionStarted === false) {
           setText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
           handleStart();
-          join();
+          await joinRoom();
+          socketRef.current.emit("start", {
+            room: props.auctionRoomId,
+            price: currentPrice,
+          });
 
-          // 경매 시작 로직 작성
+          // 경매 종료 로직 작성
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setText("경매 종료");
           setIsAuctionStarted(false);
           setEverAuctionStarted(false);
 
-          // 경매 종료 로직 작성
-          //
-          //
           handleStop();
-
           leaveRoom();
+          socketRef.current.emit("end", {
+            room: props.auctionRoomId,
+            price: currentPrice,
+          });
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
+      } else {
       }
     };
 
@@ -268,7 +381,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     return (
       <>
         <div className="auction-wrapper">
-          <Auction_max_bid price={currentPrice} />
+          <Auction_max_bid price={maxBidPrice} />
           <div className="auction-container">
             <div className="auction-container-left">
               <div>

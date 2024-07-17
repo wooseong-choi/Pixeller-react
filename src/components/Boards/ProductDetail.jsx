@@ -28,7 +28,7 @@ const ProductDetail = ({
 
   useEffect(() => {
     getProductById(productId.id).then((res) => {
-      console.log(res);
+      // console.log(res);
       setProduct(res);
     });
 
