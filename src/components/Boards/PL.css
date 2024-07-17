@@ -58,7 +58,7 @@ element.style {
   -ms-overflow-style: none;
 }
 .item-list::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .item-card {
@@ -78,13 +78,12 @@ element.style {
 }
 
 .item-details {
-  margin-top: 12px;
-  padding: 8px;
+  margin: 12px auto 0;
+  /* padding: 8px; */
   background-color: #f0f0f0;
   border-radius: 1em;
   text-align: center;
   width: 60%;
-  margin: auto;
   line-height: 40px;
 }
 
