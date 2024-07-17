@@ -9,8 +9,8 @@ import { jwtDecode } from "jwt-decode";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
-const URL = '//172.30.1.11:8080/chat';
-// const URL = '//lionreport.pixeller.net/chat';
+// const URL = '//172.30.1.11:8080/chat';
+const URL = '//lionreport.pixeller.net/chat';
 const PUBLIC_ROOM_NO = '1';
 
 
