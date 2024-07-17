@@ -326,22 +326,22 @@
   height: 80px;
   cursor: pointer;
   background-color: #6bab8d;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .chat-room.public{
   background-image: url('../../../public/icon/public_speaking.png');
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 .chat-room.private{
   background-image: url('../../../public/icon/pngegg_40.png');
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 .chat-room.private.room-list-navi{
   background-image: url('../../../public/icon/undo_r.png');
+}
+.chat-room.user-list {
+  background-image: url('../../../public/icon/user-list.png');
 }
 
 .chat-room:hover, .chat-room.active {
@@ -358,6 +358,10 @@
   margin: auto;
 }
 .chat-content.private.active > div.chatList{
+  width: 100%;
+}
+
+.chat-content.user-list.active > div.chatList {
   width: 100%;
 }
 
@@ -379,4 +383,8 @@
 
 .swiper-slide {
   display: flex !important;
+}
+
+.user-list .user-info {
+  margin-bottom: 20px;
 }
