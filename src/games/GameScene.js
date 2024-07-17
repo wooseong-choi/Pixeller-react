@@ -299,6 +299,13 @@ class GameScene extends Phaser.Scene {
     this.move_soundEffect.playTime = 0.5;
     this.shoot_soundEffect = this.sound.add("shoot");
 
+    // 사용자 상호작용으로 AudioContext 활성화
+    this.input.on('pointerdown', () => {
+      if (this.sound.context.state === 'suspended') {
+        this.sound.context.resume();
+      }
+    });
+
     // BGM 객체 생성
     // var bgm1 = this.sound.add("bgm1");
     // var bgm2 = this.sound.add("bgm2");
