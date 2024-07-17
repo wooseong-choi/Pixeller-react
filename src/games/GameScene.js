@@ -257,11 +257,11 @@ class GameScene extends Phaser.Scene {
     this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // font
-    this.load.bitmapFont(
-      "font",
-      "./fonts/MangoByeolbyeol.png",
-      "./fonts/MangoByeolbyeol.xml"
-    );
+    // this.load.bitmapFont(
+    //   "font",
+    //   "./fonts/MangoByeolbyeol.png",
+    //   "./fonts/MangoByeolbyeol.xml"
+    // );
   }
 
   /**
@@ -310,13 +310,19 @@ class GameScene extends Phaser.Scene {
 
 
     // 캐릭터 이름 생성
-    this.player.nameText = this.add.bitmapText(
+    this.player.nameText = this.add.text(
       this.player.x - 10,
       this.player.y - 15,
-      "font",
       this.username,
-      12
-    ); // or 8
+      {
+        fontFamily: '"Nanum Gothic", sans-serif',
+        fontSize: '14px',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 3
+      }
+    );
+    this.player.nameText.setOrigin(0.5, 1); 
 
     // 조준선 그래픽 객체 생성
     this.aimLine = this.add.graphics().setDepth(1);
@@ -398,9 +404,9 @@ class GameScene extends Phaser.Scene {
       false
     );
     // space key: shoot
-    this.spaceKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
+    // this.spaceKey = this.input.keyboard.addKey(
+    //   Phaser.Input.Keyboard.KeyCodes.SPACE
+    // );
 
     this.scale.on("resize", this.resize, this);
 
@@ -538,7 +544,7 @@ class GameScene extends Phaser.Scene {
     // this.Player.Move(this.cursors, this.move_soundEffect);
     this.Player.Move_(this.input.keyboard, this.move_soundEffect);
 
-    this.player.nameText.x = this.player.x - 10;
+    this.player.nameText.x = this.player.x;
     this.player.nameText.y = this.player.y - 30;
 
     if (!this.lastPositionUpdateTime) {
@@ -579,7 +585,7 @@ class GameScene extends Phaser.Scene {
     }
 
     // bullets
-    if (Phaser.Input.Keyboard.JustDown(this.spaceKey) && this.isAiming) {
+    if (this.input.activePointer.isDown && this.isAiming) {
       const bullet = this.bullets.get(this.player.x, this.player.y);
       if (bullet) {
         bullet.setActive(true).setVisible(true);
