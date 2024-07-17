@@ -17,7 +17,6 @@ cd $REPOSITORY
 
 sudo npm install --legacy-peer-deps
 sudo npm install -g pm2
-sudo npm install -g serve # 정적 파일을 서빙하기 위한 도구
 
 sudo npm run build # 프로젝트 빌드
 
@@ -25,6 +24,6 @@ sudo pm2 stop react-app || true
 sudo pm2 delete react-app || true
 
 # 빌드된 파일을 serve를 이용해 서빙
-sudo pm2 start serve --name "react-app" -- -s build -l 3000
+sudo pm2 serve build 3000 --name "react-app" --spa
 
 sudo pm2 save
