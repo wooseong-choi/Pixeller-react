@@ -241,7 +241,7 @@
 .chat-content > div {
   width: 85%;
   margin: auto;
-  margin-right: 30px;
+  /* margin-right: 30px; */
 }
 .chat-rooms {
   display: inline-block;
@@ -340,6 +340,9 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.chat-room.private.room-list-navi{
+  background-image: url('../../../public/icon/undo_r.png');
+}
 
 .chat-room:hover, .chat-room.active {
   /* background-color: #6bab8d; */
@@ -351,8 +354,11 @@
 }
 
 .chat-content.private.active > div{
+  width: 85%;
+  margin: auto;
+}
+.chat-content.private.active > div.chatList{
   width: 100%;
-  margin: 0;
 }
 
 .chatbox {
@@ -363,4 +369,14 @@
   width: 100%;
   height: 100%;
   background-color: #84ac99;
+  line-height: 100px;
+  cursor: pointer;
+}
+
+.chat-room-id {
+  display: none;
+}
+
+.swiper-slide {
+  display: flex !important;
 }

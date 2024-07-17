@@ -44,8 +44,7 @@ class OPlayer implements iChara {
   targetX: number;
   targetY: number;
   client_id: string;
-  nameText: GameObjects.BitmapText;
-  nameTextT: Phaser.GameObjects.Text;
+  nameText: GameObjects.Text;
   preset: string;
 
   constructor(
@@ -79,58 +78,76 @@ class OPlayer implements iChara {
     x: number,
     y: number,
     preset: string
-  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody | null {
+  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
     this.preset = preset;
-    const directions = ['down', 'left', 'right', 'up'];
-    const frameIndexes = ['0', '1', '2', '3'];
+    const playerWorkDConfig = {
+      key: preset + "_walk_down",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_0_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkLConfig = {
+      key: preset + "_walk_left",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_1_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkRConfig = {
+      key: preset + "_walk_right",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_2_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
+    const playerWorkUConfig = {
+      key: preset + "_walk_up",
+      frames: this.obj.anims.generateFrameNames(preset, {
+        start: 0,
+        end: 3,
+        prefix: "frame_3_",
+      }),
+      frameRate: 10,
+      repeat: -1,
+    };
 
-    directions.forEach((dir, index) => {
-      const config = {
-        key: `${preset}_walk_${dir}`,
-        frames: this.obj.anims.generateFrameNames(preset, {
-          start: 0,
-          end: 3,
-          prefix: `frame_${frameIndexes[index]}_`,
-        }),
-        frameRate: 10,
-        repeat: -1,
-        duration: 400 // 40프레임 * (1초 / 10프레임) = 400ms
-      };
-      this.obj.anims.create(config);
-    });
+    this.obj.anims.create(playerWorkDConfig);
+    this.obj.anims.create(playerWorkLConfig);
+    this.obj.anims.create(playerWorkRConfig);
+    this.obj.anims.create(playerWorkUConfig);
 
     this.player = this.obj.physics.add.sprite(x, y, preset).setScale(0.8, 0.8);
 
-    if (!this.player) {
-      console.error("Failed to create player sprite");
-      return null;
-    }
-
     this.player.setCollideWorldBounds(true);
-    if (this.player.body) {
-      this.player.body.setSize(this.width, this.height, true);
-    }
-    this.oldPosition = { x, y };
+    this.player.body.setSize(this.width, this.height, true);
+    this.oldPosition = { x: x, y: y };
 
-    this.nameText = this.obj.add.bitmapText(
-      this.player.x - 10,
-      this.player.y - 30,
-      "font",
+    // this.OPlayer[key].nameText = this.add.bitmapText(this.OPlayer[key].x - 10,this.OPlayer[key].y - 30,"font",user.username,12); // or 8
+    this.nameText = this.obj.add.text(
+      this.player.x,
+      this.player.y - 28,
       this.name,
-      12
+      {
+        fontFamily: '"Nanum Gothic", sans-serif',
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#000000',
+        resolution: 4
+        // stroke: '#000000',
+        // strokeThickness: 3
+      }
     );
-
-    // // 애니메이션 로드 확인
-    // directions.forEach(dir => {
-    //   if (!this.obj.anims.exists(`${preset}_walk_${dir}`)) {
-    //     // console.error(`Animation ${preset}_walk_${dir} not found`);
-    //   }
-    // });
-
-    // if (!this.player.anims) {
-    //   console.error('Animation component not initialized');
-    //   return null;
-    // }
+    this.nameText.setOrigin(0.5, 1);
 
     return this.player;
   }
@@ -154,85 +171,59 @@ class OPlayer implements iChara {
     }
   }
 
-  playAnimation(direction: string) {
-    if (!this.player || !this.player.anims) {
-      console.error("Player or animations not initialized");
-      return;
-    }
-    let animationKey: string | null = null;
-
-    switch (direction) {
-      case 'walk_left':
-      case 'left':
-        animationKey = `${this.preset}_walk_left`;
-        break;
-      case 'walk_right':
-      case 'right':
-        animationKey = `${this.preset}_walk_right`;
-        break;
-      case 'walk_up':
-      case 'up':
-        animationKey = `${this.preset}_walk_up`;
-        break;
-      case 'walk_down':
-      case 'down':
-        animationKey = `${this.preset}_walk_down`;
-        break;
-      default:
-        console.warn(`Unknown direction: ${direction}`);
-        return;
-    }
+  // playAnimation(direction: string) {
+  //   if (!this.player || !this.player.anims) {
+  //     console.error("Player or animations not initialized");
+  //     return;
+  //   }
+  //   const animationKey = `${this.preset}_walk_${direction}`;
     
-    if (animationKey && this.player.anims.exists(animationKey)) {
-      this.player.play(animationKey, true);
-    }
-  }
+  //   if (this.player.anims.exists(animationKey)) {
+  //     this.player.play(animationKey, true);
+  //   } else {
+  //     console.warn(`Animation ${animationKey} not found`);
+  //   }
+  // }
 
   async moveTo(x: number, y: number, direction: string) {
-    if (!this.player) {
-      console.error("Player not initialized");
-      return;
-    }
-    try {
-      const dx = x - this.player.x;
-      const dy = y - this.player.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      this.direction = direction;
+    // Calculate the distance to the target
+    const dx = x - this.player.x;
+    const dy = y - this.player.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    this.direction = direction;
 
-      const duration = (distance / this.speed) * 10;
+    // Calculate the duration for the tween based on the distance to the target
+    const duration = (distance / this.speed) * 10; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
 
-      this.playAnimation(direction);
-
-      return new Promise<void>((resolve) => {
-        this.obj.tweens.add({
-          targets: [this.nameText],
-          x: x - 10,
-          y: y - 30,
-          duration: duration,
-          ease: "Linear",
-          onComplete: () => {
-            resolve();
-          },
-        });
-        this.obj.tweens.add({
-          targets: [this.player],
-          x: x,
-          y: y,
-          duration: duration,
-          ease: "Linear",
-          onUpdate: () => {
-            this.playAnimation(direction);
-          },
-          onComplete: () => {
-            this.onMove = false;
-            if (this.player && this.player.anims) this.player.anims.stop();
-            resolve();
-          },
-        });
+    // Create a tween that updates the player's position
+    return new Promise<void>((resolve) => {
+      this.obj.tweens.add({
+        targets: [this.nameText],
+        x: x,
+        y: y - 28,
+        duration: duration,
+        ease: "Linear",
+        onComplete: () => {
+          resolve();
+        },
       });
-    } catch (error) {
-      console.error('Error in moveTo:', error);
-    }
+      this.obj.tweens.add({
+        targets: [this.player],
+        x: x,
+        y: y,
+        duration: duration,
+        ease: "Linear",
+        onComplete: () => {
+          this.onMove = false;
+          if (this.player.anims) this.player.anims.pause();
+          resolve();
+        },
+      });
+
+      if (this.onMove) {
+        this.player.anims.play(`${this.preset}_${direction}`, true);
+      }
+    });
   }
 
   moveToBlock(x: number, y: number) {

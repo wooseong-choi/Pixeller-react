@@ -22,13 +22,15 @@ class GameScene extends Phaser.Scene {
   constructor() {
     super();
     this.uid = null;
-    this.players = null;
+
+    this.aimLine = null;
+    this.isAiming = false;
 
     this.Player = new Player(this, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-      // this.socket = io("ws://192.168.0.96:3333/ws", {
+      // this.socket = io("ws://192.168.0.96/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -60,7 +62,7 @@ class GameScene extends Phaser.Scene {
     });
 
     // 메인 통신 로직
-    this.socket.on("message", async (data) => {
+    this.socket.on("message", (data) => {
       // console.log(data);
       switch (data.type) {
         // 채팅 메시지 처리
@@ -72,63 +74,59 @@ class GameScene extends Phaser.Scene {
         case "join":
           console.log("New player connected: " + data);
           // console.log(data);
-          // if (this.OPlayer[data.user.uid] !== undefined) {
-          //   if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
-          //     this.OPlayer[data.user.uid].Destroy();
-          //     this.OPlayer[data.user.uid] = new OPlayer(
-          //       this,
-          //       data.user.username,
-          //       CHARACTER_WIDTH,
-          //       CHARACTER_HEIGHT,
-          //       data.user.clientid
-          //     );
-          //     const rand_0_9 = Math.floor(Math.random() * 6);
-          //     const oplayer_sprite = this.OPlayer[data.user.uid].Create(
-          //       data.user.x,
-          //       data.user.y,
-          //       "player" + rand_0_9
-          //     );
-          //     this.players.add(oplayer_sprite);
-          //   } else {
-          //     this.OPlayer[data.user.uid].clientid = data.user.clientid;
-          //     this.OPlayer[data.user.uid].x = data.user.x;
-          //     this.OPlayer[data.user.uid].y = data.user.y;
-          //   }
-          // } else {
-          //   this.OPlayer[data.user.uid] = new OPlayer(
-          //     this,
-          //     data.user.username,
-          //     CHARACTER_WIDTH,
-          //     CHARACTER_HEIGHT,
-          //     data.user.clientid
-          //   );
-          //   const rand_0_9 = Math.floor(Math.random() * 6);
-          //   const oplayer_sprite = this.OPlayer[data.user.uid].Create(
-          //     data.user.x,
-          //     data.user.y,
-          //     "player" + rand_0_9
-          //   );
-          //   this.players.add(oplayer_sprite);
-          // }
-          await this.handleJoinEvent(data);
+          if (this.OPlayer[data.user.uid] !== undefined) {
+            if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
+              this.OPlayer[data.user.uid].Destroy();
+              this.OPlayer[data.user.uid] = new OPlayer(
+                this,
+                data.user.username,
+                CHARACTER_WIDTH,
+                CHARACTER_HEIGHT,
+                data.user.clientid
+              );
+              const rand_0_9 = Math.floor(Math.random() * 6);
+              this.OPlayer[data.user.uid].Create(
+                data.user.x,
+                data.user.y,
+                "player" + rand_0_9
+              );
+            } else {
+              this.OPlayer[data.user.uid].clientid = data.user.clientid;
+              this.OPlayer[data.user.uid].x = data.user.x;
+              this.OPlayer[data.user.uid].y = data.user.y;
+            }
+          } else {
+            this.OPlayer[data.user.uid] = new OPlayer(
+              this,
+              data.user.username,
+              CHARACTER_WIDTH,
+              CHARACTER_HEIGHT,
+              data.user.clientid
+            );
+            const rand_0_9 = Math.floor(Math.random() * 6);
+            this.OPlayer[data.user.uid].Create(
+              data.user.x,
+              data.user.y,
+              "player" + rand_0_9
+            );
+          }
           break;
 
         // 유저 움직임 처리
         case "move":
           // console.log(data);
-          // const user = data.user;
+          const user = data.user;
 
-          // // 움직인 유저 정보만 받아와서 갱신해주기
-          // if (this.OPlayer[user.uid]) {
-          //   const otherPlayer = this.OPlayer[user.uid];
-          //   if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
-          //     otherPlayer.moveTo(user.x, user.y, user.direction);
-          //     otherPlayer.setMoving(true);
-          //   } else {
-          //     otherPlayer.setMoving(false);
-          //   }
-          // }
-          await this.handleMoveEvent(data);
+          // 움직인 유저 정보만 받아와서 갱신해주기
+          if (this.OPlayer[user.uid]) {
+            const otherPlayer = this.OPlayer[user.uid];
+            if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
+              otherPlayer.moveTo(user.x, user.y, user.direction);
+              otherPlayer.setMoving(true);
+            } else {
+              otherPlayer.setMoving(false);
+            }
+          }
           break;
 
         // 해당 유저 삭제
@@ -137,8 +135,6 @@ class GameScene extends Phaser.Scene {
           if (this.OPlayer[data.uid]) {
             this.OPlayer[data.uid].Destroy();
             delete this.OPlayer[data.uid];
-            delete this.temp_OPlayer[data.uid];
-            delete this.players[data.uid]; // <- ?? 검증 필요
           }
           console.log(this.OPlayer);
           break;
@@ -163,9 +159,9 @@ class GameScene extends Phaser.Scene {
               this.player.x = data.x;
               this.player.y = data.y;
             }
+            this.syncUserReceived = true;
+            this.create_OPlayer();
           }
-          this.syncUserReceived = true;
-          this.create_OPlayer();
           break;
 
         case "syncMe":
@@ -239,64 +235,6 @@ class GameScene extends Phaser.Scene {
           });
       }
     });
-
-    setInterval(() => {
-      this.socket.emit("userList");
-    }, 1000 * 30);
-
-  }
-
-  async handleJoinEvent(data) {
-    if (this.OPlayer[data.user.uid] !== undefined) {
-      if (this.OPlayer[data.user.uid].clientid !== data.user.clientid) {
-        this.OPlayer[data.user.uid].Destroy();
-        await this.createAndInitializeOPlayer(data.user);
-      } else {
-        this.OPlayer[data.user.uid].clientid = data.user.clientid;
-        this.OPlayer[data.user.uid].moveToBlock(data.user.x, data.user.y);
-      }
-    } else {
-      await this.createAndInitializeOPlayer(data.user);
-    }
-  }
-
-  async createAndInitializeOPlayer(user) {
-    this.OPlayer[user.uid] = new OPlayer(
-      this,
-      user.username,
-      CHARACTER_WIDTH,
-      CHARACTER_HEIGHT,
-      user.uid,
-      user.clientid
-    );
-    const rand_0_9 = Math.floor(Math.random() * 6);
-    const oplayer_sprite = await this.OPlayer[user.uid].Create(
-      user.x,
-      user.y,
-      "player" + rand_0_9
-    );
-    if (oplayer_sprite && this.players) {
-      this.players.add(oplayer_sprite);
-    } else {
-      console.error("Failed to create or add OPlayer:", user.uid);
-    }
-  }
-
-  async handleMoveEvent(data) {
-    const user = data.user;
-    if (this.OPlayer[user.uid] && this.OPlayer[user.uid].player) {
-      const otherPlayer = this.OPlayer[user.uid];
-      if (otherPlayer.player.x !== user.x || otherPlayer.player.y !== user.y) {
-        await otherPlayer.moveTo(user.x, user.y, user.direction);
-        otherPlayer.setMoving(true);
-        // 애니메이션 설정 추가
-        otherPlayer.playAnimation(user.direction);
-      } else {
-        otherPlayer.setMoving(false);
-        // 애니메이션 정지
-        otherPlayer.player.anims.stop();
-      }
-    }
   }
 
   /**
@@ -319,11 +257,11 @@ class GameScene extends Phaser.Scene {
     this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // font
-    this.load.bitmapFont(
-      "font",
-      "./fonts/MangoByeolbyeol.png",
-      "./fonts/MangoByeolbyeol.xml"
-    );
+    // this.load.bitmapFont(
+    //   "font",
+    //   "./fonts/MangoByeolbyeol.png",
+    //   "./fonts/MangoByeolbyeol.xml"
+    // );
   }
 
   /**
@@ -372,13 +310,27 @@ class GameScene extends Phaser.Scene {
 
 
     // 캐릭터 이름 생성
-    this.player.nameText = this.add.bitmapText(
-      this.player.x - 10,
-      this.player.y - 15,
-      "font",
+    this.player.nameText = this.add.text(
+      this.player.x,
+      this.player.y - 28,
       this.username,
-      12
-    ); // or 8
+      {
+        fontFamily: '"Nanum Gothic", sans-serif',
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#000000',
+        resolution: 4
+        // stroke: '#000000',
+        // strokeThickness: 3
+      }
+    );
+    this.player.nameText.setOrigin(0.5, 1); 
+
+    // 조준선 그래픽 객체 생성
+    this.aimLine = this.add.graphics().setDepth(1);
+
+    // Tab 키 추가
+    this.tabKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
 
     // 총알 생성
     this.bullets = this.physics.add.group({
@@ -399,11 +351,8 @@ class GameScene extends Phaser.Scene {
 
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    // this.cameras.main.setSize(CAMERA_WIDTH, CAMERA_HEIGHT);
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5); // 카메라가 플레이어를 따라다니도록 설정
-
-    // 카메라 데드존 설정
-    // this.cameras.main.setDeadzone(100, 100);
+    
 
     // 스크롤 설정
     this.scoll.create(this, map.widthInPixels, map.heightInPixels);
@@ -457,9 +406,9 @@ class GameScene extends Phaser.Scene {
       false
     );
     // space key: shoot
-    this.spaceKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
+    // this.spaceKey = this.input.keyboard.addKey(
+    //   Phaser.Input.Keyboard.KeyCodes.SPACE
+    // );
 
     this.scale.on("resize", this.resize, this);
 
@@ -534,23 +483,15 @@ class GameScene extends Phaser.Scene {
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
 
-      // const rand_0_9 = Math.floor(Math.random() * 6);
-      // if (this.OPlayer[key]) {
-      //   const oplayer_sprite = this.OPlayer[key].Create(
-      //     user.x,
-      //    user.y,
-      //    "player" + rand_0_9
-      //   );
-      //   if (oplayer_sprite) {
-      //     this.players.add(oplayer_sprite);
-      //   } else {
-      //     console.error("Failed to create sprite for player", key);
-      //   }
-      // } else {
-      //   console.error("OPlayer not found for key", key);
-      // }
-      await this.createAndInitializeOPlayer(user);
+      const rand_0_9 = Math.floor(Math.random() * 6);
+      const oplayer_sprite = this.OPlayer[key].Create(
+        user.x,
+        user.y,
+        "player" + rand_0_9
+      );
+      this.players.add(oplayer_sprite);
     }
+    
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
     // for (let key in this.OPlayer) {
@@ -560,7 +501,7 @@ class GameScene extends Phaser.Scene {
 
   handlePlayerHit(player, bullet) {
     if (player && player.hit) {
-      player.hit(bullet);
+      // player.hit(bullet);
     } else if (player) {
       // OPlayer의 경우
       const angle = Phaser.Math.Angle.Between(
@@ -569,8 +510,8 @@ class GameScene extends Phaser.Scene {
         player.x,
         player.y
       );
-      const offsetX = Math.cos(angle) * 10; // 밀려나는 거리 조절
-      const offsetY = Math.sin(angle) * 10; // 밀려나는 거리 조절
+      const offsetX = Math.cos(angle) * 20; // 밀려나는 거리 조절
+      const offsetY = Math.sin(angle) * 20; // 밀려나는 거리 조절
 
       this.tweens.add({
         targets: player,
@@ -605,8 +546,8 @@ class GameScene extends Phaser.Scene {
     // this.Player.Move(this.cursors, this.move_soundEffect);
     this.Player.Move_(this.input.keyboard, this.move_soundEffect);
 
-    this.player.nameText.x = this.player.x - 10;
-    this.player.nameText.y = this.player.y - 30;
+    this.player.nameText.x = this.player.x;
+    this.player.nameText.y = this.player.y - 28;
 
     if (!this.lastPositionUpdateTime) {
       this.lastPositionUpdateTime = time;
@@ -632,28 +573,36 @@ class GameScene extends Phaser.Scene {
       this.lastPositionUpdateTime = time;
     }
 
+    // 조준선 표시 / 숨김
+    if (Phaser.Input.Keyboard.JustDown(this.tabKey)) {
+      this.isAiming = !this.isAiming;
+      if (!this.isAiming) {
+        this.aimLine.clear();
+      }
+    }
+
+    // 조준선 업데이트
+    if (this.isAiming) {
+      this.updateAimLine();
+    }
+
     // bullets
-    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
-      const pointer = this.input.activePointer;
+    if (this.input.activePointer.isDown && this.isAiming) {
       const bullet = this.bullets.get(this.player.x, this.player.y);
       if (bullet) {
         bullet.setActive(true).setVisible(true);
-
-        // 총알 각도 설정
+  
         const angle = Phaser.Math.Angle.Between(
-          this.player.x,
-          this.player.y,
-          pointer.worldX,
-          pointer.worldY
+          this.player.x, this.player.y,
+          this.input.activePointer.worldX, this.input.activePointer.worldY
         );
+        const targetX = this.player.x + Math.cos(angle) * 1000; // 충분히 먼 거리
+        const targetY = this.player.y + Math.sin(angle) * 1000;
+  
         bullet.setRotation(angle).setScale(0.3, 0.3);
-
-        this.physics.moveTo(bullet, pointer.x, pointer.y, 2000);
-        // bullet.body.setVelocityY(-300);
-        // bullet.body.velocity.y = -300;
-        this.shoot_soundEffect.play({
-          volume: 0.5,
-        });
+  
+        this.physics.moveTo(bullet, targetX, targetY, 2000);
+        this.shoot_soundEffect.play({ volume: 0.5 });
       }
     }
 
@@ -705,6 +654,25 @@ class GameScene extends Phaser.Scene {
   handleCollision(player, obstacle) {
     // 충돌 시 실행할 코드
     console.log("플레이어와 장애물이 충돌했습니다!");
+  }
+
+  updateAimLine() {
+    this.aimLine.clear();
+    this.aimLine.lineStyle(1, 0xff0000);
+    
+    const angle = Phaser.Math.Angle.Between(
+      this.player.x, this.player.y,
+      this.input.activePointer.worldX, this.input.activePointer.worldY
+    );
+    
+    const lineLength = 1000; // 조준선의 길이
+    const endX = this.player.x + Math.cos(angle) * lineLength;
+    const endY = this.player.y + Math.sin(angle) * lineLength;
+    
+    this.aimLine.beginPath();
+    this.aimLine.moveTo(this.player.x, this.player.y);
+    this.aimLine.lineTo(endX, endY);
+    this.aimLine.strokePath();
   }
 }
 

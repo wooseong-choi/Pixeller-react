@@ -3,6 +3,11 @@ import UserInfo from "../UI/UserInfo";
 import { getProductById, createPurchaseWish } from "../../api/products";
 import "./PD.css";
 import { HttpStatusCode } from "axios";
+// import Swiper JS
+import Swiper from 'swiper';
+// import Swiper styles
+import '../../static/css/swiper-bundle.min.css';
+
 
 const ProductDetail = ({
   productId,
@@ -15,10 +20,10 @@ const ProductDetail = ({
     name: "",
     price: "",
     memberId: "",
-    imageFileUrls: "",
-    memberDto: [],
-  });
+    imageFileUrls: [],
 
+  });
+  
   const handlePurchaseWish = () => {
     // console.log(createPurchaseWish(productId.id));
     if (createPurchaseWish(productId.id)) {
@@ -30,6 +35,7 @@ const ProductDetail = ({
     getProductById(productId.id).then((res) => {
       // console.log(res);
       setProduct(res);
+      console.log(product);
     });
 
     const handleEsc = (event) => {
@@ -55,14 +61,34 @@ const ProductDetail = ({
 
   const user = sessionStorage.getItem("username");
 
+  useEffect(() => {
+    const swiper = new Swiper('.swiper-container', {
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      // allowSlideNext: true,
+      // allowSlidePrev: true,
+    });
+  }, [product.imageFileUrls]);
+
   return (
     <div className="board-wrapper" onClick={handleClose}>
       <div className="board-container" onClick={(e) => e.stopPropagation()}>
         <button className="close-button" onClick={handleClose}>
           ×
         </button>
-        <div className="img-container">
-          <img src={product.imageFileUrls[0]} alt="product" />
+
+        <div className="img-container swiper-container swiper">
+          <div className="swiper-wrapper">
+          {product.imageFileUrls.map((url, index) => (
+            <div key={index} className="swiper-slide">
+              <img key={index} src={url} alt="product" />
+            </div>
+          ))}
+          </div>
+          <div className="swiper-button-next"></div>
+          <div className="swiper-button-prev"></div>
         </div>
         <div className="product-detail">
           <div className="product-seller">

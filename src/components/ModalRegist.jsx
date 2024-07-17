@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../static/css/ModalLogin.css";
+import { loginS } from "../api/login";
+import { UserDTO } from "../api/dto/user";
 
 const ModalRegist = ({ isRegistOpen, onClose }) => {
   const [username, setUsername] = useState("");
@@ -27,15 +29,20 @@ const ModalRegist = ({ isRegistOpen, onClose }) => {
     };
     axios
       .post("https://api.pixeller.net/user/create", { user })
-      .then((response) => {
+      .then(async (response) => {
         console.log(response);
         if (response.data === null || response.data === "")
           return alert("회원가입이 실패하였습니다.");
         if (response.data.msg === "Ok") {
-          sessionStorage.setItem("user", JSON.stringify(response.data));
-          sessionStorage.setItem("username", username);
+          const user = new UserDTO(username, password);
 
-          navigate("/main");
+          const res = await loginS(user);
+          if (res === "success") {
+            navigate("/main");
+          }
+          // sessionStorage.setItem("user", JSON.stringify(response.data));
+          // sessionStorage.setItem("username", username);
+
         } else {
           alert(response.data.msg);
         }

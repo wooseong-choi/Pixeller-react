@@ -18,6 +18,7 @@ const GLogin = () => {
     const user = new GoogleUserDTO(name, token, jwt.sub);
 
     const res = await loginS(user);
+    console.log(res);
     if (res === "success") {
       navigate("/main");
     }

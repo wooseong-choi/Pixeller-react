@@ -301,7 +301,7 @@ class Player implements iChara {
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     // Calculate the duration for the tween based on the distance to the target
-    const duration = (distance / this.speed) * 1000; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
+    const duration = (distance / this.speed) * 10; 
 
     // Create a tween that updates the player's position
     this.obj.tweens.add({

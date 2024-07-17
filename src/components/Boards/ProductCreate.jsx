@@ -105,7 +105,7 @@ const ProductDetail = ({ handleClose }) => {
         },
       });
 
-      files.push({path: uploadUrl.data.url, filename: file.name});
+      files.push({path: uploadUrl.data.url.split('?')[0], filename: file.name});
 
       console.log(response);
     }
