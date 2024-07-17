@@ -29,7 +29,7 @@ const Chat = ({stompClient}) => {
     }, [stompClient]);
 
     const showMessage = (message) => {
-        console.log(message);
+        // console.log(message);
         setMessages(prevMessages => [...prevMessages, message]);
     }; 
      

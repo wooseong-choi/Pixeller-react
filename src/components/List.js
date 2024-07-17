@@ -90,10 +90,20 @@ const List = ({
   const chatRoomHandler = (e) => {
     if(e.target.className.indexOf("public") > -1) {
       document.querySelector(".chat-rooms .private").classList.remove("active");
+      document.querySelector(".chat-rooms .private").classList.remove("room-list-navi");
       e.target.classList.add("active");
       setChatType("public");
       document.querySelector('.chat-content.private').classList.remove('active');
       document.querySelector(".chat-content.public").classList.add("active");
+    }else if(e.target.className.indexOf("private") > -1 
+          &&  e.target.className.indexOf("room-list-navi") > -1){
+      // 재로딩을 위해 컴포넌트를 null로 설정 후 다시 설정
+      e.target.classList.remove("room-list-navi");
+      e.target.classList.remove("active");
+      setChatPrivateComponent(null);
+      setTimeout(() => {
+        setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
+      }, 0);
     }else if(e.target.className.indexOf("private") > -1) {
       document.querySelector(".chat-rooms .public").classList.remove("active");
       e.target.classList.add("active");
@@ -129,7 +139,7 @@ const List = ({
         <nav className="chat-content public active">{chatPublicComponent}</nav>
         <nav className="chat-content private ">{chatPrivateComponent}</nav>
         <div className="chat-rooms">
-          <div className="chat-room public" onClick={chatRoomHandler}></div>
+          <div className="chat-room public active" onClick={chatRoomHandler}></div>
           <div className="chat-room private" onClick={chatRoomHandler}></div>
         </div>
       </div>
