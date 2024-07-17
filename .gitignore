@@ -25,4 +25,3 @@ yarn-error.log*
 # etc
 /backups
 /.github/workflows/.env
-.env
