@@ -8,6 +8,7 @@ import { axiosCRUDInstance } from "../api/axios";
 import { jwtDecode } from "jwt-decode";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import Alert from "./alert/sweetAlert2";
 
 // const URL = '//172.30.1.11:8080/chat';
 const URL = '//lionreport.pixeller.net/chat';
@@ -104,7 +105,6 @@ const List = ({
 
   const user = jwtDecode(sessionStorage.getItem("user"));
 
-
   return (
     <>
       <div className={`sidebar-container side-menu ${isOpen ? "open" : ""}`}>
@@ -133,7 +133,7 @@ const List = ({
           <div className="chat-room private" onClick={chatRoomHandler}></div>
         </div>
       </div>
-
+      <Alert/>
     </>
   );
 };
