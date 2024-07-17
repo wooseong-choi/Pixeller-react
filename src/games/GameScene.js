@@ -466,24 +466,15 @@ class GameScene extends Phaser.Scene {
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
 
-      // const rand_0_9 = Math.floor(Math.random() * 6);
-      // if (this.OPlayer[key]) {
-      //   const oplayer_sprite = this.OPlayer[key].Create(
-      //     user.x,
-      //    user.y,
-      //    "player" + rand_0_9
-      //   );
-      //   if (oplayer_sprite) {
-      //     this.players.add(oplayer_sprite);
-      //   } else {
-      //     console.error("Failed to create sprite for player", key);
-      //   }
-      // } else {
-      //   console.error("OPlayer not found for key", key);
-      // }
       const rand_0_9 = Math.floor(Math.random() * 6);
-      this.OPlayer[key].Create(user.x, user.y, "player" + rand_0_9);
+      const oplayer_sprite = this.OPlayer[key].Create(
+        user.x,
+        user.y,
+        "player" + rand_0_9
+      );
+      this.players.add(oplayer_sprite);
     }
+    
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
     // for (let key in this.OPlayer) {
@@ -493,7 +484,7 @@ class GameScene extends Phaser.Scene {
 
   handlePlayerHit(player, bullet) {
     if (player && player.hit) {
-      player.hit(bullet);
+      // player.hit(bullet);
     } else if (player) {
       // OPlayer의 경우
       const angle = Phaser.Math.Angle.Between(
@@ -502,8 +493,8 @@ class GameScene extends Phaser.Scene {
         player.x,
         player.y
       );
-      const offsetX = Math.cos(angle) * 10; // 밀려나는 거리 조절
-      const offsetY = Math.sin(angle) * 10; // 밀려나는 거리 조절
+      const offsetX = Math.cos(angle) * 20; // 밀려나는 거리 조절
+      const offsetY = Math.sin(angle) * 20; // 밀려나는 거리 조절
 
       this.tweens.add({
         targets: player,
