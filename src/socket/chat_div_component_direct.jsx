@@ -1,19 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
-const PUBLIC_ROOM_NO = '1';
-
-const ChatDivComponent = ({stompClient,messages}) => {
+const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
     const [message, setMessage] = useState('');
     const messageEndRef = useRef(null);
 
     const user = jwtDecode(sessionStorage.getItem('user') );
-    
+    console.log('내가 메세지야',messages);
     const handleMessageChange = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setMessage(e.target.value);
     };
+ 
     const sendMessage = () => {
         // alert('메세지 보내기');
         // const msg = document.getElementById("message").value;
@@ -22,7 +21,7 @@ const ChatDivComponent = ({stompClient,messages}) => {
             content: message,
         };
         try {
-            stompClient.send("/pub/message/"+PUBLIC_ROOM_NO, {}, JSON.stringify(msg));
+            stompClient.send(`/pub/message/direct/${private_room_no}/send`, {}, JSON.stringify(msg));
         } catch (error) {
             console.error('Error sending message: ', error);
         }
@@ -68,4 +67,4 @@ const ChatDivComponent = ({stompClient,messages}) => {
 
 }
 
-export default ChatDivComponent;
+export default ChatDivComponentDirect;

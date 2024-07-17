@@ -62,13 +62,12 @@ const ProductDetail = ({
 
   useEffect(() => {
     const swiper = new Swiper('.swiper-container', {
-      speed: 400,
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
       },
-      allowSlideNext: true,
-      allowSlidePrev: true,
+      // allowSlideNext: true,
+      // allowSlidePrev: true,
     });
   }, [product.imageFileUrls]);
 
