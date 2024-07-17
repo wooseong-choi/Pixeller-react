@@ -334,7 +334,7 @@ class GameScene extends Phaser.Scene {
 
     // 총알 생성
     this.bullets = this.physics.add.group({
-      maxSize: 10,
+      maxSize: -1,
       defaultKey: "bullet",
     });
 

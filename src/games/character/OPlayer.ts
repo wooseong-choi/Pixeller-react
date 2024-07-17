@@ -187,6 +187,10 @@ class OPlayer implements iChara {
 
   async moveTo(x: number, y: number, direction: string) {
     // Calculate the distance to the target
+    if (!this.player) {
+      console.error("Player not initialized");
+      return;
+    }
     const dx = x - this.player.x;
     const dy = y - this.player.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -220,7 +224,7 @@ class OPlayer implements iChara {
         },
       });
 
-      if (this.onMove) {
+      if (this.onMove && this.player && this.player.anims) {
         this.player.anims.play(`${this.preset}_${direction}`, true);
       }
     });
