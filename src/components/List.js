@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../static/css/List.css";
 import ChatDirect from "../socket/chat_direct";
 import ChatPublic from "../socket/chat_public";
+import ChatUserList from "../socket/chat_user_list";
+
 import "../components/Boards/PL.css";
 import ProductList from "./Boards/ProductList";
 import { axiosCRUDInstance } from "../api/axios";
@@ -33,6 +35,7 @@ const List = ({
 
   const [chatPublicComponent, setChatPublicComponent] = useState(null);
   const [chatPrivateComponent, setChatPrivateComponent] = useState(null);
+  const [chatUserListComponent, setChatUserListComponent] = useState(null);
 
   const [chatType, setChatType] = useState("public");
 
@@ -40,6 +43,10 @@ const List = ({
 
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
+
+  const [chatUserList, setChatUserList] = useState([]);
+
+  const [sendChatId, setSendChatId] = useState(null);
 
   useEffect(() => {
     if (!stompClient) {
@@ -72,6 +79,21 @@ const List = ({
   }, [stompClient]);
   
   useEffect(() => {
+    const handleUserList = (e) => {
+      // alert('receive-userlist 이벤트 발생!');
+      console.log(e.detail.users);  // 사용자 목록 확인
+      setChatUserList(e.detail.users);
+    };
+
+    window.addEventListener('receive-userlist', handleUserList);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('receive-userlist', handleUserList);
+    };
+  }, []);
+
+  useEffect(() => {
     if (stompClient) {
       if (!chatPublicComponent) {
         setChatPublicComponent(<ChatPublic stompClient={stompClient} />);
@@ -79,21 +101,37 @@ const List = ({
       if (!chatPrivateComponent) {
         setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
       }
+
     }
   }, [stompClient, chatPublicComponent, chatPrivateComponent]);
 
+  useEffect(() => {
+    // if (!chatUserListComponent) {
+    setChatUserListComponent(<ChatUserList stompClient={stompClient} chatUserList={chatUserList} setSendChatId={setSendChatId} />);
+    // }
+  },[chatUserList, sendChatId]);
 
   const toggleMenu = (val, method) => {
     method(!val);
   };
 
   const chatRoomHandler = (e) => {
+    if(e.target.className.indexOf("room-list-navi") == -1){
+      const chatRooms = document.querySelectorAll(".chat-room");
+      for (let i = 0; i < chatRooms.length; i++) {
+        chatRooms[i].classList.remove("active");
+      }
+      
+      const chatContents = document.querySelectorAll('.chat-content');
+      for (let i = 0; i < chatContents.length; i++) {
+        chatContents[i].classList.remove("active");
+      }
+
+    }
+
     if(e.target.className.indexOf("public") > -1) {
-      document.querySelector(".chat-rooms .private").classList.remove("active");
-      document.querySelector(".chat-rooms .private").classList.remove("room-list-navi");
       e.target.classList.add("active");
       setChatType("public");
-      document.querySelector('.chat-content.private').classList.remove('active');
       document.querySelector(".chat-content.public").classList.add("active");
     }else if(e.target.className.indexOf("private") > -1 
           &&  e.target.className.indexOf("room-list-navi") > -1){
@@ -104,12 +142,30 @@ const List = ({
       setTimeout(() => {
         setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
       }, 0);
+
+      if(document.querySelector('.chat-room.public').className.indexOf('active') > -1){
+        const chatRooms = document.querySelectorAll(".chat-room");
+        for (let i = 0; i < chatRooms.length; i++) {
+          chatRooms[i].classList.remove("active");
+        }
+        const chatContents = document.querySelectorAll('.chat-content');
+        for (let i = 0; i < chatContents.length; i++) {
+          chatContents[i].classList.remove("active");
+        }
+
+
+        e.target.classList.add("active");
+        setChatType("private");
+        document.querySelector(".chat-content.private").classList.add("active");
+      }
+
     }else if(e.target.className.indexOf("private") > -1) {
-      document.querySelector(".chat-rooms .public").classList.remove("active");
       e.target.classList.add("active");
       setChatType("private");
-      document.querySelector('.chat-content.public').classList.remove('active');
       document.querySelector(".chat-content.private").classList.add("active");
+    }else if(e.target.className.indexOf("user-list") > -1){
+      document.querySelector(".chat-content.user-list").classList.add("active");
+      e.target.classList.add("active");
     }
   };
 
@@ -138,9 +194,11 @@ const List = ({
 
         <nav className="chat-content public active">{chatPublicComponent}</nav>
         <nav className="chat-content private ">{chatPrivateComponent}</nav>
+        <nav className="chat-content user-list ">{chatUserListComponent}</nav>
         <div className="chat-rooms">
           <div className="chat-room public active" onClick={chatRoomHandler}></div>
           <div className="chat-room private" onClick={chatRoomHandler}></div>
+          <div className="chat-room user-list " onClick={chatRoomHandler}></div>
         </div>
       </div>
       <Alert/>

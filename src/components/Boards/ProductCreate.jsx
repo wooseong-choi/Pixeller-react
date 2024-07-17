@@ -269,7 +269,7 @@ const ProductDetail = ({ handleClose }) => {
                 className="category"
                 type="text"
                 name="category"
-                placeholder="카테고리를 입력해주세요"
+                placeholder=" 카테고리를 입력해주세요"
               />
               <input type="datetime-local" className="auction_start_time" name="auction_start_time" />
             </div>
