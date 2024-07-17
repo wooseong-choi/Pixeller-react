@@ -186,7 +186,7 @@ class OPlayer implements iChara {
     this.direction = direction;
 
     // Calculate the duration for the tween based on the distance to the target
-    const duration = (distance / this.speed) * 1000; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
+    const duration = (distance / this.speed) * 10; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
 
     // Create a tween that updates the player's position
     return new Promise<void>((resolve) => {
