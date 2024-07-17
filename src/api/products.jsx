@@ -128,8 +128,7 @@ export const checkSellerTrueOrFalse = async (username, productId) => {
         },
       }
     );
-    console.log("axios product::::", response);
-    return Boolean(response.data);
+    return response.data;
   } catch (error) {
     throw error;
   }

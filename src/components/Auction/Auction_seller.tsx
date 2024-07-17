@@ -26,6 +26,7 @@ import Auction_max_bid from "./Auction_max_bid.jsx";
 // import Auction from "../../socket/auctions.jsx";
 import { io } from "socket.io-client";
 import { getProductById, checkSellerTrueOrFalse } from "../../api/products.jsx";
+import { join } from "path";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -49,12 +50,8 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 
 const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
-    // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
-    // 현재 방이 경매중인지 확인
-
     // init data
     const username = props.userName;
-    // const isSeller = props.isSeller; // 판매자 여부
     const [isSeller, setIsSeller] = useState(props.isSeller);
     const handleClose = props.handleClose;
     const URL = "ws://localhost:3333/auction";
@@ -99,6 +96,18 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     }));
 
     useEffect(() => {
+      // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
+      checkSellerTrueOrFalse(props.userName, props.auctionRoomId).then(
+        (res) => {
+          if (res) {
+            setIsSeller(true);
+          } else {
+            setIsSeller(false);
+            setText("경매 참여");
+          }
+        }
+      );
+
       return () => {
         room?.disconnect();
       };
@@ -108,13 +117,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const socketRef = useRef<any>();
 
     useEffect(() => {
-      getProductById(props.auctionRoomId).then((res) => {
-        if (username === res.name) {
-          setIsSeller(true);
-        } else {
-          setIsSeller(false);
-        }
-      });
       socketRef.current = io(URL, {
         // autoConnect: false,
         transportOptions: {
@@ -182,7 +184,11 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           case "join":
             console.log("User joined");
             console.log(data.message);
-            if (data.started) setText("경매 중");
+            if (data.started) {
+              setText("경매 중");
+              setIsAuctionStarted(true);
+              setEverAuctionStarted(true);
+            }
             break;
           case "leave":
             console.log("User left");
@@ -221,11 +227,6 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           publication: RemoteTrackPublication,
           participant: RemoteParticipant
         ) => {
-          console.log(
-            "track subscribed: ",
-            publication.trackSid,
-            participant.identity
-          );
           setRemoteTracks((prev) => [
             ...prev,
             {
@@ -337,7 +338,9 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
       if (isSeller) {
         // 경매 시작 로직 작성
-        if (isAuctionStarted === false && everAuctionStarted === false) {
+        if (everAuctionStarted && !isAuctionStarted) {
+          alert("이미 경매가 완료되었습니다.");
+        } else if (isAuctionStarted === false && everAuctionStarted === false) {
           setText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
@@ -363,6 +366,13 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       } else {
+        if (isAuctionStarted) {
+          joinRoom();
+          handleStart();
+          setText("경매 중");
+        } else {
+          alert("경매가 시작되지 않았습니다.");
+        }
       }
     };
 
