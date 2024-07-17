@@ -5,13 +5,14 @@ import Stomp from 'stompjs';
 import ChatDivComponent from './chat_div_component';
 
 const Chat = ({stompClient}) => {
-    // const [stompClient, setStompClient] = useState(null);
-    // const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [chatList, setChatList] = useState([]);
     const user = jwtDecode(sessionStorage.getItem('user') );
 
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
+
+    const [chatRoomId, setChatRoomId] = useState(null);
 
     useEffect(() => {
         if (stompClient) {
@@ -37,17 +38,36 @@ const Chat = ({stompClient}) => {
         // console.log(chatList);
     }; 
 
+    const joinRoomHandler = (e) => {
+        const roomId = e.currentTarget.getAttribute('id');
+        console.log(roomId);
+        const splitedRoomId = roomId.split('-')[1];
+        setChatRoomId(splitedRoomId);
+
+        stompClient.subscribe(`/sub/message/direct/${splitedRoomId}?page=${page}&size=${size}`, (res) => {
+            alert('안녕 난 메세지, 어서구현해라');
+            alert('메세지 받았다!');
+            console.log('ㅗVㅗ',res);
+        });
+
+
+    }
+
+
     return (
         <>
-            {/* <ChatDivComponent stompClient={stompClient} messages={messages} /> */}
+            {chatRoomId!=null?
+                <ChatDivComponent stompClient={stompClient} messages={messages} />
+            :
             <div>
                 {chatList.map((chat, index) => (
-                    <div key={index} id={`roomid-${chat.chatRoomId}`} className={`chatbox `}>
+                    <div key={index} id={`roomid-${chat.chatRoomId}`} className={`chatbox `} onClick={joinRoomHandler}>
                         <span className="chat-room-id">{chat.chatRoomId}</span>
                         <span className="chat-room-message">{chat.message}</span>
                     </div>
                 ))}
             </div>
+            }
         </>
     );
 };
