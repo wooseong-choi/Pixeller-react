@@ -44,7 +44,9 @@ const Chat = ({stompClient}) => {
         const splitedRoomId = roomId.split('-')[1];
         setChatRoomId(splitedRoomId);
 
-        stompClient.subscribe(`/sub/message/direct/${splitedRoomId}`, (res) => {
+        stompClient.subscribe(`/sub/message/direct/${splitedRoomId}?page=${page}&size=${size}`, (res) => {
+            alert('안녕 난 메세지, 어서구현해라');
+            alert('메세지 받았다!');
             console.log('ㅗVㅗ',res);
         });
 
