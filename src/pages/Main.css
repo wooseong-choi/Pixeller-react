@@ -15,13 +15,7 @@ body,
 body {
   display: flex;
   flex-direction: column;
-  font-family: sans-serif;
 }
-
-body.font-loaded {
-  font-family: 'Nanum Gothic', sans-serif;
-}
-
 #GameApp {
   background: none;
   display: flex;

@@ -27,23 +27,13 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const OpenViduRef = useRef(null);
 
   useEffect(() => {
-    const loadFont = () => {
-      const link = document.createElement('link');
-      link.href = 'https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap';
-      link.rel = 'stylesheet';
-      link.onload = () => {
-        document.body.classList.add('font-loaded');
-      };
-      document.head.appendChild(link);
-    };
-
-    loadFont();
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
 
     return () => {
-      const link = document.querySelector('link[href^="https://fonts.googleapis.com/css2?family=Nanum+Gothic"]');
-      if (link) {
-        document.head.removeChild(link);
-      }
+      document.head.removeChild(link);
     };
   }, []);
 
