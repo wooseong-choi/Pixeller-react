@@ -41,7 +41,14 @@ const Chat = ({stompClient}) => {
     const joinRoomHandler = (e) => {
         const roomId = e.currentTarget.getAttribute('id');
         console.log(roomId);
-        setChatRoomId(roomId.split('-')[1]);
+        const splitedRoomId = roomId.split('-')[1];
+        setChatRoomId(splitedRoomId);
+
+        stompClient.subscribe(`/sub/message/direct/${splitedRoomId}`, (res) => {
+            console.log('ㅗVㅗ',res);
+        });
+
+
     }
 
 
