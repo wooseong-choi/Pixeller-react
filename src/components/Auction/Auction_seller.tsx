@@ -25,8 +25,11 @@ import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 import Auction_max_bid from "./Auction_max_bid.jsx";
 // import Auction from "../../socket/auctions.jsx";
 import { io } from "socket.io-client";
-import { getProductById, checkSellerTrueOrFalse } from "../../api/products.jsx";
-import { join } from "path";
+import {
+  getProductById,
+  getProductFiles,
+  checkSellerTrueOrFalse,
+} from "../../api/products.jsx";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -54,8 +57,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const username = props.userName;
     const [isSeller, setIsSeller] = useState(props.isSeller);
     const handleClose = props.handleClose;
-    // const URL = "ws://localhost:3333/auction";
-    const URL = "//api.pixeller.net/auction";
+    const URL = "ws://localhost:3333/auction";
+    // const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
 
     // 경매 관련
@@ -64,6 +67,11 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
     const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰 가격
+    const [winner, setWinner] = useState(""); // 낙찰자
+
+    // 상품 관련
+    const [product, setProduct] = useState<any>(null);
+    const [productFiles, setProductFiles] = useState<any>(null);
 
     // bid analyzer
     const {
@@ -129,6 +137,16 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             token: token,
           },
         },
+      });
+
+      getProductById(props.auctionRoomId).then((res) => {
+        console.log("DEBUG: Auction 상품 정보", res);
+        // setProduct({
+        //   name: res.data.name,
+        //   price: res.data.price,
+        //   description: res.data.description,
+        //   fileImage: res.data.imageFileUrls,
+        // });
       });
 
       return () => {
@@ -198,13 +216,23 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             console.log("Auction started");
             console.log(data.message);
             setText("경매 중");
+            setIsAuctionStarted(true);
             break;
           case "end":
             console.log("Auction ended");
             console.log(data.message);
-            alert(
-              `경매가 종료되었습니다. 낙찰자: ${data.winner}, 낙찰가: ${data.bid_price}`
-            );
+            if (data.winner !== undefined) {
+              // alert(
+              //   `경매가 종료되었습니다. 낙찰자: ${data.winner}, 낙찰가: ${data.bid_price}`
+              // );
+              if (data.winner === username) {
+                alert("축하합니다! 낙찰하셨습니다.");
+              } else {
+                setWinner(data.winner);
+              }
+            } else {
+              alert("경매가 종료되었습니다. 낙찰자가 없습니다.");
+            }
             break;
           default:
             break;
@@ -344,11 +372,11 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
-          handleStart();
+          // handleStart();
           await joinRoom();
           socketRef.current.emit("start", {
             room: props.auctionRoomId,
-            price: currentPrice,
+            init_price: initialPrice,
           });
 
           // 경매 종료 로직 작성
@@ -357,7 +385,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setIsAuctionStarted(false);
           setEverAuctionStarted(false);
 
-          handleStop();
+          // handleStop();
           leaveRoom();
           socketRef.current.emit("end", {
             room: props.auctionRoomId,
@@ -366,11 +394,12 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       } else {
-        if (isAuctionStarted) {
+        if (isAuctionStarted && !everAuctionStarted) {
           joinRoom();
           handleStart();
           setText("경매 중");
         } else {
+          // 여기서 판매자 분기쳐야함.
           alert("경매가 시작되지 않았습니다.");
         }
       }
@@ -401,8 +430,8 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                     {text}
                   </button>
                   <p className="bid-price">
-                    <img src="svg/Dollar.svg" />
-                    현재 가격{" "}
+                    {/* <img src="svg/Dollar.svg" /> */}
+                    {" 내가 부른 가격: "}
                     <span className="rtp">{formatAmount(currentPrice)}</span>
                   </p>
                 </div>
@@ -432,7 +461,13 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                 <>
                   {remoteTrack.trackPublication.kind === "video" ? (
                     <div>
-                      <div className="auction-buyer-video-container">
+                      <div
+                        className={`auction-buyer-video-container ${
+                          remoteTrack.participantIdentity === winner
+                            ? "winner"
+                            : ""
+                        }`}
+                      >
                         <VideoComponent
                           key={remoteTrack.trackPublication.trackSid}
                           track={remoteTrack.trackPublication.videoTrack!}
