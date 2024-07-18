@@ -8,6 +8,7 @@ import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
 import Auction from "../components/Auction/Auction.jsx";
 import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
+import Auction_new from "../components/Auction/Auction_new.tsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -136,15 +137,16 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               </div>
               <div>
                 {isAuctionOpen ? (
-                  <Auction_OpenVidu
-                    isSeller={true}
-                    auctionRoomId={auctionProduct.id}
-                    handleClose={closeAuctionModal}
-                    auctionProduct={auctionProduct.id}
-                    userName={userName}
-                    auctionPrice={auctionProduct.price}
-                    ref={OpenViduRef}
-                  />
+                  // <Auction_OpenVidu
+                  //   isSeller={true}
+                  //   auctionRoomId={auctionProduct.id}
+                  //   handleClose={closeAuctionModal}
+                  //   auctionProduct={auctionProduct.id}
+                  //   userName={userName}
+                  //   auctionPrice={auctionProduct.price}
+                  //   ref={OpenViduRef}
+                  // />
+                  <Auction_new handleClose={closeAuctionModal}/>
                 ) : null}
               </div>
             </div>
