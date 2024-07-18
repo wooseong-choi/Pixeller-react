@@ -9,8 +9,8 @@ import axios from "axios";
 const ProductDetail = ({ handleClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // const uri = "//lionreport.pixeller.net";
-  const uri = "//192.168.0.100:8080";
+  const uri = "//lionreport.pixeller.net";
+  // const uri = "//192.168.0.100:8080";
 
   useEffect(() => {
     const handleEsc = (event) => {
