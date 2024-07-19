@@ -35,16 +35,16 @@ const Auction_new = ({handleClose,productId}) => {
 
   
   
-  function updateNumber(): void {
-    let numberElement = document.getElementById('number') as HTMLElement;
-    let currentNumber = parseInt(numberElement.textContent || '0');
-    if (currentNumber > 0) {
-        currentNumber--;
-        numberElement.textContent = currentNumber.toString();
-    } else {
-        clearInterval(timer);
-    }
-  }
+  // function updateNumber(): void {
+  //   let numberElement = document.getElementById('number') as HTMLElement;
+  //   let currentNumber = parseInt(numberElement.textContent || '0');
+  //   if (currentNumber > 0) {
+  //       currentNumber--;
+  //       numberElement.textContent = currentNumber.toString();
+  //   } else {
+  //       clearInterval(timer);
+  //   }
+  // }
 
   // let timer = setInterval(updateNumber, 1000);
 
