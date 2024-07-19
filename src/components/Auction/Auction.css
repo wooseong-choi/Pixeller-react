@@ -440,8 +440,8 @@ body{
   background-color: rgba( 204,204 ,204, 0.4 );
   overflow-y: auto;
 }
-.syschat :hover {
-  background-color: rgba( 204,204 ,204, 0.4 );
+.syschat:hover , .syschat:active , .syschat:focus {
+  background-color: rgba( 204,204 ,204, 0.8 );
 }
 
 .syschat > p {
@@ -546,6 +546,13 @@ body{
   justify-content: center;
   align-items: center;
   position: relative;
+  position: absolute;
+  right: 100px;
+  bottom: 100px;
+  opacity: 0.3;
+}
+.circle-container:hover {
+  opacity: 0.7;
 }
 
 .circle {
