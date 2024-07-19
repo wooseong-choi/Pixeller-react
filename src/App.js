@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Main from "./pages/Main.jsx";
 import "./static/css/App.css";
 import * as Sentry from "@sentry/react";
+import LoginNew from "./pages/LoginNew.jsx";
 
 Sentry.init({
   dsn: "https://lionreport.pixeller.net/log",
@@ -36,6 +37,7 @@ function App() {
     <Router>
       <SentryRoutes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<LoginNew />} />
         <Route path="/main" element={ <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} /> }/>
         <Route path="*" element={<NotFound />} />
       </SentryRoutes>

@@ -36,7 +36,7 @@ const Login = () => {
           >
             Join to the World!
           </button>
-          <span
+          <button
             onClick={() => {
               setIsRegistOpen(isRegistOpen === false ? true : false);
             }}
@@ -49,7 +49,7 @@ const Login = () => {
             }}
           >
             회원가입
-          </span>
+          </button>
           <ModalLogin isOpen={isOpen} onClose={() => setIsOpen(false)} />
           <ModalRegist
             isRegistOpen={isRegistOpen}

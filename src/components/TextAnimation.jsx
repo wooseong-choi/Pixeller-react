@@ -5,20 +5,21 @@ import "../static/css/TypingAnimation.css";
 
 gsap.registerPlugin(TextPlugin);
 
-const TypingAnimation = () => {
+const TypingAnimation = (text) => {
   const textRef = useRef(null);
   const cursorRef = useRef(null);
   const [index, setIndex] = useState(0);
-  const textToType = [
-    '"will overcome challenges and obstacles with your teammates."',
-    '"will learn how to guide yourself to an exponential yet sustainable growth."',
-    '"will experience the true essence of programming in a flow state."',
-  ];
+  const textToType = ["중고거래에 경매를 더하다.", "중고거래에 경매를 더하다."];
+  // const textToType = [
+  //   '"will overcome challenges and obstacles with your teammates."',
+  //   '"will learn how to guide yourself to an exponential yet sustainable growth."',
+  //   '"will experience the true essence of programming in a flow state."',
+  // ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % textToType.length);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
