@@ -22,7 +22,7 @@ import VideoComponent from "../OpenVidu/VideoComponent.tsx";
 import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 
-import Auction_max_bid from "./Auction_max_bid.jsx";
+import AuctionBidEffector from "./Auction_max_bid.jsx";
 // import Auction from "../../socket/auctions.jsx";
 import { io } from "socket.io-client";
 import {
@@ -421,7 +421,7 @@ const Auction_OpenVidu = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     return (
       <>
         <div className="auction-wrapper">
-          <Auction_max_bid price={maxBidPrice} />
+          <AuctionBidEffector price={maxBidPrice} />
           <div className="auction-container">
             <div className="auction-container-left">
               <div>

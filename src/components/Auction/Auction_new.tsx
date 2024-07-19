@@ -20,9 +20,9 @@ import {
 import ProductDetailNew from "../Boards/ProductDetailNew";
 import AudioComponent from "../OpenVidu/AudioComponent.tsx";
 import VideoComponent from "../OpenVidu/VideoComponent.tsx";
-import Auction_max_bid from "./Auction_max_bid.jsx";
 import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
+import AuctionBidEffector from "./Auction_max_bid.jsx";
 
 // AXIOS API 콜
 import {
@@ -44,11 +44,12 @@ type AuctionSellerProps = {
   handleClose: () => void;
 };
 
-type product = {
+type Product = {
   name: string;
-  price: number;
+  price: string;
   description: string;
   fileImage: string[];
+  seller: string;
 };
 
 export type VideoCanvasHandle = {
@@ -68,17 +69,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     // init data
     const username = props.userName;
     const [isSeller, setIsSeller] = useState(props.isSeller);
-    const URL = "ws://localhost:3333/auction";
-    // const URL = "//api.pixeller.net/auction";
+    // const URL = "ws://localhost:3333/auction";
+    const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
 
     const productId = props.auctionRoomId;
-    const [product, setProduct] = useState<product>({
-      name: "",
-      price: 0,
-      description: "",
-      fileImage: [],
-    });
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -87,8 +82,18 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
     const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
-    const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰 가격
     const [winner, setWinner] = useState(""); // 낙찰자
+    const [bidPrice, setBidPrice] = useState(initialPrice); // 현재 입찰가
+    const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
+
+    // 상품 관련
+    const [product, setProduct] = useState({
+      name: "",
+      price: "",
+      description: "",
+      fileImage: [],
+      seller: "",
+    });
 
     // bid analyzer
     const {
@@ -102,6 +107,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       resetPrice,
       browserSupportsSpeechRecognition,
     } = useSpeechRecognition(initialPrice);
+    const [bidAid, setBidAid] = useState(false);
 
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -118,10 +124,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       alert("여기다 이벤트 걸어");
     };
     const handleMinBid = (event) => {
-      alert("여기다 이벤트 걸어");
+      setBidPrice((prev) => prev + 500);
     };
     const handleMinBidTimes = (event) => {
-      alert("여기다 이벤트 걸어");
+      setBidPrice((prev) => prev + 1000);
     };
 
     //// *** 경매 타이머 이벤트 ***
@@ -136,11 +142,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     //   }
     // }
 
-    // // let timer = setInterval(updateNumber, 1000);
+    // let timer = setInterval(updateNumber, 1000);
 
     // OpenVidu 토큰 요청 정보
     const roomName = props.auctionRoomId + "auction";
-    const participantName = username!;
+    const participantName = isSeller ? "seller-" + username : username!;
 
     // OpenVidu token 세션 접속 정보
     const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
@@ -163,7 +169,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setIsSeller(true);
           } else {
             setIsSeller(false);
-            setAuctionStatusText("경매 참여");
+            setAuctionStatusText("경매 전");
           }
         }
       );
@@ -175,6 +181,18 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     // socket 관련
     const socketRef = useRef<any>();
+
+    useEffect(() => {
+      getProductById(productId).then((res) => {
+        setProduct({
+          name: res.name,
+          price: res.price,
+          description: res.description,
+          fileImage: res.imageFileUrls,
+          seller: res.memberDto.id,
+        });
+      });
+    }, []);
 
     useEffect(() => {
       socketRef.current = io(URL, {
@@ -189,16 +207,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             token: token,
           },
         },
-      });
-
-      getProductById(props.auctionRoomId).then((res) => {
-        console.log("DEBUG: Auction 상품 정보", res);
-        setProduct({
-          name: res.data.name,
-          price: res.data.price,
-          description: res.data.description,
-          fileImage: res.data.imageFileUrls,
-        });
       });
 
       return () => {
@@ -486,16 +494,25 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                 <br />
                 p<br />r<br />o<br />d<br />u<br />c<br />t
               </div>
-              <ProductDetailNew productId={productId} />
+              <ProductDetailNew productData={product} />
             </div>
             <div className="auction-new-right">
               <div className="auction-new-right-top">
                 <span className="seller">
-                  판매자 :<p className="seller-n"> Ryuu</p>
+                  판매자 :<p className="seller-n"> {product.seller}</p>
                 </span>
                 <span className="product-name">트랙패드</span>
-                <span className="isAuctionInProgress">{AuctionStatusText}</span>
-                // 여기에 판매자 영상
+                <span className="isAuctionInProgress" onClick={startAuction}>
+                  {AuctionStatusText}
+                </span>
+                {/* // 여기에 판매자 영상 - 현재 우선 자신의 영상 */}
+                {localTrack && (
+                  <VideoComponent
+                    track={localTrack}
+                    participantId={participantName}
+                    local={true}
+                  />
+                )}
                 <div className="syschat">
                   <p>[입찰 알림 🔔] 만두님이 50000원에 입찰했습니다!</p>
                   <p>[입찰 알림 🔔] 민사님이 50500원에 입찰했습니다!</p>
@@ -522,6 +539,32 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
+                  {remoteTracks.map((remoteTrack) => (
+                    <>
+                      {remoteTrack.trackPublication.kind === "video" ? (
+                        <div>
+                          <div
+                            className={`auction-buyer-video-container ${
+                              remoteTrack.participantIdentity === winner
+                                ? "winner"
+                                : ""
+                            }`}
+                          >
+                            <VideoComponent
+                              key={remoteTrack.trackPublication.trackSid}
+                              track={remoteTrack.trackPublication.videoTrack!}
+                              participantId={remoteTrack.participantIdentity}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <AudioComponent
+                          key={remoteTrack.trackPublication.trackSid}
+                          track={remoteTrack.trackPublication.audioTrack!}
+                        />
+                      )}
+                    </>
+                  ))}
                   <div>
                     <div>
                       <img src="icon/svg/person.svg" />
@@ -585,14 +628,27 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                 </div>
                 <div className="auction-new-right-right">
                   <div className="title">
-                    <h1>Price</h1>
+                    <h1>Price {<AuctionBidEffector price={maxBidPrice} />}</h1>
                   </div>
                   <div className="voice-input">
                     <span>원하시는 가격이 맞으신가요?</span>
+                    <span
+                      className={"bid_mic" + (!bidAid ? " off" : "")}
+                      onClick={() => {
+                        if (bidAid) {
+                          handleStop();
+                          setBidAid(false);
+                        } else {
+                          handleStart();
+                          setBidAid(true);
+                        }
+                      }}
+                    ></span>
                     <input
                       className="bid_price"
                       name="bid_price"
                       type="text"
+                      value={bidPrice}
                       onChange={handleInputChange}
                     />
                     <button className="bid_button" onClick={handleBid}>

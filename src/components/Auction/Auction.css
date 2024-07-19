@@ -175,7 +175,6 @@
   font-size: 24px;
   cursor: pointer;
   color: #000;
-
 }
 
 .no-one-is-here {
@@ -219,8 +218,6 @@
   line-height: 32px;
 }
 
-
-
 /* 여기부터 리뉴얼 */
 .auction-new-background {
   position: fixed;
@@ -231,7 +228,7 @@
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   z-index: 1002;
 }
 
@@ -254,7 +251,7 @@
   width: 70%; /* 슬라이드 메뉴가 숨겨질 때의 너비 */
 }
 
-.auction-new-modal .close-button{
+.auction-new-modal .close-button {
   right: 0px;
   z-index: 3;
 }
@@ -284,7 +281,7 @@
   transform: translateX(-20%); /* 왼쪽으로 슬라이드 아웃 */
 }
 
-.vertical-text{
+.vertical-text {
   display: none;
 }
 .auction-new-left.slide-out .vertical-text {
@@ -314,7 +311,7 @@
   position: absolute;
   top: 5px;
   left: 5px;
-  background-image: url('../../../public/icon/svg/double-left.svg');
+  background-image: url("../../../public/icon/svg/double-left.svg");
   background-repeat: no-repeat;
   background-size: 24px;
   width: 24px;
@@ -341,16 +338,16 @@
   display: none;
 }
 
-.product-detail-new h2{
+.product-detail-new h2 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 54px;
   margin-top: 54px;
 }
-.product-detail-new h1{
-  color: #FC9905;
+.product-detail-new h1 {
+  color: #fc9905;
   font-size: 30px;
-  font-weight: bold; 
+  font-weight: bold;
   margin-bottom: 26px;
 }
 
@@ -371,7 +368,8 @@
   padding-left: 60px;
   display: flex; /* Flexbox 사용 */
   flex-direction: column; /* 요소들을 세로 방향으로 배치 */
-  background: url('../../../public/icon/svg/starting_price.svg') no-repeat 10px center; /* 배경 이미지 설정 */
+  background: url("../../../public/icon/svg/starting_price.svg") no-repeat 10px
+    center; /* 배경 이미지 설정 */
   background-color: #fff;
 }
 
@@ -424,10 +422,10 @@
   font-weight: bold;
 }
 
-body{
+body {
   -ms-overflow-style: none;
 }
-  
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -436,12 +434,15 @@ body{
   height: 50%;
   position: absolute;
   bottom: 0;
-  /* opacity: 0.4; */
-  background-color: rgba( 204,204 ,204, 0.4 );
+  opacity: 0.4;
+  background-color: rgba(204, 204, 204, 0.4);
   overflow-y: auto;
 }
-.syschat:hover , .syschat:active , .syschat:focus {
-  background-color: rgba( 204,204 ,204, 0.8 );
+.syschat:hover,
+.syschat:active,
+.syschat:focus {
+  background-color: rgba(204, 204, 204, 0.8);
+  opacity: 1;
 }
 
 .syschat > p {
@@ -464,22 +465,22 @@ body{
   top: 20px;
   right: 20px;
   display: inline-block;
-  color : #fff;
-  background: url('../../../public/icon/svg/onair.svg') no-repeat 20px center; /* 배경 이미지 설정 */
-  background-color: #2359E4;
+  color: #fff;
+  background: url("../../../public/icon/svg/onair.svg") no-repeat 20px center; /* 배경 이미지 설정 */
+  background-color: #2359e4;
   opacity: 0.8;
 }
 
-.auction-new-right-top .seller{
-  color: #A1A1A1;
+.auction-new-right-top .seller {
+  color: #a1a1a1;
   display: inline-block;
   margin-top: 30px;
 }
 
-.auction-new-right-top .seller .seller-n{
+.auction-new-right-top .seller .seller-n {
   display: inline;
 }
-.auction-new-right-top .product-name{
+.auction-new-right-top .product-name {
   font-size: 24px;
   font-weight: bold;
   display: block;
@@ -487,40 +488,55 @@ body{
 }
 
 .voice-input {
-  margin-top : 30px;
+  margin-top: 30px;
+  position: relative;
 }
 
-.voice-input > span, .minimun-bid > span{
+.voice-input > span,
+.minimun-bid > span {
   font-size: 12px;
-  color: #A1A1A1;
+  color: #a1a1a1;
 }
 
 .voice-input input.bid_price {
   width: 70%;
   height: 40px;
-  border: 1px solid #A1A1A1;
+  border: 1px solid #a1a1a1;
   border-radius: 10px;
   padding: 0 20px;
-  padding-left: 30px;
+  padding-left: 35px;
   font-size: 16px;
   outline: none;
-  background: url('../../../public/icon/svg/voice.svg') no-repeat 0px center;
+  /* background: url("../../../public/icon/svg/voice.svg") no-repeat 0px center; */
+}
+
+.voice-input .bid_mic {
+  background: url("../../../public/icon/svg/voice.svg") no-repeat 0px center;
+  width: 30px;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.voice-input .bid_mic.off {
+  background: url("../../../public/icon/svg/voice-x.svg") no-repeat 0px center;
 }
 
 .voice-input .bid_button {
-  width: calc( 30% - 10px );
+  width: calc(30% - 10px);
   height: 40px;
   border: none;
   border-radius: 10px;
   font-size: 14px;
   cursor: pointer;
   margin-left: 10px;
-  background-color: #2359E4;
+  background-color: #2359e4;
   color: #fff;
 }
 
 .minimun-bid {
-  margin-top : 30px;
+  margin-top: 30px;
 }
 
 .bid-button-div {
@@ -539,7 +555,6 @@ body{
   line-height: 30px;
   padding-left: 10px;
 }
-
 
 .circle-container {
   display: flex;
@@ -570,4 +585,11 @@ body{
   font-size: 48px;
   color: #f00;
   position: absolute;
+}
+
+/* 경매 div 금액 컴포 */
+.auction-new-right-right .title .max-bid-price {
+  display: inline;
+  font-size: 20px;
+  font-weight: bold;
 }

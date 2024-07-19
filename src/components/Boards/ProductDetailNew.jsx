@@ -8,34 +8,32 @@ import Swiper from "swiper";
 // import Swiper styles
 import "../../static/css/swiper-bundle.min.css";
 
-const ProductDetailNew = ({ productId }) => {
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    description: "",
-    fileImage: [],
-  });
+const ProductDetailNew = ({ productData }) => {
+  // const [product, setProduct] = useState({
+  //   name: "",
+  //   price: "",
+  //   description: "",
+  //   fileImage: [],
+  // });
 
-  useEffect(() => {
-    getProductById(productId).then((res) => {
-      console.log("DEBUG: Auction 상품 정보", res);
-      setProduct({
-        name: res.name,
-        price: res.price,
-        description: res.description,
-        fileImage: res.imageFileUrls,
-      });
-    });
-  }, [productId]);
-
-  const user = sessionStorage.getItem("username");
+  // useEffect(() => {
+  //   getProductById(productId).then((res) => {
+  //     console.log("DEBUG: Auction 상품 정보", res);
+  //     setProduct({
+  //       name: res.name,
+  //       price: res.price,
+  //       description: res.description,
+  //       fileImage: res.imageFileUrls,
+  //     });
+  //   });
+  // }, [productId]);
 
   return (
     <div className="product-detail-new">
       {/* <h2>트랙패드 by Ryuu</h2> */}
-      <h2>{product.name}</h2>
+      <h2>{productData.name}</h2>
       <h1>Description</h1>
-      {product.description.split("\n").map((line, index) => (
+      {productData.description.split("\n").map((line, index) => (
         <p key={index}>{line}</p>
       ))}
       {/* <p>맥북 사용하시는 분! 아니면 윈도우 사용하시는 분이더라도</p>
@@ -52,7 +50,7 @@ const ProductDetailNew = ({ productId }) => {
       <div className="starting-price">
         <span>Starting price</span>
         {/* <span>$5,000 {product.price}</span> */}
-        <span>₩ {product.price}</span>f
+        <span>₩ {productData.price}</span>f
       </div>
     </div>
   );
