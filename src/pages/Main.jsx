@@ -9,6 +9,7 @@ import "./Main.css";
 // import Auction from "../components/Auction/Auction.jsx";
 // import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
+import '../static/css/VideoComponent.css';
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -86,7 +87,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
+            <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
