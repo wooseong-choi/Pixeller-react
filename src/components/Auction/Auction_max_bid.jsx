@@ -25,7 +25,7 @@ const Auction_max_bid = ({ price }) => {
         <div className="max-bid-container">
           <div className="max-bid-data">
             <animated.div style={styles} className="max-bid-price">
-              {price.toLocaleString()} 원
+              경매 최고가: {price.toLocaleString()} 원
             </animated.div>
           </div>
         </div>

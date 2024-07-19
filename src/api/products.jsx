@@ -114,3 +114,22 @@ export const createPurchaseWish = async (productId) => {
     throw error;
   }
 };
+
+// 판매자 확인 로직
+export const checkSellerTrueOrFalse = async (username, productId) => {
+  try {
+    const response = await axiosCRUDInstance.post(
+      `/api/products/check`,
+      { id: username, productId: productId },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + sessionStorage.getItem("user"),
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
