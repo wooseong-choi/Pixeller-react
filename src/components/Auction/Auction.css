@@ -472,9 +472,10 @@ body {
 }
 
 .auction-new-right-top .seller {
-  color: #a1a1a1;
+  color: #000000;
   display: inline-block;
   margin-top: 30px;
+  padding-left: 10px;
 }
 
 .auction-new-right-top .seller .seller-n {
@@ -485,6 +486,7 @@ body {
   font-weight: bold;
   display: block;
   margin-top: 20px;
+  padding-left: 10px;
 }
 
 .voice-input {
@@ -590,6 +592,7 @@ body {
 /* 경매 div 금액 컴포 */
 .auction-new-right-right .title .max-bid-price {
   display: inline;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
+  color: #2359e4;
 }

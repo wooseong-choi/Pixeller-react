@@ -29,7 +29,7 @@ const AuctionBidEffector = ({ price }) => {
   return (
     <>
       <animated.div style={styles} className="max-bid-price">
-        ₩ {price.toLocaleString()}
+        ₩{price.toLocaleString()}
       </animated.div>
     </>
   );
