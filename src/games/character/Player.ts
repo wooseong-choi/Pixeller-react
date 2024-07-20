@@ -191,7 +191,7 @@ class Player implements iChara {
     const isMoving = velocityX !== 0 || velocityY !== 0;
     this.handleSound(isMoving, move_soundEffect);
 
-    this.oldPosition = { x: this.player.x, y: this.player.y };
+    // this.oldPosition = { x: this.player.x, y: this.player.y };
   }
 
   private handleSound(
