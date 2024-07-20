@@ -56,7 +56,7 @@ const ProductList = ({products}) => {
       const result = response.data;
 
       if (result.success) {
-        console.log("Chat started successfully:", result);
+        const roomId = result.data["roomId"];
       } else {
         console.error("Failed to start chat:", result.message);
       }
