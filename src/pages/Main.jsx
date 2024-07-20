@@ -6,14 +6,13 @@ import List from "../components/List";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
-import Auction from "../components/Auction/Auction.jsx";
-import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
+// import Auction from "../components/Auction/Auction.jsx";
+// import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
 import '../static/css/VideoComponent.css';
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
-  const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
@@ -77,7 +76,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const setAuctionProduct = (product) => {
-    console.log("main product: ", product);
     setAuctionProductState(product);
   };
 
@@ -147,7 +145,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   //   auctionPrice={auctionProduct.price}
                   //   ref={OpenViduRef}
                   // />
-                  <Auction_new handleClose={closeAuctionModal}/>
+                  <Auction_new
+                    handleClose={closeAuctionModal}
+                    isSeller={true}
+                    userName={userName}
+                    auctionRoomId={auctionProduct.id}
+                    auctionProduct={auctionProduct.id}
+                    auctionPrice={auctionProduct.price}
+                    ref={OpenViduRef}
+                  />
                 ) : null}
               </div>
             </div>

@@ -49,8 +49,15 @@
   display: block;
 }
 
-
 #room-header {
   display: flex;
   justify-content: center;
+}
+
+.auction-new-right-top .video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+  z-index: -1;
 }

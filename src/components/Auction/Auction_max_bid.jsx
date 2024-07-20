@@ -1,18 +1,25 @@
 import React, { useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { _config } from "gsap/gsap-core";
+import { Display } from "phaser";
 
-const Auction_max_bid = ({ price }) => {
+const AuctionBidEffector = ({ price }) => {
   const [prevPrice, setPrevPrice] = React.useState(0);
 
   const [styles, api] = useSpring(() => ({
-    from: { backgroundColor: "white" },
+    from: {
+      backgroundColor: "white",
+      Display: "inline",
+    },
   }));
 
   useEffect(() => {
     if (price !== prevPrice) {
       api.start({
-        to: [{ backgroundColor: "green" }, { backgroundColor: "white" }],
+        to: [
+          { backgroundColor: "grey" },
+          { backgroundColor: "white", Display: "inline" },
+        ],
         _config: { duration: 300 },
       });
       setPrevPrice(price);
@@ -21,17 +28,11 @@ const Auction_max_bid = ({ price }) => {
 
   return (
     <>
-      <div className="max-bid-wrapper">
-        <div className="max-bid-container">
-          <div className="max-bid-data">
-            <animated.div style={styles} className="max-bid-price">
-              경매 최고가: {price.toLocaleString()} 원
-            </animated.div>
-          </div>
-        </div>
-      </div>
+      <animated.div style={styles} className="max-bid-price">
+        ₩{price.toLocaleString()}
+      </animated.div>
     </>
   );
 };
 
-export default Auction_max_bid;
+export default AuctionBidEffector;
