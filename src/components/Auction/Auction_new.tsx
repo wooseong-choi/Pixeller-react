@@ -280,32 +280,23 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
       socketRef.current.on("message", (data) => {
         // console.log(data);
+        setSyschat((prev) => {
+          return prev + data.message + "\n";
+        });
 
         switch (data.type) {
           case "bid":
             setMaxBidPrice(data.bid_price);
             setBidPrice(data.bid_price);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             setCountDown(10);
             console.log(syschat);
             break;
           case "countdown":
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "message":
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "join":
             console.log(data.message);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             if (data.started) {
               setAuctionStatusText("경매 중");
               setIsAuctionStarted(true);
@@ -314,21 +305,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             break;
           case "leave":
             console.log(data.message);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "start":
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "end":
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             // setEndText("52000원에 만두님이 트랙패드의 낙찰자가 되셨습니다.");
             setEndText(
               `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
