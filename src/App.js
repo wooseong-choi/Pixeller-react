@@ -14,6 +14,7 @@ import Main from "./pages/Main.jsx";
 import "./static/css/App.css";
 import * as Sentry from "@sentry/react";
 import LoginNew from "./pages/LoginNew.jsx";
+import AlertAuction from "./components/alert/AlertAuction.jsx";
 
 Sentry.init({
   dsn: "https://lionreport.pixeller.net/log",
@@ -37,7 +38,11 @@ function App() {
     <Router>
       <SentryRoutes>
         <Route path="/" element={<LoginNew />} />
-        <Route path="/login" element={<LoginNew />} />  
+        <Route path="/login" element={<LoginNew />} />
+        <Route
+          path="/test"
+          element={<AlertAuction handlerStart={null} handleClose={null} />}
+        />
         <Route
           path="/main"
           element={
