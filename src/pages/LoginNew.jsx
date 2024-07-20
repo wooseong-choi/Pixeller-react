@@ -6,16 +6,20 @@ import { loginS } from "../api/login.jsx";
 import GLogin from "../components/GLogin";
 import { gsap } from "gsap/gsap-core";
 import CustomButton from "../components/alert/CustomButton.jsx";
+import axios from "axios";
 
-import "./LoginNew.css";
+import "../static/css/LoginNew.css";
 
 const LoginNew = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [createUsername, setCreateUsername] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [isLoginView, setIsLoginView] = useState(true); // 상태 추가
+  const [animationDone, setAnimationDone] = useState(false);
   const navigate = useNavigate();
 
   const textRef = useRef(null);
-  const cursorRef = useRef(null);
   const [index, setIndex] = useState(0);
   const textToType = ["중고거래에 경매를 더하다."];
 
@@ -25,6 +29,14 @@ const LoginNew = () => {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+
+  const handleCreateUsernameChange = (e) => {
+    setCreateUsername(e.target.value);
+  };
+
+  const handleCreatePasswordChange = (e) => {
+    setCreatePassword(e.target.value);
   };
 
   useEffect(() => {
@@ -48,6 +60,64 @@ const LoginNew = () => {
       navigate("/main");
     }
   };
+  const handleregist = () => {
+    // Perform login logic here
+
+    const user = {
+      id: createUsername,
+      name: createUsername,
+      pw: createPassword,
+      user_type: "U",
+    };
+    axios
+      .post("https://api.pixeller.net/user/create", { user })
+      .then(async (response) => {
+        console.log(response);
+        if (response.data === null || response.data === "")
+          return alert("회원가입이 실패하였습니다.");
+        if (response.data.msg === "Ok") {
+          const user = new UserDTO(createUsername, createPassword);
+
+          const res = await loginS(user);
+          if (res === "success") {
+            navigate("/main");
+          }
+
+        } else {
+          alert(response.data.msg);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        return alert("에러가 발생했습니다.");
+      });
+  };
+  
+  const handleTransitionEnd = (e) => {
+    if (animationDone) {
+      if (isLoginView) {
+        document.getElementById('registerView').style.display = "none";
+        document.getElementById('loginView').style.display = "flex";
+      } else {
+        document.getElementById('loginView').style.display = "none";
+        document.getElementById('registerView').style.display = "flex";
+      }
+      setAnimationDone(false);
+    }
+  };
+
+  useEffect(() => {
+    setAnimationDone(false);
+    if (isLoginView) {
+      setTimeout(() => {
+        setAnimationDone(true);
+      }, 500);
+    } else {
+      setTimeout(() => {
+        setAnimationDone(true);
+      }, 500);
+    }
+  }, [isLoginView]);
 
   return (
     <div className="login-page-wrapper">
@@ -64,7 +134,11 @@ const LoginNew = () => {
             <img src="apple-icon-180x180.png" alt="Bunny Character" />
           </div>
         </div>
-        <div className="login-page-right">
+        <div
+          id="loginView"
+          className={`login-page-right ${isLoginView ? "fade-in" : "fade-out"}`}
+          onTransitionEnd={handleTransitionEnd}
+        >
           <h2 className="login-page-header">Login</h2>
           <form className="login-form">
             <label htmlFor="username">Email Address</label>
@@ -88,18 +162,49 @@ const LoginNew = () => {
             <button type="button" onClick={handleLogin}>
               Login
             </button>
-            <div className="footer-create">
-              <Link to="/register" className="register">
-                Create Account
-              </Link>
+            <div className="footer-create" onClick={() => setIsLoginView(false)}>
+              Create Account
             </div>
           </form>
           <div className="login-google">
             <GLogin />
           </div>
-          <div>
+          {/* <div>
             <CustomButton />
-          </div>
+          </div> */}
+        </div>
+        <div
+          id="registerView"
+          className={`login-page-right ${isLoginView ? "fade-out" : "fade-in"} hide`}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          <h2 className="login-page-header">Create Account</h2>
+          <form className="create-form">
+            <label htmlFor="username" for="create-username" >Email Address</label>
+            <input
+              type="text"
+              id="create-username"
+              name="create-username"
+              value={createUsername}
+              placeholder="Enter username"
+              onChange={handleCreateUsernameChange}
+            />
+            <label htmlFor="password"  for="create-password" >Password</label>
+            <input
+              type="password"
+              id="create-password"
+              name="create-password"
+              value={createPassword}
+              placeholder="Enter password"
+              onChange={handleCreatePasswordChange}
+            />
+            <button type="button" onClick={handleregist}>
+              Create
+            </button>
+            <div className="footer-create">
+              Already have an account? <span onClick={() => setIsLoginView(true)}>Login</span>
+            </div>
+          </form>
         </div>
       </div>
     </div>

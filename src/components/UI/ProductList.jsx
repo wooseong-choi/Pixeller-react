@@ -66,6 +66,10 @@ const ProductList = ({closePLModal}) => {
 
   }, [sidebarItems]);
 
+  const comma3number = (num) => {
+    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   console.log(filteredItems);
   return (
     <>
@@ -104,16 +108,21 @@ const ProductList = ({closePLModal}) => {
                     <div className="swiper-button-next"></div>
                     <div className="swiper-button-prev"></div>
                 </div>
-                <div className="product-info">
+                <div className="new-product-info">
+                  <div className="new-product-info-div">
                     <div className="product-name">
                         <span>{item.name}</span>
                     </div>
                     <div className="product-price">
-                        <span>{item.price}</span>
+                        <span>{comma3number ( item.price )}원</span>
                     </div>
-                    <div className="product-seller">
-                        <span>판매자 : {item.memberDto.id}</span>
-                    </div>
+                  </div>
+                  <div className="new-product-seller">
+                      <span>판매자 : {item.memberDto.id}</span>
+                  </div>
+                  <div>
+                    
+                  </div>
                 </div>
             </div>
           </div>
