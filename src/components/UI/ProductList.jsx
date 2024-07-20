@@ -120,8 +120,10 @@ const ProductList = ({closePLModal}) => {
                   <div className="new-product-seller">
                       <span>판매자 : {item.memberDto.id}</span>
                   </div>
-                  <div>
-                    
+                  <div className="new-product-DM-div">
+                    <div>
+                      <span>판매자에게 DM 보내기</span>
+                    </div>
                   </div>
                 </div>
             </div>
