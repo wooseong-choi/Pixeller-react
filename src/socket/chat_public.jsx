@@ -17,11 +17,6 @@ const Chat = ({stompClient}) => {
                 stompClient.subscribe(`/sub/message/${PUBLIC_ROOM_NO}`, (message) => {
                     showMessage(JSON.parse(message.body));
                 });
-
-                stompClient.send(`/pub/message/${PUBLIC_ROOM_NO}/enter`);
-                stompClient.subscribe(`/sub/message/1/enter`, (res) => {
-                    showMessage(JSON.parse(res.body));
-                });
             };
 
             subscribe();
