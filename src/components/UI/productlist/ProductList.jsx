@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Swiper from 'swiper/bundle';
 // import Swiper styles
 import '../../../static/css/swiper-bundle.min.css';
+import { axiosCRUDInstance } from "../../../api/axios.jsx";
 
 const ProductList = ({products}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -40,6 +41,28 @@ const ProductList = ({products}) => {
 
   const comma3number = (num) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  const dmHandler = async (e) => {
+    const oppositeId = e.currentTarget.getAttribute('data-uid');
+  
+    try {
+      const response = await axiosCRUDInstance.post("/api/chat-room/opposite/"+oppositeId,{}, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + sessionStorage.getItem("user"),
+        },
+      });
+      const result = response.data;
+
+      if (result.success) {
+        console.log("Chat started successfully:", result);
+      } else {
+        console.error("Failed to start chat:", result.message);
+      }
+    } catch (error) {
+      console.error("Error during DM API call:", error);
+    }
   }
 
   // console.log(products);
@@ -83,7 +106,7 @@ const ProductList = ({products}) => {
                   </div>
                   <div className="new-product-DM-div">
                     <div>
-                      <span>판매자에게 DM 보내기</span>
+                    <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기gg!!!</span>
                     </div>
                   </div>
                 </div>
