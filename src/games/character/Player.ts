@@ -161,7 +161,6 @@ class Player implements iChara {
       animationKey = "walk_right";
     }
 
-    // if (up.isDown) {
     if (up.isDown) {
       velocityY = -this.speed;
       animationKey = "walk_up";
@@ -170,7 +169,6 @@ class Player implements iChara {
       animationKey = "walk_down";
     }
 
-    // 대각선 이동 시 속도 정규화
     if (velocityX !== 0 && velocityY !== 0) {
       const factor = 1 / Math.sqrt(2);
       velocityX *= factor;
@@ -183,26 +181,32 @@ class Player implements iChara {
       this.player.play(animationKey, true);
       this.direction = animationKey;
     } else {
-      move_soundEffect.stop();
       this.player.setVelocity(0, 0);
       this.player.anims.stop();
     }
 
-    // 위치를 정수로 반올림
-    // this.player.x = Math.round(this.player.x);
-    // this.player.y = Math.round(this.player.y);
+    const isMoving = velocityX !== 0 || velocityY !== 0;
+    this.handleSound(isMoving, move_soundEffect);
 
-    if (
-      this.oldPosition.x !== this.player.x ||
-      this.oldPosition.y !== this.player.y
-    ) {
-      if (up || down || left || right) {
-        if (!move_soundEffect.isPlaying)
-          move_soundEffect.play({
-            volume: 0.5,
-            loop: true,
-          });
+    this.oldPosition = { x: this.player.x, y: this.player.y };
+  }
+
+  private handleSound(
+    isMoving: boolean,
+    move_soundEffect:
+      | Phaser.Sound.NoAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | Phaser.Sound.WebAudioSound
+  ) {
+    if (isMoving) {
+      if (!move_soundEffect.isPlaying) {
+        move_soundEffect.play({
+          volume: 0.2,
+          loop: true,
+        });
       }
+    } else {
+      move_soundEffect.stop();
     }
   }
 
