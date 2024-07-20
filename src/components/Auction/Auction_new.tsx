@@ -92,6 +92,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [syschat, setSyschat] = useState(""); // 시스템 채팅
     const [bidder, setBidder] = useState(""); // 입찰자
 
+    const [sellerCam, setSellerCam] = useState<RemoteTrack | null>(null); // 판매자 화상 데이터
+
     // 상품 관련
     const [product, setProduct] = useState({
       name: "",
@@ -351,6 +353,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           publication: RemoteTrackPublication,
           participant: RemoteParticipant
         ) => {
+          if (participant.identity.split("-")[0] === "seller") {
+            setSellerCam(_track);
+          }
           setRemoteTracks((prev) => [
             ...prev,
             {
@@ -363,7 +368,14 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
       room.on(
         RoomEvent.TrackUnsubscribed,
-        (_track: RemoteTrack, publication: RemoteTrackPublication) => {
+        (
+          _track: RemoteTrack,
+          publication: RemoteTrackPublication,
+          participant: RemoteParticipant
+        ) => {
+          if (participant.identity.split("-")[0] === "seller") {
+            setSellerCam(null);
+          }
           setRemoteTracks((prev) =>
             prev.filter(
               (track) =>
