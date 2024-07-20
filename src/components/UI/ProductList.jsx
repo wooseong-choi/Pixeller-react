@@ -5,6 +5,7 @@ import { getAllProducts } from "../../api/products";
 import Swiper from 'swiper/bundle';
 // import Swiper styles
 import '../../static/css/swiper-bundle.min.css';
+import {jwtDecode} from "jwt-decode";
 
 const ProductList = ({closePLModal}) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,6 +71,14 @@ const ProductList = ({closePLModal}) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  const user = jwtDecode(sessionStorage.getItem("user"));
+  
+  const dmHandler = (e) => {
+    
+
+  }
+
+  console.log(user);
   console.log(filteredItems);
   return (
     <>
@@ -85,7 +94,7 @@ const ProductList = ({closePLModal}) => {
                   <button className="close-button" onClick={closePLModalHandler}>×</button>
               </div>
           </div>
-          
+
         {filteredItems.map((item, index) => (
           <div
             key={item.productId}
@@ -124,7 +133,7 @@ const ProductList = ({closePLModal}) => {
                   </div>
                   <div className="new-product-DM-div">
                     <div>
-                      <span>판매자에게 DM 보내기</span>
+                      <span data-uid={item.memberDto.memberId} onClick={dmHandler} >판매자에게 DM 보내기</span>
                     </div>
                   </div>
                 </div>
