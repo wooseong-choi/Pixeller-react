@@ -270,7 +270,7 @@ class GameScene extends Phaser.Scene {
 
     this.load.tilemapTiledJSON("map", "./map/real_map.json");
     this.load.image("object", "./gfx/meta_tile.png");
-    this.load.image("tile_asset", "./map/map.png");
+    this.load.image("tile_asset", "./map/real_map.png");
     this.load.audio("step", "./sounds/move_sound_effect.mp3");
     // this.load.audio("bgm1", "./sounds/market_sound.mp3");
     // this.load.audio("bgm2", "./sounds/store_sound.mp3");
@@ -301,7 +301,7 @@ class GameScene extends Phaser.Scene {
     this.add
       .image(0, 0, "tile_asset")
       .setOrigin(0, 0)
-      .setDisplaySize(2880, 2240);
+      .setDisplaySize(3440, 2480);
 
     // 레이어 생성
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
