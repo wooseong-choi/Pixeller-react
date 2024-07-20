@@ -125,7 +125,7 @@ class GameScene extends Phaser.Scene {
 
         // 유저 움직임 처리
         case "move":
-          // console.log(data);
+          console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
@@ -267,9 +267,9 @@ class GameScene extends Phaser.Scene {
       this.Player.Preload("player" + i, chaArray[i], "./meta/move.json");
     }
 
-    this.load.tilemapTiledJSON("map", "./map/map.json");
-    this.load.image("object", "./gfx/object.png");
-    this.load.image("tile_asset", "./gfx/tile_asset.png");
+    this.load.tilemapTiledJSON("map", "./map/real_map.json");
+    this.load.image("object", "./gfx/meta_tile.png");
+    this.load.image("tile_asset", "./map/real_map.png");
     this.load.audio("step", "./sounds/move_sound_effect.mp3");
     // this.load.audio("bgm1", "./sounds/market_sound.mp3");
     // this.load.audio("bgm2", "./sounds/store_sound.mp3");
@@ -300,16 +300,16 @@ class GameScene extends Phaser.Scene {
     this.add
       .image(0, 0, "tile_asset")
       .setOrigin(0, 0)
-      .setDisplaySize(3480, 1280);
+      .setDisplaySize(3440, 2480);
 
     // 레이어 생성
     var metaLayer = map.createLayer("Meta", [Asset], 0, 0);
     metaLayer.setVisible(false);
-    var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
+    // var objectLayer1 = map.createLayer("Object Layer 1", [Asset], 0, 0);
 
     // 화면에 보이는 타일만 렌더링하도록 설정
     metaLayer.setCullPadding(2, 2);
-    objectLayer1.setCullPadding(2, 2);
+    // objectLayer1.setCullPadding(2, 2);
 
     // 월드 경계 설정
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -321,12 +321,20 @@ class GameScene extends Phaser.Scene {
     this.move_soundEffect.playTime = 0.5;
     this.shoot_soundEffect = this.sound.add("shoot");
 
+    // 사용자 상호작용으로 AudioContext 활성화
+    this.input.on('pointerdown', () => {
+      if (this.sound.context.state === 'suspended') {
+        this.sound.context.resume();
+      }
+    });
+
     // BGM 객체 생성
     // var bgm1 = this.sound.add("bgm1");
     // var bgm2 = this.sound.add("bgm2");
 
     // 플레이어 생성
     this.players = this.add.group();
+    console.log("x: " + this.x + " y: " + this.y);
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
 
@@ -589,6 +597,7 @@ class GameScene extends Phaser.Scene {
       };
 
       this.Player.oldPosition = { x: this.player.x, y: this.player.y };
+      // console.log("move", user);
       this.socket.emit("move", user);
 
       this.lastPositionUpdateTime = time;
@@ -631,9 +640,9 @@ class GameScene extends Phaser.Scene {
       if (
         bullet.active &&
         (bullet.y < 0 ||
-          bullet.y > 1280 || // map height로 변경할 것
+          bullet.y > 2240 || // map height로 변경할 것
           bullet.x < 0 ||
-          bullet.x > 3480) // map width로 변경할 것
+          bullet.x > 2880) // map width로 변경할 것
       ) {
         bullet.setActive(false).setVisible(false);
       }
