@@ -89,7 +89,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [winner, setWinner] = useState(""); // 낙찰자
     const [bidPrice, setBidPrice] = useState(initialPrice); // 현재 입찰가
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
-    const [syschat, setSyschat] = useState("");
+    const [syschat, setSyschat] = useState(""); // 시스템 채팅
+    const [bidder, setBidder] = useState(""); // 입찰자
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -178,7 +179,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       }
     };
 
-    //// *** 경매 타이머 이벤트 ***
+    // *** 경매 타이머 이벤트 ***
     const [countDown, setCountDown] = useState(10);
 
     function updateNumber(timer): void {
@@ -288,6 +289,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           case "bid":
             setMaxBidPrice(data.bid_price);
             setBidPrice(data.bid_price);
+            setBidder(data.username);
             setCountDown(10);
             console.log(syschat);
             break;
@@ -297,7 +299,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             break;
           case "join":
             console.log(data.message);
-            if (data.started) {
+            if (data.done) {
+              setAuctionStatusText("경매 종료");
+              setIsAuctionStarted(false);
+              setEverAuctionStarted(true);
+            } else if (data.started) {
               setAuctionStatusText("경매 중");
               setIsAuctionStarted(true);
               setEverAuctionStarted(true);
@@ -312,6 +318,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             break;
           case "end":
             // setEndText("52000원에 만두님이 트랙패드의 낙찰자가 되셨습니다.");
+            setWinner(data.winner);
             setEndText(
               `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
             );
@@ -478,7 +485,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setAuctionStatusText("경매 종료");
           setIsAuctionStarted(false);
-          setEverAuctionStarted(false);
 
           // handleStop();
           await leaveRoom();
@@ -492,11 +498,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         if (isAuctionStarted && !everAuctionStarted) {
           joinRoom();
           handleStart();
+          setEverAuctionStarted(true);
           setAuctionStatusText("경매 중");
         } else if (isAuctionStarted && everAuctionStarted) {
           // 여기서 판매자 분기쳐야함.
           handleStop();
           leaveRoom();
+          setIsAuctionStarted(false);
           setAuctionStatusText("경매 종료");
           // alert("경매가 시작되지 않았습니다.");
         }
@@ -619,6 +627,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                             className={`auction-buyer-video-container ${
                               remoteTrack.participantIdentity === winner
                                 ? "winner"
+                                : ""
+                            } ${
+                              remoteTrack.participantIdentity === bidder
+                                ? "bidder"
                                 : ""
                             }`}
                           >
