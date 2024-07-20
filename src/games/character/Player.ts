@@ -185,10 +185,13 @@ class Player implements iChara {
       this.player.anims.stop();
     }
 
+    this.player.x = Math.round(this.player.x);
+    this.player.y = Math.round(this.player.y);
+
     const isMoving = velocityX !== 0 || velocityY !== 0;
     this.handleSound(isMoving, move_soundEffect);
 
-    this.oldPosition = { x: this.player.x, y: this.player.y };
+    // this.oldPosition = { x: this.player.x, y: this.player.y };
   }
 
   private handleSound(
