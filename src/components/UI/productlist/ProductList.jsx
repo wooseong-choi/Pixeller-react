@@ -6,23 +6,9 @@ import Swiper from 'swiper/bundle';
 // import Swiper styles
 import '../../static/css/swiper-bundle.min.css';
 
-const ProductList = ({closePLModal}) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const ProductList = ({products}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [sidebarItems, setSidebarItems] = useState([]);
 
-  useEffect(() => {
-    getAllProducts().then((res) => {
-      console.log(res);
-      const products = res;
-      setSidebarItems(products);
-    });
-  }, []);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
-  
   useEffect(() => {
     const handleSwipe = (e) => {
       if (e.deltaY > 0) {
@@ -40,22 +26,7 @@ const ProductList = ({closePLModal}) => {
 
     window.addEventListener("wheel", handleSwipe);
 
-    return () => {
-      window.removeEventListener("wheel", handleSwipe);
-    };
-  }, [sidebarItems]);
-
-  const filteredItems = sidebarItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const closePLModalHandler = (e) => {
-    closePLModal();
-    document.querySelector('.bottom_menu_item.item').classList.add('off');
-  }
-
-  useEffect(() => {
-    if (sidebarItems.length > 0) {
+    if (products.length > 0) {
         const swiper = new Swiper('.product-bottom .swiper-container', {
             navigation: {
                 nextEl: ".product-bottom .swiper-button-next",
@@ -63,30 +34,19 @@ const ProductList = ({closePLModal}) => {
             },
         });
     }
-
-  }, [sidebarItems]);
+    return () => {
+      window.removeEventListener("wheel", handleSwipe);
+    };
+  }, [products]);
 
   const comma3number = (num) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  console.log(filteredItems);
+  console.log(products);
   return (
     <>
-        <div className="product_list">
-          <div className="product-top">
-              <div>
-                  <div className="snp500">
-                      <img src="icon/svg/square.and.pencil.svg"/>
-                  </div>
-                  <div className="search-div">
-                      <img src="icon/svg/search.svg"/>
-                  </div>
-                  <button className="close-button" onClick={closePLModalHandler}>×</button>
-              </div>
-          </div>
-          
-        {filteredItems.map((item, index) => (
+        {products.map((item, index) => (
           <div
             key={item.productId}
             id={`product-${item.productId}`}
@@ -131,7 +91,6 @@ const ProductList = ({closePLModal}) => {
             </div>
           </div>
             ))}
-        </div>
     </>
   );
 };
