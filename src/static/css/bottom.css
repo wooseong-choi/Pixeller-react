@@ -180,7 +180,7 @@ body {
 }
 
 .product-item-card {
-  height: 50vh; /* 각 항목을 전체 화면 높이로 설정 */
+  height: calc(50vh - 15%); /* 각 항목을 전체 화면 높이로 설정 */
   position: absolute;
   width: 100%;
   transition: transform 0.5s ease; /* 애니메이션 */
@@ -205,6 +205,10 @@ body {
 
 .product-top {
   padding: 10px;
+  background-color: #fff;
+  border-radius: 15px 15px 0 0 ;
+  position: relative;
+  z-index: 1;
 } 
 
 
