@@ -73,8 +73,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     // init data
     const username = props.userName;
     const [isSeller, setIsSeller] = useState(props.isSeller);
-    const URL = "ws://localhost:3333/auction";
-    // const URL = "//api.pixeller.net/auction";
+    // const URL = "ws://localhost:3333/auction";
+    const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
 
     const productId = props.auctionRoomId;

@@ -1,4 +1,3 @@
-// test
 import Phaser from "phaser";
 import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
@@ -126,7 +125,7 @@ class GameScene extends Phaser.Scene {
 
         // 유저 움직임 처리
         case "move":
-          // console.log(data);
+          console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
@@ -598,6 +597,7 @@ class GameScene extends Phaser.Scene {
       };
 
       this.Player.oldPosition = { x: this.player.x, y: this.player.y };
+      // console.log("move", user);
       this.socket.emit("move", user);
 
       this.lastPositionUpdateTime = time;
