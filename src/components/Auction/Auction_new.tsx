@@ -89,7 +89,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [winner, setWinner] = useState(""); // 낙찰자
     const [bidPrice, setBidPrice] = useState(initialPrice); // 현재 입찰가
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
-    const [syschat, setSyschat] = useState("");
+    const [syschat, setSyschat] = useState(""); // 시스템 채팅
+    const [bidder, setBidder] = useState(""); // 입찰자
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -114,6 +115,19 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     } = useSpeechRecognition(initialPrice);
     const [bidAid, setBidAid] = useState(false);
 
+    const sysChatEndRef = useRef<HTMLDivElement | null>(null);
+    const scrollToBottom = () => {
+      sysChatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const calculateOpacity = (index) => {
+      return 1 - (index / syschat.length) * 0.5;
+    };
+
+    useEffect(() => {
+      scrollToBottom();
+    }, [syschat]);
+
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
     };
@@ -136,43 +150,36 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       setBidPrice(numericValue);
     };
 
+    const bidding = (price) => {
+      socketRef.current.emit("bid", {
+        room: props.auctionRoomId,
+        bid_price: price,
+        username: username,
+        product_id: props.auctionRoomId,
+        bid_time: new Date().toISOString(),
+      });
+    };
+
     const handleBid = (event) => {
-      if (isAuctionStarted && bidPrice > maxBidPrice)
-        // && !isSeller) // <= 로직 정리 후에 다시 삽입.
-        socketRef.current.emit("bid", {
-          room: props.auctionRoomId,
-          bid_price: bidPrice,
-          username: participantName,
-          product_id: props.auctionRoomId,
-          bid_time: new Date().toISOString(),
-        });
+      if (isAuctionStarted && bidPrice > maxBidPrice) {
+        bidding(bidPrice);
+      }
+      // && !isSeller) // <= 로직 정리 후에 다시 삽입.
     };
     const handleMinBid = (event) => {
       if (isAuctionStarted) {
         setBidPrice((prev) => prev + 500);
-        socketRef.current.emit("bid", {
-          room: props.auctionRoomId,
-          bid_price: bidPrice + 500,
-          username: participantName,
-          product_id: props.auctionRoomId,
-          bid_time: new Date().toISOString(),
-        });
+        bidding(bidPrice + 500);
       }
     };
     const handleMinBidTimes = (event) => {
       if (isAuctionStarted) {
         setBidPrice((prev) => prev + 1000);
-        socketRef.current.emit("bid", {
-          room: props.auctionRoomId,
-          bid_price: bidPrice + 1000,
-          username: participantName,
-          product_id: props.auctionRoomId,
-          bid_time: new Date().toISOString(),
-        });
+        bidding(bidPrice + 1000);
       }
     };
 
-    //// *** 경매 타이머 이벤트 ***
+    // *** 경매 타이머 이벤트 ***
     const [countDown, setCountDown] = useState(10);
 
     function updateNumber(timer): void {
@@ -273,63 +280,45 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       });
 
       socketRef.current.on("message", (data) => {
-        console.log(data);
+        // console.log(data);
+        setSyschat((prev) => {
+          return prev + data.message + "\n";
+        });
 
         switch (data.type) {
           case "bid":
-            console.log("Bid received");
             setMaxBidPrice(data.bid_price);
             setBidPrice(data.bid_price);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
+            setBidder(data.username);
             setCountDown(10);
             console.log(syschat);
             break;
           case "countdown":
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "message":
-            console.log("Message received");
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "join":
-            console.log("User joined");
             console.log(data.message);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
-            if (data.started) {
+            if (data.done) {
+              setAuctionStatusText("경매 종료");
+              setIsAuctionStarted(false);
+              setEverAuctionStarted(true);
+            } else if (data.started) {
               setAuctionStatusText("경매 중");
               setIsAuctionStarted(true);
               setEverAuctionStarted(true);
             }
             break;
           case "leave":
-            console.log("User left");
             console.log(data.message);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "start":
-            console.log("Auction started");
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             break;
           case "end":
-            console.log("Auction ended");
-            setSyschat((prev) => {
-              return prev + data.message + "\n";
-            });
             // setEndText("52000원에 만두님이 트랙패드의 낙찰자가 되셨습니다.");
+            setWinner(data.winner);
             setEndText(
               `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
             );
@@ -406,35 +395,41 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     }
 
     async function micController(isMicOpen: boolean) {
-      if (localTrack) {
-        if (localTrack.isMuted && !isMicOpen) {
-          localTrack.unmute();
-        } else if (!localTrack.isMuted && isMicOpen) {
-          localTrack.mute();
-        } else {
-          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-        }
-      } else {
-        console.log("localTrack is undefined");
+      if (room) {
+        room.localParticipant.setMicrophoneEnabled(isMicOpen);
       }
+      // if (localTrack) {
+      //   if (localTrack.isMuted && !isMicOpen) {
+      //     localTrack.unmute();
+      //   } else if (!localTrack.isMuted && isMicOpen) {
+      //     localTrack.mute();
+      //   } else {
+      //     console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+      //   }
+      // } else {
+      //   console.log("localTrack is undefined");
+      // }
     }
 
     async function camController(isCamOpen: boolean) {
-      if (localTrack) {
-        if (localTrack.isUpstreamPaused && !isCamOpen) {
-          localTrack.resumeUpstream();
-        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-          localTrack.pauseUpstream();
-        } else {
-          console.log(
-            "undefined status: ",
-            localTrack.isUpstreamPaused,
-            isCamOpen
-          );
-        }
-      } else {
-        console.log("localTrack is undefined");
+      if (room) {
+        room.localParticipant.setCameraEnabled(isCamOpen);
       }
+      // if (localTrack) {
+      //   if (localTrack.isUpstreamPaused && !isCamOpen) {
+      //     localTrack.resumeUpstream();
+      //   } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+      //     localTrack.pauseUpstream();
+      //   } else {
+      //     console.log(
+      //       "undefined status: ",
+      //       localTrack.isUpstreamPaused,
+      //       isCamOpen
+      //     );
+      //   }
+      // } else {
+      //   console.log("localTrack is undefined");
+      // }
     }
 
     async function leaveRoom() {
@@ -490,10 +485,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         } else if (isAuctionStarted === true && everAuctionStarted === true) {
           setAuctionStatusText("경매 종료");
           setIsAuctionStarted(false);
-          setEverAuctionStarted(false);
 
           // handleStop();
-          leaveRoom();
+          await leaveRoom();
           // socketRef.current.emit("end", {
           //   room: props.auctionRoomId,
           //   price: currentPrice,
@@ -504,10 +498,15 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         if (isAuctionStarted && !everAuctionStarted) {
           joinRoom();
           handleStart();
+          setEverAuctionStarted(true);
           setAuctionStatusText("경매 중");
-        } else {
+        } else if (isAuctionStarted && everAuctionStarted) {
           // 여기서 판매자 분기쳐야함.
-          alert("경매가 시작되지 않았습니다.");
+          handleStop();
+          leaveRoom();
+          setIsAuctionStarted(false);
+          setAuctionStatusText("경매 종료");
+          // alert("경매가 시작되지 않았습니다.");
         }
       }
     };
@@ -560,31 +559,48 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                   {AuctionStatusText}
                 </span>
                 {/* // 여기에 판매자 영상 - 현재 우선 자신의 영상 */}
-                {localTrack && (
+                {isSeller && localTrack && (
                   <VideoComponent
                     track={localTrack}
                     participantId={participantName}
                     local={true}
                   />
                 )}
+                {!isSeller &&
+                  remoteTracks.map((remoteTrack) => (
+                    <>
+                      {remoteTrack.participantIdentity.split("-")[0] ===
+                        "seller" &&
+                      remoteTrack.trackPublication.kind === "video" ? (
+                        <div>
+                          <div
+                            className={`auction-buyer-video-container ${
+                              remoteTrack.participantIdentity === winner
+                                ? "winner"
+                                : ""
+                            }`}
+                          >
+                            <VideoComponent
+                              key={remoteTrack.trackPublication.trackSid}
+                              track={remoteTrack.trackPublication.videoTrack!}
+                              participantId={remoteTrack.participantIdentity}
+                            />
+                          </div>
+                          <span>{remoteTrack.participantIdentity}</span>
+                        </div>
+                      ) : (
+                        <AudioComponent
+                          key={remoteTrack.trackPublication.trackSid}
+                          track={remoteTrack.trackPublication.audioTrack!}
+                        />
+                      )}
+                    </>
+                  ))}
                 <div className="syschat">
                   {syschat.split("\n").map((line, index) => {
                     return <p key={index}>{line}</p>;
                   })}
-                  {/* <p>[입찰 알림 🔔] 만두님이 50000원에 입찰했습니다!</p>
-                  <p>[입찰 알림 🔔] 민사님이 50500원에 입찰했습니다!</p>
-                  <p>[입찰 알림 🔔] 만두님이 51000원에 입찰했습니다!</p>
-                  <p>[입찰 알림 🔔] 성우님이 51500원에 입찰했습니다!</p>
-                  <p>[입찰 알림 🔔] 만두님이 52000원에 입찰했습니다!</p>
-                  <p>[경매 종료 임박 ⏳] 5</p>
-                  <p>[경매 종료 임박 ⏳] 4</p>
-                  <p>[경매 종료 임박 ⏳] 3</p>
-                  <p>[경매 종료 임박 ⏳] 2</p>
-                  <p>[경매 종료 임박 ⏳] 1</p>
-                  <p>
-                    [ 낙찰 선언 🎉] "축하합니다! 만두님, 52000원에
-                    낙찰되셨습니다!"
-                  </p> */}
+                  <div ref={sysChatEndRef}></div>
                 </div>
                 <div className="circle-container">
                   <div className="circle">
@@ -596,6 +612,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
+                  {!isSeller && localTrack && (
+                    <VideoComponent
+                      track={localTrack}
+                      participantId={participantName}
+                      local={true}
+                    />
+                  )}
                   {remoteTracks.map((remoteTrack) => (
                     <>
                       {remoteTrack.trackPublication.kind === "video" ? (
@@ -604,6 +627,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                             className={`auction-buyer-video-container ${
                               remoteTrack.participantIdentity === winner
                                 ? "winner"
+                                : ""
+                            } ${
+                              remoteTrack.participantIdentity === bidder
+                                ? "bidder"
                                 : ""
                             }`}
                           >

@@ -142,6 +142,9 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     }
 
     async function micController(isMicOpen: boolean) {
+      // if (room) {
+      //   room.localParticipant.setMicrophoneEnabled(isMicOpen);
+      // }
       if (localTrack) {
         if (localTrack.isMuted && !isMicOpen) {
           localTrack.unmute();
@@ -156,6 +159,9 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
     }
 
     async function camController(isCamOpen: boolean) {
+      // if (room) {
+      //   room.localParticipant.setCameraEnabled(isCamOpen);
+      // }
       if (localTrack) {
         if (localTrack.isUpstreamPaused && !isCamOpen) {
           localTrack.resumeUpstream();
