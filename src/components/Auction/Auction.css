@@ -436,6 +436,8 @@ body {
   position: absolute;
   bottom: 0;
   opacity: 0.4;
+  color: linear-gradient(to bottom, white, transparent);
+  background: linear-gradient(to bottom, white, transparent);
   background-color: rgba(204, 204, 204, 0.4);
   overflow-y: auto;
 }
@@ -444,6 +446,7 @@ body {
 .syschat:focus {
   background-color: rgba(204, 204, 204, 0.8);
   opacity: 1;
+  transition: opacity 0.5s;
 }
 
 .syschat > p {
@@ -523,7 +526,7 @@ body {
 }
 
 .voice-input .bid_mic.off {
-  background: url("../../../public/icon/svg/voice.svg") no-repeat 0px center;
+  background: url("../../../public/icon/svg/voice-x.svg") no-repeat 0px center;
 }
 
 .voice-input .bid_button {
@@ -628,4 +631,12 @@ body {
 .auction-winner-text {
   font-size: 5vmin;
   font-weight: bold;
+}
+
+.winner {
+  border: 2px solid #fc9905;
+}
+
+.bidder {
+  border: 2px solid #2359e4;
 }

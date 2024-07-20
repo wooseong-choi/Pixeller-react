@@ -20,7 +20,7 @@ const chaArray = [
 
 const getUserList = (socket) => {
   socket.emit("userList");
-}
+};
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -34,7 +34,7 @@ class GameScene extends Phaser.Scene {
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-    // this.socket = io("//192.168.0.96:3333/ws", {
+      // this.socket = io("//192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -54,6 +54,10 @@ class GameScene extends Phaser.Scene {
     this.syncUserReceived = false;
     this.username = sessionStorage.getItem("username");
 
+    this.specialAreas = [];
+    this.centralAreas = [];
+    this.messageBoxes = {};
+
     this.socket.on("connect", function (data) {
       console.log(data);
     });
@@ -64,7 +68,7 @@ class GameScene extends Phaser.Scene {
       });
       await this.socket.disconnect();
     });
-    
+
     window.addEventListener("onload", async () => {
       setTimeout(() => {
         getUserList(this.socket);
@@ -125,7 +129,7 @@ class GameScene extends Phaser.Scene {
 
         // 유저 움직임 처리
         case "move":
-          console.log(data);
+          // console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
@@ -188,13 +192,15 @@ class GameScene extends Phaser.Scene {
           // 채팅 nav에서 접속한 전체 유저의 목록을 받는 이벤트이다
           console.log(data);
           window.dispatchEvent(
-            new CustomEvent("receive-userlist", {detail: {users: data.users}})
+            new CustomEvent("receive-userlist", {
+              detail: { users: data.users },
+            })
           );
           break;
 
         // 기타 이벤트 처리
         case "error":
-        
+
         default:
           console.log("Error!: No msg event on Socket.");
           break;
@@ -256,7 +262,6 @@ class GameScene extends Phaser.Scene {
           });
       }
     });
-
   }
 
   /**
@@ -311,6 +316,8 @@ class GameScene extends Phaser.Scene {
     metaLayer.setCullPadding(2, 2);
     // objectLayer1.setCullPadding(2, 2);
 
+    this.createSpecialAreas();
+
     // 월드 경계 설정
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
@@ -322,8 +329,8 @@ class GameScene extends Phaser.Scene {
     this.shoot_soundEffect = this.sound.add("shoot");
 
     // 사용자 상호작용으로 AudioContext 활성화
-    this.input.on('pointerdown', () => {
-      if (this.sound.context.state === 'suspended') {
+    this.input.on("pointerdown", () => {
+      if (this.sound.context.state === "suspended") {
         this.sound.context.resume();
       }
     });
@@ -334,10 +341,9 @@ class GameScene extends Phaser.Scene {
 
     // 플레이어 생성
     this.players = this.add.group();
-    console.log("x: " + this.x + " y: " + this.y);
+    // console.log("x: " + this.x + " y: " + this.y);
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
-
 
     // 캐릭터 이름 생성
     this.player.nameText = this.add.text(
@@ -346,21 +352,23 @@ class GameScene extends Phaser.Scene {
       this.username,
       {
         fontFamily: '"Nanum Gothic", sans-serif',
-        fontSize: '14px',
-        fontStyle: 'bold',
-        color: '#000000',
-        resolution: 4
+        fontSize: "14px",
+        fontStyle: "bold",
+        color: "#000000",
+        resolution: 4,
         // stroke: '#000000',
         // strokeThickness: 3
       }
     );
-    this.player.nameText.setOrigin(0.5, 1); 
+    this.player.nameText.setOrigin(0.5, 1);
 
     // 조준선 그래픽 객체 생성
     this.aimLine = this.add.graphics().setDepth(1);
 
     // Tab 키 추가
-    this.tabKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
+    this.tabKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.TAB
+    );
 
     // 총알 생성
     this.bullets = this.physics.add.group({
@@ -382,7 +390,6 @@ class GameScene extends Phaser.Scene {
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5); // 카메라가 플레이어를 따라다니도록 설정
-    
 
     // 스크롤 설정
     this.scoll.create(this, map.widthInPixels, map.heightInPixels);
@@ -482,6 +489,133 @@ class GameScene extends Phaser.Scene {
     // bgm1.play();
   }
 
+  createSpecialAreas() {
+    // 경매 납치되는 영역
+    this.specialAreas = [
+      { x: 816, y: 1414, width: 596, height: 366, name: "Area1"},
+      { x: 832, y: 816, width: 628, height: 326, name: "Area2"},
+      { x: 2064, y: 824, width: 596, height: 278, name: "Area3"},
+      { x: 2064, y: 1409, width: 596, height: 366, name: "Area4"}
+    ];
+
+    // 경매 시작하는 영역
+    this.centralAreas = [
+      { x: 832, y: 1414, width: 76, height: 76, name: "Area1_center"},
+      { x: 832, y: 800, width: 76, height: 76, name: "Area2_center"},
+      { x: 2080, y: 724, width: 38, height: 38, name: "Area3_center"},
+      { x: 2080, y: 1439, width: 232, height: 152, name: "Area4_center"},
+    ];
+
+    const graphics = this.add.graphics();
+    graphics.lineStyle(2, 0xf0000);
+
+    this.specialAreas.forEach(area => {
+      const x = area.x - area.width / 2;
+      const y = area.y - area.height / 2;
+      graphics.strokeRect(x, y, area.width, area.height);
+    });
+
+    graphics.lineStyle(2, 0x00ff00);
+
+    this.centralAreas.forEach(area => {
+      const x = area.x - area.width / 2;
+      const y = area.y - area.height / 2;
+      graphics.strokeRect(x, y, area.width, area.height);
+      this.createMessageBox(area);
+    });
+  }
+
+  // setAlpha : 투명도 조절
+  // setOrigin : 텍스트의 중심점 조절
+  createMessageBox(area) {
+    const messageBox = this.add.container(area.x, area.y - 50).setAlpha(0);
+    const background = this.add.graphics();
+    background.fillStyle(0x000000, 0.7);
+    background.fillRoundedRect(-100, -20, 200, 40, 10);
+    const text = this.add.text(0, 0, "F 버튼을 눌러 경매를 시작하세요", {
+      font: "14px Arial",
+      color: "#ffffff",
+      allign: "center"
+    }).setOrigin(0.5);
+    messageBox.add([background, text]);
+
+    this.messageBoxes[area.name] = messageBox;
+  }
+  
+  checkSpecialAreas() {
+    const playerX = this.player.x;
+    const playerY = this.player.y;
+
+    this.specialAreas.forEach(area => {
+      if (this.isPlayerInArea(playerX, playerY, area)) {
+        if (this.player.currentArea !== area.name) {
+          this.player.currentArea = area.name;
+          this.onEnterSpecialArea(area);
+        }
+      } else if (this.player.currentArea === area.name) {
+        this.player.currentArea = null;
+        this.onLeaveSpecialArea(area);
+      }
+    });
+
+    this.centralAreas.forEach(area => {
+      if (this.isPlayerInArea(playerX, playerY, area)) {
+        if (this.player.currentCentralArea !== area.name) {
+          this.player.currentCentralArea = area.name;
+          this.onEnterCentralArea(area);
+        }
+      } else if (this.player.currentCentralArea === area.name) {
+        this.player.currentCentralArea = null;
+        this.onLeaveCentralArea(area);
+      }
+    });
+  }
+
+  isPlayerInArea(playerX, playerY, area) {
+    const halfWidth = area.width / 2;
+    const halfHeight = area.height / 2;
+    const left = area.x - halfWidth;
+    const right = area.x + halfWidth;
+    const top = area.y - halfHeight;
+    const bottom = area.y + halfHeight;
+
+    return playerX >= left && playerX <= right && playerY >= top && playerY <= bottom;
+  }
+
+
+  onEnterSpecialArea(area) {
+    console.log(`Enter ${area.name}`);
+    // this.socket.emit("enterArea", {
+    //   uid: this.uid,
+    //   username: this.username,
+    //   area: area.name
+    // });
+  }
+
+
+  onLeaveSpecialArea(area) {
+    console.log(`Leave ${area.name}`);
+    // this.socket.emit("leaveArea", {
+    //   uid: this.uid,
+    //   username: this.username,
+    //   area: area.name
+    // });
+  }
+
+  onEnterCentralArea(area) {
+    console.log(`Enter central ${area.name}`);
+    if (this.messageBoxes[area.name]) {
+      this.messageBoxes[area.name].setAlpha(1);
+    }
+  }
+
+  onLeaveCentralArea(area) {
+    console.log(`Leave central ${area.name}`);
+    if (this.messageBoxes[area.name]) {
+      this.messageBoxes[area.name].setAlpha(0);
+    }
+  }
+
   resize(gameSize) {
     const width = gameSize.width;
     const height = gameSize.height;
@@ -503,7 +637,6 @@ class GameScene extends Phaser.Scene {
   }
 
   async create_OPlayer() {
-
     if (!this.players) {
       console.error("players group is not initialized");
       return;
@@ -521,7 +654,6 @@ class GameScene extends Phaser.Scene {
       );
       this.players.add(oplayer_sprite);
     }
-    
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
     // for (let key in this.OPlayer) {
@@ -621,16 +753,18 @@ class GameScene extends Phaser.Scene {
       const bullet = this.bullets.get(this.player.x, this.player.y);
       if (bullet) {
         bullet.setActive(true).setVisible(true);
-  
+
         const angle = Phaser.Math.Angle.Between(
-          this.player.x, this.player.y,
-          this.input.activePointer.worldX, this.input.activePointer.worldY
+          this.player.x,
+          this.player.y,
+          this.input.activePointer.worldX,
+          this.input.activePointer.worldY
         );
         const targetX = this.player.x + Math.cos(angle) * 1000; // 충분히 먼 거리
         const targetY = this.player.y + Math.sin(angle) * 1000;
-  
+
         bullet.setRotation(angle).setScale(0.3, 0.3);
-  
+
         this.physics.moveTo(bullet, targetX, targetY, 2000);
         this.shoot_soundEffect.play({ volume: 0.5 });
       }
@@ -647,6 +781,14 @@ class GameScene extends Phaser.Scene {
         bullet.setActive(false).setVisible(false);
       }
     }, this);
+
+    this.checkSpecialAreas();
+    if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('F'))) {
+      if (this.player.currentCentralArea) {
+        console.log(`경매 시작! (${this.player.currentCentralArea})`);
+        // 여기에 경매 시작 로직 추가
+      }
+    }
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
@@ -689,16 +831,18 @@ class GameScene extends Phaser.Scene {
   updateAimLine() {
     this.aimLine.clear();
     this.aimLine.lineStyle(1, 0xff0000);
-    
+
     const angle = Phaser.Math.Angle.Between(
-      this.player.x, this.player.y,
-      this.input.activePointer.worldX, this.input.activePointer.worldY
+      this.player.x,
+      this.player.y,
+      this.input.activePointer.worldX,
+      this.input.activePointer.worldY
     );
-    
+
     const lineLength = 1000; // 조준선의 길이
     const endX = this.player.x + Math.cos(angle) * lineLength;
     const endY = this.player.y + Math.sin(angle) * lineLength;
-    
+
     this.aimLine.beginPath();
     this.aimLine.moveTo(this.player.x, this.player.y);
     this.aimLine.lineTo(endX, endY);
