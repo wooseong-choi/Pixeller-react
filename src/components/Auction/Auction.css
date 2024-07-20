@@ -523,7 +523,7 @@ body {
 }
 
 .voice-input .bid_mic.off {
-  background: url("../../../public/icon/svg/voice.svg") no-repeat 0px center;
+  background: url("../../../public/icon/svg/voice-x.svg") no-repeat 0px center;
 }
 
 .voice-input .bid_button {
