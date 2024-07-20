@@ -92,7 +92,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [syschat, setSyschat] = useState(""); // 시스템 채팅
     const [bidder, setBidder] = useState(""); // 입찰자
 
-    const [sellerCam, setSellerCam] = useState<RemoteTrack | null>(null); // 판매자 화상 데이터
+    const [sellerCam, setSellerCam] = useState<TrackInfo | null>(null); // 판매자 화상 데이터
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -354,15 +354,19 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           participant: RemoteParticipant
         ) => {
           if (participant.identity.split("-")[0] === "seller") {
-            setSellerCam(_track);
-          }
-          setRemoteTracks((prev) => [
-            ...prev,
-            {
+            setSellerCam({
               trackPublication: publication,
               participantIdentity: participant.identity,
-            },
-          ]);
+            });
+          } else {
+            setRemoteTracks((prev) => [
+              ...prev,
+              {
+                trackPublication: publication,
+                participantIdentity: participant.identity,
+              },
+            ]);
+          }
         }
       );
 
@@ -578,7 +582,18 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                     local={true}
                   />
                 )}
-                {!isSeller &&
+                {!isSeller && sellerCam && (
+                  <>
+                    <VideoComponent
+                      track={sellerCam.trackPublication.videoTrack!}
+                      participantId={sellerCam.participantIdentity}
+                    />
+                    <AudioComponent
+                      track={sellerCam.trackPublication.audioTrack!}
+                    />
+                  </>
+                )}
+                {/* {!isSeller &&
                   remoteTracks.map((remoteTrack) => (
                     <>
                       {remoteTrack.participantIdentity.split("-")[0] ===
@@ -607,7 +622,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                         />
                       )}
                     </>
-                  ))}
+                  ))} */}
                 <div className="syschat">
                   {syschat.split("\n").map((line, index) => {
                     return <p key={index}>{line}</p>;
