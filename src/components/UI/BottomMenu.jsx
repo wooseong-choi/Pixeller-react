@@ -4,7 +4,7 @@ import Bgm from "./bottommenu/bgm";
 
 const BottomMenu = ({closePLModal, openPLModal}) => {
     const user = sessionStorage.getItem("user");
-    const [bgmRunning, setBgmRunning] = useState(false);
+    const [bgmRunning, setBgmRunning] = useState(true);
 
     const clickCameraHandler = (e) => {
         e.preventDefault();
@@ -55,13 +55,6 @@ const BottomMenu = ({closePLModal, openPLModal}) => {
             closePLModal();
         }
     }
-
-    // useEffect(() => {
-    //     clickPauseHandler();
-    //     return () => {
-    //         setBgmRunning(false);
-    //     }
-    // }, []);
 
     return (
         <div className="bottom_menu">
