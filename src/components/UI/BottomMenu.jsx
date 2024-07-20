@@ -9,7 +9,7 @@ const BottomMenu = ({
   setIsMicOpen,
 }) => {
   const user = sessionStorage.getItem("user");
-  const [bgmRunning, setBgmRunning] = useState(false);
+  const [bgmRunning, setBgmRunning] = useState(true);
 
   const clickCameraHandler = (e) => {
     e.preventDefault();
