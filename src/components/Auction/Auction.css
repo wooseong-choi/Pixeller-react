@@ -436,6 +436,8 @@ body {
   position: absolute;
   bottom: 0;
   opacity: 0.4;
+  color: linear-gradient(to bottom, white, transparent);
+  background: linear-gradient(to bottom, white, transparent);
   background-color: rgba(204, 204, 204, 0.4);
   overflow-y: auto;
 }
@@ -444,6 +446,7 @@ body {
 .syschat:focus {
   background-color: rgba(204, 204, 204, 0.8);
   opacity: 1;
+  transition: opacity 0.5s;
 }
 
 .syschat > p {
