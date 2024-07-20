@@ -11,7 +11,7 @@ import "./Main.css";
 import Auction_new from "../components/Auction/Auction_new.tsx";
 import '../static/css/VideoComponent.css';
 import BottomMenu from "../components/UI/BottomMenu.jsx";
-import ProductList from "../components/UI/ProductList.jsx";
+import ProductBox from "../components/UI/ProductBox.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -188,7 +188,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div>
             <div className="product_list_div">
               {isPLListOpen ? (
-              <ProductList closePLModal={closePLModal}/>
+              <ProductBox closePLModal={closePLModal}/>
               ):null}
             </div>
           </div>

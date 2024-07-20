@@ -1,10 +1,9 @@
 // SidebarSection.js
 import React, { useEffect, useState } from "react";
-import { getAllProducts } from "../../api/products";
 // import Swiper JS
 import Swiper from 'swiper/bundle';
 // import Swiper styles
-import '../../static/css/swiper-bundle.min.css';
+import '../../../static/css/swiper-bundle.min.css';
 
 const ProductList = ({products}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -14,7 +13,7 @@ const ProductList = ({products}) => {
       if (e.deltaY > 0) {
         // 스와이프 아래로
         setSelectedIndex((prevIndex) =>
-          prevIndex < sidebarItems.length - 1 ? prevIndex + 1 : prevIndex
+          prevIndex < products.length - 1 ? prevIndex + 1 : prevIndex
         );
       } else {
         // 스와이프 위로
@@ -43,7 +42,7 @@ const ProductList = ({products}) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  console.log(products);
+  // console.log(products);
   return (
     <>
         {products.map((item, index) => (
