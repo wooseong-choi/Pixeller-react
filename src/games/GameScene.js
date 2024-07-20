@@ -55,6 +55,8 @@ class GameScene extends Phaser.Scene {
     this.username = sessionStorage.getItem("username");
 
     this.specialAreas = [];
+    this.centralAreas = [];
+    this.messageBoxes = {};
 
     this.socket.on("connect", function (data) {
       console.log(data);
@@ -488,11 +490,20 @@ class GameScene extends Phaser.Scene {
   }
 
   createSpecialAreas() {
+    // 경매 납치되는 영역
     this.specialAreas = [
-      { x: 816, y: 1424, width: 596, height: 326, name: "Area1"},
+      { x: 816, y: 1414, width: 596, height: 366, name: "Area1"},
       { x: 832, y: 816, width: 628, height: 326, name: "Area2"},
       { x: 2064, y: 824, width: 596, height: 278, name: "Area3"},
-      { x: 2064, y: 1419, width: 596, height: 326, name: "Area4"},
+      { x: 2064, y: 1409, width: 596, height: 366, name: "Area4"}
+    ];
+
+    // 경매 시작하는 영역
+    this.centralAreas = [
+      { x: 832, y: 1414, width: 76, height: 76, name: "Area1_center"},
+      { x: 832, y: 800, width: 76, height: 76, name: "Area2_center"},
+      { x: 2080, y: 724, width: 38, height: 38, name: "Area3_center"},
+      { x: 2080, y: 1439, width: 232, height: 152, name: "Area4_center"},
     ];
 
     const graphics = this.add.graphics();
@@ -503,21 +514,40 @@ class GameScene extends Phaser.Scene {
       const y = area.y - area.height / 2;
       graphics.strokeRect(x, y, area.width, area.height);
     });
+
+    graphics.lineStyle(2, 0x00ff00);
+
+    this.centralAreas.forEach(area => {
+      const x = area.x - area.width / 2;
+      const y = area.y - area.height / 2;
+      graphics.strokeRect(x, y, area.width, area.height);
+      this.createMessageBox(area);
+    });
   }
 
+  // setAlpha : 투명도 조절
+  // setOrigin : 텍스트의 중심점 조절
+  createMessageBox(area) {
+    const messageBox = this.add.container(area.x, area.y - 50).setAlpha(0);
+    const background = this.add.graphics();
+    background.fillStyle(0x000000, 0.7);
+    background.fillRoundedRect(-100, -20, 200, 40, 10);
+    const text = this.add.text(0, 0, "F 버튼을 눌러 경매를 시작하세요", {
+      font: "14px Arial",
+      color: "#ffffff",
+      allign: "center"
+    }).setOrigin(0.5);
+    messageBox.add([background, text]);
+
+    this.messageBoxes[area.name] = messageBox;
+  }
+  
   checkSpecialAreas() {
     const playerX = this.player.x;
     const playerY = this.player.y;
 
     this.specialAreas.forEach(area => {
-      const halfWidth = area.width / 2;
-      const halfHeight = area.height / 2;
-      const left = area.x - halfWidth;
-      const right = area.x + halfWidth;
-      const top = area.y - halfHeight;
-      const bottom = area.y + halfHeight;
-
-      if (playerX >= left && playerX <= right && playerY >= top && playerY <= bottom) {
+      if (this.isPlayerInArea(playerX, playerY, area)) {
         if (this.player.currentArea !== area.name) {
           this.player.currentArea = area.name;
           this.onEnterSpecialArea(area);
@@ -527,7 +557,31 @@ class GameScene extends Phaser.Scene {
         this.onLeaveSpecialArea(area);
       }
     });
+
+    this.centralAreas.forEach(area => {
+      if (this.isPlayerInArea(playerX, playerY, area)) {
+        if (this.player.currentCentralArea !== area.name) {
+          this.player.currentCentralArea = area.name;
+          this.onEnterCentralArea(area);
+        }
+      } else if (this.player.currentCentralArea === area.name) {
+        this.player.currentCentralArea = null;
+        this.onLeaveCentralArea(area);
+      }
+    });
   }
+
+  isPlayerInArea(playerX, playerY, area) {
+    const halfWidth = area.width / 2;
+    const halfHeight = area.height / 2;
+    const left = area.x - halfWidth;
+    const right = area.x + halfWidth;
+    const top = area.y - halfHeight;
+    const bottom = area.y + halfHeight;
+
+    return playerX >= left && playerX <= right && playerY >= top && playerY <= bottom;
+  }
+
 
   onEnterSpecialArea(area) {
     console.log(`Enter ${area.name}`);
@@ -538,6 +592,7 @@ class GameScene extends Phaser.Scene {
     // });
   }
 
+
   onLeaveSpecialArea(area) {
     console.log(`Leave ${area.name}`);
     // this.socket.emit("leaveArea", {
@@ -545,6 +600,20 @@ class GameScene extends Phaser.Scene {
     //   username: this.username,
     //   area: area.name
     // });
+  }
+
+  onEnterCentralArea(area) {
+    console.log(`Enter central ${area.name}`);
+    if (this.messageBoxes[area.name]) {
+      this.messageBoxes[area.name].setAlpha(1);
+    }
+  }
+
+  onLeaveCentralArea(area) {
+    console.log(`Leave central ${area.name}`);
+    if (this.messageBoxes[area.name]) {
+      this.messageBoxes[area.name].setAlpha(0);
+    }
   }
 
   resize(gameSize) {
@@ -714,6 +783,12 @@ class GameScene extends Phaser.Scene {
     }, this);
 
     this.checkSpecialAreas();
+    if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('F'))) {
+      if (this.player.currentCentralArea) {
+        console.log(`경매 시작! (${this.player.currentCentralArea})`);
+        // 여기에 경매 시작 로직 추가
+      }
+    }
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
