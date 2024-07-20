@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@nextui-org/react": "^2.4.6",
     "@pixi/react": "^7.1.2",
     "@react-oauth/google": "^0.12.1",
     "@react-spring/web": "^9.7.3",
@@ -13,6 +14,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
+    "canvas-confetti": "^1.9.3",
     "gsap": "^3.12.5",
     "jwt-decode": "^4.0.0",
     "livekit-client": "^2.3.1",
@@ -29,6 +31,7 @@
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
+    "styled-components": "^6.1.12",
     "sweetalert2": "^11.12.2",
     "sweetalert2-react-content": "^5.0.7",
     "swiper": "^11.1.5",

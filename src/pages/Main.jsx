@@ -6,13 +6,15 @@ import List from "../components/List";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
-import Auction from "../components/Auction/Auction.jsx";
-import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
+// import Auction from "../components/Auction/Auction.jsx";
+// import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
+import '../static/css/VideoComponent.css';
+import BottomMenu from "../components/UI/BottomMenu.jsx";
+import ProductList from "../components/UI/ProductList.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
-  const auctionRoomId = "localRooms";
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
@@ -24,6 +26,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isMicOpen, setIsMicOpen] = useState(false);
   const [isAuctionOpen, setIsAuctionOpen] = useState(false);
   const [auctionProduct, setAuctionProductState] = useState(null);
+  const [isPLListOpen, setIsPLListOpen] = useState(false);
+
 
   const OpenViduRef = useRef(null);
 
@@ -76,7 +80,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const setAuctionProduct = (product) => {
-    console.log("main product: ", product);
     setAuctionProductState(product);
   };
 
@@ -90,6 +93,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
   };
 
+  const closePLModal = () => {
+    setIsPLListOpen(false);
+  }
+
+  const openPLModal = () => {
+    setIsPLListOpen(true);
+  }
+
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
   });
@@ -99,7 +110,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
+            <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
@@ -130,7 +141,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                       className="modal-content"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <ProductCreate handleClose={closePCModal} />
+                      {/* <ProductCreate handleClose={closePCModal} /> */}
                     </div>
                   </div>
                 ) : null}
@@ -146,7 +157,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   //   auctionPrice={auctionProduct.price}
                   //   ref={OpenViduRef}
                   // />
-                  <Auction_new handleClose={closeAuctionModal}/>
+                  <Auction_new
+                    handleClose={closeAuctionModal}
+                    isSeller={true}
+                    userName={userName}
+                    auctionRoomId={auctionProduct.id}
+                    auctionProduct={auctionProduct.id}
+                    auctionPrice={auctionProduct.price}
+                    ref={OpenViduRef}
+                  />
                 ) : null}
               </div>
             </div>
@@ -163,6 +182,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
+            </div>
+            <div className="bottom_menu_div ">
+              <BottomMenu closePLModal={closePLModal} openPLModal={openPLModal} />
+            </div>
+            <div className="product_list_div">
+              {isPLListOpen ? (
+              <ProductList closePLModal={closePLModal}/>
+              ):null}
             </div>
           </div>
           <Bottom

@@ -1,9 +1,10 @@
 // 해당 코드는 nlp 모델을 사용하는게 아닌, 규칙 기반 접근 방식 (정규식 사용)
 // 한국어 숫자 처리를 위한 정규식
-const koreanNumberRegex = /(\d{1,3}(,\d{3})|\d+)(\s)*(십|백|천|만|억)?((\s)*\d+(\s)*(십|백|천)?)?((\s)*\d+(\s)*(십|백)?)?((\s)*\d+)?(\s)*(원)?/g;
+const koreanNumberRegex =
+  /(\d{1,3}(,\d{3})|\d+)(\s)*(십|백|천|만|억)?((\s)*\d+(\s)*(십|백|천)?)?((\s)*\d+(\s)*(십|백)?)?((\s)*\d+)?(\s)*(원)?/g;
 
 export const analyzeBid = (text) => {
-  console.log('Analyzing text:', text);  // 디버그 로그 추가
+  // console.log('Analyzing text:', text);  // 디버그 로그 추가
 
   // 금액 추출 (정규식 사용)
   const amounts = [];
@@ -14,7 +15,7 @@ export const analyzeBid = (text) => {
   }
 
   // 숫자 추출 (compromise의 numbers() 메서드 대신 정규식 사용)
-  const numbers = amounts.map(amount => convertToWon(amount));
+  const numbers = amounts.map((amount) => convertToWon(amount));
 
   // console.log('Extracted amounts:', amounts);  // 디버그 로그 추가
   // console.log('Extracted numbers:', numbers);  // 디버그 로그 추가
@@ -22,19 +23,19 @@ export const analyzeBid = (text) => {
   return {
     amounts,
     numbers,
-    original: text
+    original: text,
   };
 };
 
 // 금액을 원 단위로 변환
 export const convertToWon = (amount) => {
-  const cleanAmount = amount.replace(/,/g, '').replace('원', '').trim();
+  const cleanAmount = amount.replace(/,/g, "").replace("원", "").trim();
   const unitMap = {
-    '십': 10,
-    '백': 100,
-    '천': 1000,
-    '만': 10000,
-    '억': 100000000
+    십: 10,
+    백: 100,
+    천: 1000,
+    만: 10000,
+    억: 100000000,
   };
 
   let result = 0;
@@ -71,5 +72,5 @@ export const convertToWon = (amount) => {
 
 // 입찰 의도 파악
 export const detectBidIntent = (analysis) => {
-    return analysis.amounts.length > 0;
-  };
+  return analysis.amounts.length > 0;
+};
