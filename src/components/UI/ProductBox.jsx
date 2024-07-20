@@ -6,7 +6,7 @@ import ProductList from "./productlist/ProductList.jsx";
 import ProductSearchList from "./productlist/ProductSearchList.jsx";
 
 const ProductBox = ({closePLModal}) => {
-  const [searchTerm, setSearchTerm] = useState("");
+
   const [sidebarItems, setSidebarItems] = useState([]);
 
   const [searchMode, setSearchMode] = useState(false);
@@ -19,13 +19,6 @@ const ProductBox = ({closePLModal}) => {
     });
   }, []);
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
-  
-  const filteredItems = sidebarItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const closePLModalHandler = (e) => {
     closePLModal();
@@ -53,7 +46,7 @@ const ProductBox = ({closePLModal}) => {
   }
 
   console.log(user);
-  console.log(filteredItems);
+  console.log(sidebarItems);
   return (
     <>
         <div className="product_list">
@@ -72,10 +65,10 @@ const ProductBox = ({closePLModal}) => {
               </div>
           </div>
           <div className="product-list-wrap">
-            <ProductList products={filteredItems} />
+            <ProductList products={sidebarItems} />
           </div>
           <div className="product-search-wrap">
-            <ProductSearchList products={filteredItems} />
+            <ProductSearchList products={sidebarItems} />
           </div>
         </div>
     </>
