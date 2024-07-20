@@ -126,7 +126,7 @@ class GameScene extends Phaser.Scene {
 
         // 유저 움직임 처리
         case "move":
-          // console.log(data);
+          console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
