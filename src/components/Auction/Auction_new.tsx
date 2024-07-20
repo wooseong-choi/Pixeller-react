@@ -406,35 +406,41 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     }
 
     async function micController(isMicOpen: boolean) {
-      if (localTrack) {
-        if (localTrack.isMuted && !isMicOpen) {
-          localTrack.unmute();
-        } else if (!localTrack.isMuted && isMicOpen) {
-          localTrack.mute();
-        } else {
-          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-        }
-      } else {
-        console.log("localTrack is undefined");
+      if (room) {
+        room.localParticipant.setMicrophoneEnabled(isMicOpen);
       }
+      // if (localTrack) {
+      //   if (localTrack.isMuted && !isMicOpen) {
+      //     localTrack.unmute();
+      //   } else if (!localTrack.isMuted && isMicOpen) {
+      //     localTrack.mute();
+      //   } else {
+      //     console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+      //   }
+      // } else {
+      //   console.log("localTrack is undefined");
+      // }
     }
 
     async function camController(isCamOpen: boolean) {
-      if (localTrack) {
-        if (localTrack.isUpstreamPaused && !isCamOpen) {
-          localTrack.resumeUpstream();
-        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-          localTrack.pauseUpstream();
-        } else {
-          console.log(
-            "undefined status: ",
-            localTrack.isUpstreamPaused,
-            isCamOpen
-          );
-        }
-      } else {
-        console.log("localTrack is undefined");
+      if (room) {
+        room.localParticipant.setCameraEnabled(isCamOpen);
       }
+      // if (localTrack) {
+      //   if (localTrack.isUpstreamPaused && !isCamOpen) {
+      //     localTrack.resumeUpstream();
+      //   } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+      //     localTrack.pauseUpstream();
+      //   } else {
+      //     console.log(
+      //       "undefined status: ",
+      //       localTrack.isUpstreamPaused,
+      //       isCamOpen
+      //     );
+      //   }
+      // } else {
+      //   console.log("localTrack is undefined");
+      // }
     }
 
     async function leaveRoom() {
@@ -505,9 +511,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           joinRoom();
           handleStart();
           setAuctionStatusText("경매 중");
-        } else {
+        } else if (isAuctionStarted && everAuctionStarted) {
           // 여기서 판매자 분기쳐야함.
-          alert("경매가 시작되지 않았습니다.");
+          handleStop();
+          leaveRoom();
+          setAuctionStatusText("경매 종료");
+          // alert("경매가 시작되지 않았습니다.");
         }
       }
     };

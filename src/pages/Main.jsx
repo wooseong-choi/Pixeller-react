@@ -9,7 +9,7 @@ import "./Main.css";
 // import Auction from "../components/Auction/Auction.jsx";
 // import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
-import '../static/css/VideoComponent.css';
+import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductList from "../components/UI/ProductList.jsx";
 
@@ -28,13 +28,13 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [auctionProduct, setAuctionProductState] = useState(null);
   const [isPLListOpen, setIsPLListOpen] = useState(false);
 
-
   const OpenViduRef = useRef(null);
 
   useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap';
-    link.rel = 'stylesheet';
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap";
+    link.rel = "stylesheet";
     document.head.appendChild(link);
 
     return () => {
@@ -84,22 +84,24 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const toggleMIC = () => {
+    console.log("toggleMIC");
     setIsMicOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
+    console.log("toggleCam");
     setIsCamOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
   };
 
   const closePLModal = () => {
     setIsPLListOpen(false);
-  }
+  };
 
   const openPLModal = () => {
     setIsPLListOpen(true);
-  }
+  };
 
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
@@ -141,7 +143,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                       className="modal-content"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {/* <ProductCreate handleClose={closePCModal} /> */}
+                      <ProductCreate handleClose={closePCModal} />
                     </div>
                   </div>
                 ) : null}
@@ -184,12 +186,17 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="bottom_menu_div ">
-              <BottomMenu closePLModal={closePLModal} openPLModal={openPLModal} />
+              <BottomMenu
+                closePLModal={closePLModal}
+                openPLModal={openPLModal}
+                setIsCamOpen={toggleCam}
+                setIsMicOpen={toggleMIC}
+              />
             </div>
             <div className="product_list_div">
               {isPLListOpen ? (
-              <ProductList closePLModal={closePLModal}/>
-              ):null}
+                <ProductList closePLModal={closePLModal} />
+              ) : null}
             </div>
           </div>
           <Bottom

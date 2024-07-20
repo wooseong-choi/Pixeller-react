@@ -20,7 +20,7 @@ const chaArray = [
 
 const getUserList = (socket) => {
   socket.emit("userList");
-}
+};
 
 class GameScene extends Phaser.Scene {
   constructor() {
@@ -34,7 +34,7 @@ class GameScene extends Phaser.Scene {
     this.scoll = new Scroll(this, this.Map_Width, this.Map_Height, this.Player);
 
     this.socket = io("//api.pixeller.net/ws", {
-    // this.socket = io("//192.168.0.96:3333/ws", {
+      // this.socket = io("//192.168.0.96:3333/ws", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -64,7 +64,7 @@ class GameScene extends Phaser.Scene {
       });
       await this.socket.disconnect();
     });
-    
+
     window.addEventListener("onload", async () => {
       setTimeout(() => {
         getUserList(this.socket);
@@ -125,7 +125,7 @@ class GameScene extends Phaser.Scene {
 
         // 유저 움직임 처리
         case "move":
-          console.log(data);
+          // console.log(data);
           const user = data.user;
 
           // 움직인 유저 정보만 받아와서 갱신해주기
@@ -188,13 +188,15 @@ class GameScene extends Phaser.Scene {
           // 채팅 nav에서 접속한 전체 유저의 목록을 받는 이벤트이다
           console.log(data);
           window.dispatchEvent(
-            new CustomEvent("receive-userlist", {detail: {users: data.users}})
+            new CustomEvent("receive-userlist", {
+              detail: { users: data.users },
+            })
           );
           break;
 
         // 기타 이벤트 처리
         case "error":
-        
+
         default:
           console.log("Error!: No msg event on Socket.");
           break;
@@ -256,7 +258,6 @@ class GameScene extends Phaser.Scene {
           });
       }
     });
-
   }
 
   /**
@@ -322,8 +323,8 @@ class GameScene extends Phaser.Scene {
     this.shoot_soundEffect = this.sound.add("shoot");
 
     // 사용자 상호작용으로 AudioContext 활성화
-    this.input.on('pointerdown', () => {
-      if (this.sound.context.state === 'suspended') {
+    this.input.on("pointerdown", () => {
+      if (this.sound.context.state === "suspended") {
         this.sound.context.resume();
       }
     });
@@ -338,7 +339,6 @@ class GameScene extends Phaser.Scene {
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
 
-
     // 캐릭터 이름 생성
     this.player.nameText = this.add.text(
       this.player.x,
@@ -346,21 +346,23 @@ class GameScene extends Phaser.Scene {
       this.username,
       {
         fontFamily: '"Nanum Gothic", sans-serif',
-        fontSize: '14px',
-        fontStyle: 'bold',
-        color: '#000000',
-        resolution: 4
+        fontSize: "14px",
+        fontStyle: "bold",
+        color: "#000000",
+        resolution: 4,
         // stroke: '#000000',
         // strokeThickness: 3
       }
     );
-    this.player.nameText.setOrigin(0.5, 1); 
+    this.player.nameText.setOrigin(0.5, 1);
 
     // 조준선 그래픽 객체 생성
     this.aimLine = this.add.graphics().setDepth(1);
 
     // Tab 키 추가
-    this.tabKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
+    this.tabKey = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.TAB
+    );
 
     // 총알 생성
     this.bullets = this.physics.add.group({
@@ -382,7 +384,6 @@ class GameScene extends Phaser.Scene {
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5); // 카메라가 플레이어를 따라다니도록 설정
-    
 
     // 스크롤 설정
     this.scoll.create(this, map.widthInPixels, map.heightInPixels);
@@ -503,7 +504,6 @@ class GameScene extends Phaser.Scene {
   }
 
   async create_OPlayer() {
-
     if (!this.players) {
       console.error("players group is not initialized");
       return;
@@ -521,7 +521,6 @@ class GameScene extends Phaser.Scene {
       );
       this.players.add(oplayer_sprite);
     }
-    
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
     // for (let key in this.OPlayer) {
@@ -621,16 +620,18 @@ class GameScene extends Phaser.Scene {
       const bullet = this.bullets.get(this.player.x, this.player.y);
       if (bullet) {
         bullet.setActive(true).setVisible(true);
-  
+
         const angle = Phaser.Math.Angle.Between(
-          this.player.x, this.player.y,
-          this.input.activePointer.worldX, this.input.activePointer.worldY
+          this.player.x,
+          this.player.y,
+          this.input.activePointer.worldX,
+          this.input.activePointer.worldY
         );
         const targetX = this.player.x + Math.cos(angle) * 1000; // 충분히 먼 거리
         const targetY = this.player.y + Math.sin(angle) * 1000;
-  
+
         bullet.setRotation(angle).setScale(0.3, 0.3);
-  
+
         this.physics.moveTo(bullet, targetX, targetY, 2000);
         this.shoot_soundEffect.play({ volume: 0.5 });
       }
@@ -689,16 +690,18 @@ class GameScene extends Phaser.Scene {
   updateAimLine() {
     this.aimLine.clear();
     this.aimLine.lineStyle(1, 0xff0000);
-    
+
     const angle = Phaser.Math.Angle.Between(
-      this.player.x, this.player.y,
-      this.input.activePointer.worldX, this.input.activePointer.worldY
+      this.player.x,
+      this.player.y,
+      this.input.activePointer.worldX,
+      this.input.activePointer.worldY
     );
-    
+
     const lineLength = 1000; // 조준선의 길이
     const endX = this.player.x + Math.cos(angle) * lineLength;
     const endY = this.player.y + Math.sin(angle) * lineLength;
-    
+
     this.aimLine.beginPath();
     this.aimLine.moveTo(this.player.x, this.player.y);
     this.aimLine.lineTo(endX, endY);
