@@ -54,6 +54,8 @@ class GameScene extends Phaser.Scene {
     this.syncUserReceived = false;
     this.username = sessionStorage.getItem("username");
 
+    this.specialAreas = [];
+
     this.socket.on("connect", function (data) {
       console.log(data);
     });
@@ -312,6 +314,8 @@ class GameScene extends Phaser.Scene {
     metaLayer.setCullPadding(2, 2);
     // objectLayer1.setCullPadding(2, 2);
 
+    this.createSpecialAreas();
+
     // 월드 경계 설정
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
@@ -335,7 +339,7 @@ class GameScene extends Phaser.Scene {
 
     // 플레이어 생성
     this.players = this.add.group();
-    console.log("x: " + this.x + " y: " + this.y);
+    // console.log("x: " + this.x + " y: " + this.y);
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
 
@@ -481,6 +485,66 @@ class GameScene extends Phaser.Scene {
     //   bgm1.play();
     // });
     // bgm1.play();
+  }
+
+  createSpecialAreas() {
+    this.specialAreas = [
+      { x: 816, y: 1424, width: 596, height: 326, name: "Area1"},
+      { x: 832, y: 816, width: 628, height: 326, name: "Area2"},
+      { x: 2064, y: 824, width: 596, height: 278, name: "Area3"},
+      { x: 2064, y: 1419, width: 596, height: 326, name: "Area4"},
+    ];
+
+    const graphics = this.add.graphics();
+    graphics.lineStyle(2, 0xf0000);
+
+    this.specialAreas.forEach(area => {
+      const x = area.x - area.width / 2;
+      const y = area.y - area.height / 2;
+      graphics.strokeRect(x, y, area.width, area.height);
+    });
+  }
+
+  checkSpecialAreas() {
+    const playerX = this.player.x;
+    const playerY = this.player.y;
+
+    this.specialAreas.forEach(area => {
+      const halfWidth = area.width / 2;
+      const halfHeight = area.height / 2;
+      const left = area.x - halfWidth;
+      const right = area.x + halfWidth;
+      const top = area.y - halfHeight;
+      const bottom = area.y + halfHeight;
+
+      if (playerX >= left && playerX <= right && playerY >= top && playerY <= bottom) {
+        if (this.player.currentArea !== area.name) {
+          this.player.currentArea = area.name;
+          this.onEnterSpecialArea(area);
+        }
+      } else if (this.player.currentArea === area.name) {
+        this.player.currentArea = null;
+        this.onLeaveSpecialArea(area);
+      }
+    });
+  }
+
+  onEnterSpecialArea(area) {
+    console.log(`Enter ${area.name}`);
+    // this.socket.emit("enterArea", {
+    //   uid: this.uid,
+    //   username: this.username,
+    //   area: area.name
+    // });
+  }
+
+  onLeaveSpecialArea(area) {
+    console.log(`Leave ${area.name}`);
+    // this.socket.emit("leaveArea", {
+    //   uid: this.uid,
+    //   username: this.username,
+    //   area: area.name
+    // });
   }
 
   resize(gameSize) {
@@ -648,6 +712,8 @@ class GameScene extends Phaser.Scene {
         bullet.setActive(false).setVisible(false);
       }
     }, this);
+
+    this.checkSpecialAreas();
 
     // 'Q' 키가 눌렸을 때 실행할 코드
     // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
