@@ -36,9 +36,14 @@ function App() {
   return (
     <Router>
       <SentryRoutes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<LoginNew />} />
-        <Route path="/main" element={ <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} /> }/>
+        <Route path="/" element={<LoginNew />} />
+        <Route path="/login" element={<LoginNew />} />  
+        <Route
+          path="/main"
+          element={
+            <Main isListOpen={isListOpen} setIsListOpen={setIsListOpen} />
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </SentryRoutes>
     </Router>

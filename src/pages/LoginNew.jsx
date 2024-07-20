@@ -5,7 +5,7 @@ import { UserDTO } from "../api/dto/user.js";
 import { loginS } from "../api/login.jsx";
 import GLogin from "../components/GLogin";
 import { gsap } from "gsap/gsap-core";
-import { TextPlugin } from "gsap/all";
+import CustomButton from "../components/alert/CustomButton.jsx";
 
 import "./LoginNew.css";
 
@@ -96,6 +96,9 @@ const LoginNew = () => {
           </form>
           <div className="login-google">
             <GLogin />
+          </div>
+          <div>
+            <CustomButton />
           </div>
         </div>
       </div>

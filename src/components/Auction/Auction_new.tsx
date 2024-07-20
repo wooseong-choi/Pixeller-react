@@ -5,7 +5,6 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useRef,
-  Children,
 } from "react";
 import { io } from "socket.io-client";
 import {
@@ -32,6 +31,9 @@ import {
   getProductFiles,
   checkSellerTrueOrFalse,
 } from "../../api/products.jsx";
+
+// 캔버스 컨페티
+import confetti from "canvas-confetti";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -116,6 +118,16 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       setIsMenuOpen(!isMenuOpen);
     };
 
+    // 경매 종료 시 낙찰자를 축하하는 함수
+    const handleConfetti = () => {
+      confetti({
+        particleCount: 200,
+        spread: 90,
+        origin: { y: 0.6 },
+        zIndex: 1003,
+      });
+    };
+
     const handleInputChange = (event) => {
       const inputValue = event.target.value;
       // Replace all non-numeric characters except for the first decimal point
@@ -136,24 +148,28 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         });
     };
     const handleMinBid = (event) => {
-      setBidPrice((prev) => prev + 500);
-      socketRef.current.emit("bid", {
-        room: props.auctionRoomId,
-        bid_price: bidPrice + 500,
-        username: participantName,
-        product_id: props.auctionRoomId,
-        bid_time: new Date().toISOString(),
-      });
+      if (isAuctionStarted) {
+        setBidPrice((prev) => prev + 500);
+        socketRef.current.emit("bid", {
+          room: props.auctionRoomId,
+          bid_price: bidPrice + 500,
+          username: participantName,
+          product_id: props.auctionRoomId,
+          bid_time: new Date().toISOString(),
+        });
+      }
     };
     const handleMinBidTimes = (event) => {
-      setBidPrice((prev) => prev + 1000);
-      socketRef.current.emit("bid", {
-        room: props.auctionRoomId,
-        bid_price: bidPrice + 1000,
-        username: participantName,
-        product_id: props.auctionRoomId,
-        bid_time: new Date().toISOString(),
-      });
+      if (isAuctionStarted) {
+        setBidPrice((prev) => prev + 1000);
+        socketRef.current.emit("bid", {
+          room: props.auctionRoomId,
+          bid_price: bidPrice + 1000,
+          username: participantName,
+          product_id: props.auctionRoomId,
+          bid_time: new Date().toISOString(),
+        });
+      }
     };
 
     //// *** 경매 타이머 이벤트 ***
@@ -302,7 +318,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             break;
           case "start":
             console.log("Auction started");
-            console.log(data.message);
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
             setSyschat((prev) => {
@@ -311,10 +326,19 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             break;
           case "end":
             console.log("Auction ended");
-            console.log(data.message);
             setSyschat((prev) => {
               return prev + data.message + "\n";
             });
+            // setEndText("52000원에 만두님이 트랙패드의 낙찰자가 되셨습니다.");
+            setEndText(
+              `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
+            );
+            setIsEnd(true);
+            setTimeout(() => {
+              setIsEnd(false);
+              setEndText("");
+            }, 5000);
+            handleConfetti();
             break;
           default:
             break;
@@ -470,10 +494,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
           // handleStop();
           leaveRoom();
-          socketRef.current.emit("end", {
-            room: props.auctionRoomId,
-            price: currentPrice,
-          });
+          // socketRef.current.emit("end", {
+          //   room: props.auctionRoomId,
+          //   price: currentPrice,
+          // });
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       } else {
@@ -496,6 +520,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     };
 
     const bidAnalysis = analyzeBid(lastResult);
+    const [isEnd, setIsEnd] = useState(false);
+    const [endText, setEndText] = useState("");
 
     if (!browserSupportsSpeechRecognition) {
       return <span>크롬을 사용해 주세요</span>;
@@ -504,6 +530,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     return (
       <>
         <div className="auction-new-background">
+          <div className={isEnd ? "auction-winner-alert" : ""}>
+            <div className="auction-winner-text">
+              <p>{endText}</p>
+            </div>
+          </div>
           <div
             className={`auction-new-modal ${
               isMenuOpen ? "modal-expanded" : ""
