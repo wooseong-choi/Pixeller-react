@@ -155,6 +155,7 @@ const Auction_new = ({handleClose,productId}) => {
                 </div>
                 <div className="voice-input">
                   <span>원하시는 가격이 맞으신가요?</span>
+                  <span className="bid_mic" onClick={()=>{alert('작동')}}></span>
                   <input className="bid_price" name="bid_price" type="text" onChange={handleInputChange} />
                   <button className="bid_button" onClick={handleBid}>Place Bid</button>
                 </div>
