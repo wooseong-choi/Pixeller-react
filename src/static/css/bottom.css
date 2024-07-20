@@ -179,6 +179,22 @@ body {
   border-radius: 15px;
 }
 
+.product_list.search-mode .product-list-wrap {
+  display: none;
+}
+
+.product-search-wrap {
+  display: none;
+  width: 100%;
+  height: calc(50vh - 15%);
+  background-color: #fff;
+  padding: 15px;
+}
+
+.product_list.search-mode .product-search-wrap {
+  display: block;
+}
+
 .product-item-card {
   height: calc(50vh - 15%); /* 각 항목을 전체 화면 높이로 설정 */
   position: absolute;
@@ -209,6 +225,7 @@ body {
   border-radius: 15px 15px 0 0 ;
   position: relative;
   z-index: 1;
+  border-bottom : 1px solid #e0e0e0;
 } 
 
 
@@ -228,16 +245,24 @@ body {
   display: inline;
 }
 
-.product-top > div .snp500, .product-top > div .search-div {
+.product-top > div .snp500 {
   padding: 0 10px;
   line-height: 40px;
+}
+.product-top > div .snp500 > span {
   cursor: pointer;
 }
 
 .product-top > div .search-div {
+  padding: 0 10px;
+  line-height: 40px;
   text-align: right;
   width: 100%;
   padding-right: 30px;
+}
+
+.product-top > div .search-div > span {
+  cursor: pointer;
 }
 
 .product-bottom .swiper-container{
@@ -288,4 +313,14 @@ body {
   border-radius: 10px;
   margin-top: 5px;
   cursor: pointer;
+}
+
+.product-search-wrap .searchbox {
+  line-height: 40px;
+  width: 100%;
+  border: 1px solid #000;
+  border-radius: 10px;
+  height: 40px;
+  padding-left: 50px;
+  background: url("../../../public/icon/svg/search.svg") no-repeat 10px center;
 }
