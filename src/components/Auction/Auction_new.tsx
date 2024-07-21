@@ -284,17 +284,14 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         switch (data.type) {
           case "bid":
             setMaxBidPrice(data.bid_price);
-            setBidPrice(data.bid_price);
             setBidder(data.username);
             setCountDown(10);
-            console.log(syschat);
             break;
           case "countdown":
             break;
           case "message":
             break;
           case "join":
-            console.log(data.message);
             if (data.done) {
               setAuctionStatusText("경매 종료");
               setIsAuctionStarted(false);
@@ -306,7 +303,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             }
             break;
           case "leave":
-            console.log(data.message);
             break;
           case "start":
             setAuctionStatusText("경매 중");
@@ -569,7 +565,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                   })}
                   <div ref={sysChatEndRef}></div>
                 </div>
-                <CircularProgressBar />
+                {/* <CircularProgressBar /> */}
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">

@@ -133,3 +133,18 @@ export const checkSellerTrueOrFalse = async (username, productId) => {
     throw error;
   }
 };
+
+// 판매자의 판매 제품 확인
+export const checkSellerProduct = async () => {
+  try {
+    const response = await axiosCRUDInstance.get(`/api/products/my`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + sessionStorage.getItem("user"),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

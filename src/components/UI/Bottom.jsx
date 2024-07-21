@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Logout from "./Logout";
 import "../../static/css/bottom.css";
 import UserInfo from "./UserInfo";
+import AlertAuction from "../alert/AlertAuction";
 
 const App = ({
   isOpen,
@@ -13,12 +14,17 @@ const App = ({
   isMicOpen,
   setIsCamOpen,
   isCamOpen,
+  setIsAuctionAlert,
 }) => {
   const currentUser = sessionStorage.getItem("username");
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
 
   const toggleLogout = () => {
     setIsLogoutClicked((prev) => !prev);
+  };
+
+  const handleDEBUG = () => {
+    setIsAuctionAlert(true);
   };
 
   return (
@@ -44,6 +50,7 @@ const App = ({
         </div>
       </div>
       <div className="right-section">
+        <button onClick={handleDEBUG}>안녕</button>
         <button
           className="nav-button"
           onClick={() => {
