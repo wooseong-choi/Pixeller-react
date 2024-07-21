@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import UserInfo from "../UI/UserInfo";
-import { getProductById, createPurchaseWish } from "../../api/products";
+import {
+  getProductById,
+  createPurchaseWish,
+  deleteProduct,
+  checkSellerTrueOrFalse,
+} from "../../api/products";
 import "./PD.css";
-import { HttpStatusCode } from "axios";
 // import Swiper JS
-import Swiper from 'swiper';
+import Swiper from "swiper";
 // import Swiper styles
-import '../../static/css/swiper-bundle.min.css';
-
+import "../../static/css/swiper-bundle.min.css";
 
 const ProductDetail = ({
   productId,
@@ -21,9 +24,9 @@ const ProductDetail = ({
     price: "",
     memberId: "",
     imageFileUrls: [],
-
   });
-  
+  const user = sessionStorage.getItem("username");
+
   const handlePurchaseWish = () => {
     // console.log(createPurchaseWish(productId.id));
     if (createPurchaseWish(productId.id)) {
@@ -59,10 +62,19 @@ const ProductDetail = ({
     setIsAuctionOpen(true);
   };
 
-  const user = sessionStorage.getItem("username");
+  const handleDelete = async () => {
+    if (await checkSellerTrueOrFalse(user, productId.id)) {
+      console.log("판매자 확인");
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        deleteProduct(productId.id);
+      }
+    } else {
+      alert("판매자만 삭제할 수 있습니다.");
+    }
+  };
 
   useEffect(() => {
-    const swiper = new Swiper('.swiper-container', {
+    const swiper = new Swiper(".swiper-container", {
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
@@ -81,11 +93,11 @@ const ProductDetail = ({
 
         <div className="img-container swiper-container swiper">
           <div className="swiper-wrapper">
-          {product.imageFileUrls.map((url, index) => (
-            <div key={index} className="swiper-slide">
-              <img key={index} src={url} alt="product" />
-            </div>
-          ))}
+            {product.imageFileUrls.map((url, index) => (
+              <div key={index} className="swiper-slide">
+                <img key={index} src={url} alt="product" />
+              </div>
+            ))}
           </div>
           <div className="swiper-button-next"></div>
           <div className="swiper-button-prev"></div>
@@ -124,6 +136,9 @@ const ProductDetail = ({
               </button>
               <button onClick={handlePurchaseWish} className="product-request">
                 구매 요청하기
+              </button>
+              <button onClick={handleDelete} className="product-delete">
+                삭제하기
               </button>
             </div>
           </div>

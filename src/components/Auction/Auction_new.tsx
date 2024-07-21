@@ -26,15 +26,10 @@ import AuctionBidEffector from "./Auction_max_bid.jsx";
 import Tooltip from "../Tooltip.jsx";
 
 // AXIOS API 콜
-import {
-  getProductById,
-  getProductFiles,
-  checkSellerTrueOrFalse,
-} from "../../api/products.jsx";
+import { getProductById, checkSellerTrueOrFalse } from "../../api/products.jsx";
 
 // 캔버스 컨페티
 import confetti from "canvas-confetti";
-import { CircularProgress } from "@nextui-org/react";
 import CircularProgressBar from "../UI/CircularProgressBar.jsx";
 
 type TrackInfo = {
@@ -241,9 +236,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           seller: res.memberDto.id,
         });
       });
-    }, []);
 
-    useEffect(() => {
       socketRef.current = io(URL, {
         // autoConnect: false,
         transportOptions: {
@@ -468,7 +461,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
-          
+
           await joinRoom();
           socketRef.current.emit("start", {
             room: props.auctionRoomId,
@@ -548,7 +541,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                 <span className="isAuctionInProgress" onClick={startAuction}>
                   {AuctionStatusText}
                 </span>
-                {/* // 여기에 판매자 영상 - 현재 우선 자신의 영상 */}
                 {isSeller && localTrack && (
                   <VideoComponent
                     track={localTrack}
@@ -582,11 +574,19 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
                   {!isSeller && localTrack && (
-                    <VideoComponent
-                      track={localTrack}
-                      participantId={participantName}
-                      local={true}
-                    />
+                    <div>
+                      <div
+                        className={`auction-buyer-video-container ${
+                          username === winner ? "winner" : ""
+                        } ${username === bidder ? "bidder" : ""}`}
+                      >
+                        <VideoComponent
+                          track={localTrack}
+                          participantId={participantName}
+                          local={true}
+                        />
+                      </div>
+                    </div>
                   )}
                   {remoteTracks.map((remoteTrack) => (
                     <>
