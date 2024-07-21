@@ -42,26 +42,26 @@ const BottomMenu = ({
   };
   const clickPauseHandler = (e) => {
     e.preventDefault();
-    const mic = e.currentTarget;
-    const img = mic.querySelector("img");
-    if (mic.getAttribute("class").indexOf("off") > -1) {
-      mic.setAttribute("class", mic.getAttribute("class").replace("off", ""));
+    const pause = e.currentTarget;
+    const img = pause.querySelector("img");
+    if (pause.getAttribute("class").indexOf("off") > -1) {
+      pause.setAttribute("class", pause.getAttribute("class").replace("off", ""));
       img.src = "icon/svg/Pause.svg";
       setBgmRunning(true);
     } else {
-      mic.setAttribute("class", mic.getAttribute("class") + " off");
+      pause.setAttribute("class", pause.getAttribute("class") + " off");
       img.src = "icon/svg/Play.svg";
       setBgmRunning(false);
     }
   };
   const clickItemHandler = (e) => {
     e.preventDefault();
-    const mic = e.currentTarget;
-    if (mic.getAttribute("class").indexOf("off") > -1) {
-      mic.setAttribute("class", mic.getAttribute("class").replace("off", ""));
+    const item = e.currentTarget;
+    if (item.getAttribute("class").indexOf("off") > -1) {
+      item.setAttribute("class", item.getAttribute("class").replace("off", ""));
       openPLModal();
     } else {
-      mic.setAttribute("class", mic.getAttribute("class") + " off");
+      item.setAttribute("class", item.getAttribute("class") + " off");
       closePLModal();
     }
   };
