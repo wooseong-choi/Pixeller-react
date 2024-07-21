@@ -1,3 +1,4 @@
+// test
 import Phaser from "phaser";
 import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
@@ -57,6 +58,7 @@ class GameScene extends Phaser.Scene {
     this.specialAreas = [];
     this.centralAreas = [];
     this.messageBoxes = {};
+    this.chatBubbles = {};
 
     this.socket.on("connect", function (data) {
       console.log(data);
@@ -316,6 +318,7 @@ class GameScene extends Phaser.Scene {
     metaLayer.setCullPadding(2, 2);
     // objectLayer1.setCullPadding(2, 2);
 
+    this.fKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F, false);
     this.createSpecialAreas();
 
     // 월드 경계 설정
@@ -344,6 +347,14 @@ class GameScene extends Phaser.Scene {
     // console.log("x: " + this.x + " y: " + this.y);
     this.player = this.Player.Create(this.x, this.y, "player" + rand_0_9);
     this.players.add(this.player);
+
+    // 말풍선 생성
+    this.player.chatBubble = this.add.container(this.player.x, this.player.y - 60);
+    this.player.chatBubble.setDepth(1000);
+    this.player.chatBubble.setVisible(false);
+
+    // 채팅 이벤트 리스너 생성
+    window.addEventListener('chat-message', this.handleChatMessage.bind(this));
 
     // 캐릭터 이름 생성
     this.player.nameText = this.add.text(
@@ -487,6 +498,75 @@ class GameScene extends Phaser.Scene {
     //   bgm1.play();
     // });
     // bgm1.play();
+  }
+
+  handleChatMessage(event) {
+    const { sender, message } = event.detail;
+    if (sender === this.username) {
+      this.showChatBubble(this.player, message);
+    } else {
+      // 다른 플레이어의 채팅 처리
+      for (let key in this.OPlayer) {
+        if (this.OPlayer[key].name === sender) {
+          this.showChatBubble(this.OPlayer[key].player, message);
+          break;
+        }
+      }
+    }
+  }
+
+  showChatBubble(player, message) {
+    if (player.chatBubbleTimer) {
+      this.time.removeEvent(player.chatBubbleTimer);
+    }
+  
+    if (!player.chatBubble) {
+      player.chatBubble = this.add.container(player.x, player.y - 60);
+      player.chatBubble.setDepth(1000);
+    } else {
+      player.chatBubble.removeAll(true);
+    }
+  
+    // 메시지 길이 제한 및 줄바꿈 처리
+    let processedMessage = message.substring(0, 70);
+    let lines = [];
+    for (let i = 0; i < processedMessage.length; i += 10) {
+      lines.push(processedMessage.substr(i, 10));
+    }
+    processedMessage = lines.join('\n');
+  
+    const text = this.add.text(0, 0, processedMessage, {
+      font: '12px Arial',
+      fill: '#000000',
+      align: 'left',
+      resolution: 4
+    });
+  
+    // 텍스트 크기에 따른 말풍선 크기 계산
+    const textWidth = text.width;
+    const textHeight = text.height;
+    const bubbleWidth = textWidth + 20;
+    const bubbleHeight = textHeight + 20;
+  
+    const bubble = this.add.graphics();
+    bubble.fillStyle(0xffffff, 0.7);
+    bubble.lineStyle(2, 0x000000, 1);
+    bubble.fillRoundedRect(0, 0, bubbleWidth, bubbleHeight, 10);
+    bubble.strokeRoundedRect(0, 0, bubbleWidth, bubbleHeight, 10);
+  
+    text.setPosition(10, 10);  // 텍스트 위치 조정
+  
+    player.chatBubble.add([bubble, text]);
+    player.chatBubble.setVisible(true);
+  
+    // 말풍선 위치 조정 (캐릭터 우측 상단)
+    player.chatBubble.setPosition(player.x + 20, player.y - bubbleHeight - 10);
+  
+    // 새로운 타이머 설정
+    player.chatBubbleTimer = this.time.delayedCall(5000, () => {
+      player.chatBubble.setVisible(false);
+      player.chatBubbleTimer = null;
+    });
   }
 
   createSpecialAreas() {
@@ -783,10 +863,20 @@ class GameScene extends Phaser.Scene {
     }, this);
 
     this.checkSpecialAreas();
-    if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('F'))) {
+    if (Phaser.Input.Keyboard.JustDown(this.fKey)) {
       if (this.player.currentCentralArea) {
         console.log(`경매 시작! (${this.player.currentCentralArea})`);
-        // 여기에 경매 시작 로직 추가
+        this.checkPlayersInSpecialArea(this.player.currentCentralArea);
+      }
+    }
+
+    // 말풍선 위치 업데이트
+    if (this.player.chatBubble) {
+      this.player.chatBubble.setPosition(this.player.x, this.player.y - 60);
+    }
+    for (let key in this.Oplayer) {
+      if (this.Oplayer[key].player.chatBubble) {
+        this.Oplayer[key].player.chatBubble.setPosition(this.Oplayer[key].player.x, this.Oplayer[key].this.player.y - 60);
       }
     }
 
@@ -821,6 +911,37 @@ class GameScene extends Phaser.Scene {
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");
     // }
+  }
+
+  checkPlayersInSpecialArea(centralAreaName) {
+    const specialAreaName = centralAreaName.replace('_center', '');
+    const specialArea = this.specialAreas.find(area => area.name === specialAreaName);
+    
+    if (!specialArea) {
+      console.log(`해당하는 특별 구역을 찾을 수 없습니다: ${specialAreaName}`);
+      return;
+    }
+
+    const playersInArea = [];
+
+    // 현재 플레이어 확인
+    if (this.isPlayerInArea(this.player.x, this.player.y, specialArea)) {
+      playersInArea.push(this.username);
+    }
+
+    // 다른 플레이어들 확인
+    for (let key in this.OPlayer) {
+      const otherPlayer = this.OPlayer[key];
+      if (this.isPlayerInArea(otherPlayer.player.x, otherPlayer.player.y, specialArea)) {
+        playersInArea.push(otherPlayer.name);
+      }
+    }
+
+    if (playersInArea.length > 0) {
+      console.log(`${specialAreaName}에 있는 플레이어들: ${playersInArea.join(', ')}`);
+    } else {
+      console.log(`${specialAreaName}에 플레이어가 없습니다.`);
+    }
   }
 
   handleCollision(player, obstacle) {
