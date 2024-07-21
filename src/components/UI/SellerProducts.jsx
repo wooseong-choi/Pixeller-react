@@ -12,7 +12,7 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
       sellectProduct(selected);
       alertAuction(true);
     } else {
-      alert("상품을 선택해주세요.");
+      alert("선택한 상품이 없습니다.");
     }
   };
 
@@ -21,7 +21,7 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
   }, []);
 
   const [selected, setSelected] = useState(null);
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
 
   const getMyProducts = async () => {
     const product = await checkSellerProduct();
@@ -56,6 +56,14 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
                 />
               </div>
             ))}
+          {products.length === 0 && (
+            <div className="noItem-container">
+              <div>
+                <img className="noItem-img" src="icon/Items.png" alt="" />
+              </div>
+              <div>등록하신 상품이 없습니다.</div>
+            </div>
+          )}
           <div className="seller-product-footer">
             <button onClick={handleSelector}>선택 완료</button>
           </div>
