@@ -145,6 +145,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                       <SellerProducts
                         sellerOpen={setIsSellector}
                         sellectProduct={setAuctionProduct}
+                        alertAuction={setIsAuctionAlert}
                       />
                     </div>
                   </div>
@@ -159,7 +160,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <AlertAuction
-                        product={productId}
+                        product={auctionProduct}
+                        auctionStart={null}
                         auctionClose={closeAlert}
                       />
                     </div>

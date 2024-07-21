@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { checkSellerProduct } from "../../api/products";
 import "../../static/css/SellerProduct.css";
 
-const SellerProducts = ({ sellerOpen, sellectProduct }) => {
+const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
   const handleClose = () => {
     sellerOpen(false);
   };
 
   const handleSelector = () => {
-    console.log("selected", selected);
+    console.log("selected: ", selected);
     if (selected) {
       sellectProduct(selected);
+      alertAuction(true);
     }
   };
 
@@ -41,7 +42,7 @@ const SellerProducts = ({ sellerOpen, sellectProduct }) => {
               <div
                 key={product.productId}
                 className={`seller-product ${
-                  selected?.id === product.productId ? "selected" : ""
+                  selected?.productId === product.productId ? "selected" : ""
                 }`}
                 onClick={() => setSelected(product)}
               >
