@@ -318,6 +318,7 @@ class GameScene extends Phaser.Scene {
     metaLayer.setCullPadding(2, 2);
     // objectLayer1.setCullPadding(2, 2);
 
+    this.fKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F, false);
     this.createSpecialAreas();
 
     // 월드 경계 설정
@@ -862,10 +863,10 @@ class GameScene extends Phaser.Scene {
     }, this);
 
     this.checkSpecialAreas();
-    if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('F', false))) {
+    if (Phaser.Input.Keyboard.JustDown(this.fKey)) {
       if (this.player.currentCentralArea) {
         console.log(`경매 시작! (${this.player.currentCentralArea})`);
-        // 여기에 경매 시작 로직 추가
+        this.checkPlayersInSpecialArea(this.player.currentCentralArea);
       }
     }
 
@@ -910,6 +911,37 @@ class GameScene extends Phaser.Scene {
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");
     // }
+  }
+
+  checkPlayersInSpecialArea(centralAreaName) {
+    const specialAreaName = centralAreaName.replace('_center', '');
+    const specialArea = this.specialAreas.find(area => area.name === specialAreaName);
+    
+    if (!specialArea) {
+      console.log(`해당하는 특별 구역을 찾을 수 없습니다: ${specialAreaName}`);
+      return;
+    }
+
+    const playersInArea = [];
+
+    // 현재 플레이어 확인
+    if (this.isPlayerInArea(this.player.x, this.player.y, specialArea)) {
+      playersInArea.push(this.username);
+    }
+
+    // 다른 플레이어들 확인
+    for (let key in this.OPlayer) {
+      const otherPlayer = this.OPlayer[key];
+      if (this.isPlayerInArea(otherPlayer.player.x, otherPlayer.player.y, specialArea)) {
+        playersInArea.push(otherPlayer.name);
+      }
+    }
+
+    if (playersInArea.length > 0) {
+      console.log(`${specialAreaName}에 있는 플레이어들: ${playersInArea.join(', ')}`);
+    } else {
+      console.log(`${specialAreaName}에 플레이어가 없습니다.`);
+    }
   }
 
   handleCollision(player, obstacle) {
