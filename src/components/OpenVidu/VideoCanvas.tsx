@@ -214,8 +214,8 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 
     return (
       <>
-        <div id="room">
-          <div id="room-header">
+        <div id="room" className="room">
+          <div id="room-header" className="room-header">
             {localTrack && (
               <VideoComponent
                 track={localTrack}
