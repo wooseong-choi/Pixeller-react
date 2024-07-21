@@ -874,9 +874,12 @@ class GameScene extends Phaser.Scene {
     if (this.player.chatBubble) {
       this.player.chatBubble.setPosition(this.player.x, this.player.y - 60);
     }
-    for (let key in this.Oplayer) {
-      if (this.Oplayer[key].player.chatBubble) {
-        this.Oplayer[key].player.chatBubble.setPosition(this.Oplayer[key].player.x, this.Oplayer[key].this.player.y - 60);
+    for (let key in this.OPlayer) {
+      const otherPlayer = this.OPlayer[key].player;
+      if (otherPlayer) {
+        if (otherPlayer.chatBubble) {
+          otherPlayer.chatBubble.setPosition(otherPlayer.x, otherPlayer.y - 60);
+        }
       }
     }
 
