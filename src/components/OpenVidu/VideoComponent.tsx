@@ -29,7 +29,7 @@ function VideoComponent({
       <div className="participant-data">
         {/* <p>{participantId + (local ? " (You)" : "")}</p> */}
       </div>
-      <video ref={videoElement} id={track.sid}></video>
+      <video className="video-video" ref={videoElement} id={track.sid}></video>
     </div>
   );
 }
