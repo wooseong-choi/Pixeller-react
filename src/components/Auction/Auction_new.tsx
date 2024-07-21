@@ -418,38 +418,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       if (room) {
         room.localParticipant.setMicrophoneEnabled(isMicOpen);
       }
-      // if (localTrack) {
-      //   if (localTrack.isMuted && !isMicOpen) {
-      //     localTrack.unmute();
-      //   } else if (!localTrack.isMuted && isMicOpen) {
-      //     localTrack.mute();
-      //   } else {
-      //     console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-      //   }
-      // } else {
-      //   console.log("localTrack is undefined");
-      // }
     }
 
     async function camController(isCamOpen: boolean) {
       if (room) {
         room.localParticipant.setCameraEnabled(isCamOpen);
       }
-      // if (localTrack) {
-      //   if (localTrack.isUpstreamPaused && !isCamOpen) {
-      //     localTrack.resumeUpstream();
-      //   } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-      //     localTrack.pauseUpstream();
-      //   } else {
-      //     console.log(
-      //       "undefined status: ",
-      //       localTrack.isUpstreamPaused,
-      //       isCamOpen
-      //     );
-      //   }
-      // } else {
-      //   console.log("localTrack is undefined");
-      // }
     }
 
     async function leaveRoom() {
@@ -494,7 +468,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
-          // handleStart();
+          
           await joinRoom();
           socketRef.current.emit("start", {
             room: props.auctionRoomId,
@@ -506,12 +480,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 종료");
           setIsAuctionStarted(false);
 
-          // handleStop();
           await leaveRoom();
-          // socketRef.current.emit("end", {
-          //   room: props.auctionRoomId,
-          //   price: currentPrice,
-          // });
+
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       } else {
@@ -601,36 +571,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                       />
                     );
                   })}
-                {/* {!isSeller &&
-                  remoteTracks.map((remoteTrack) => (
-                    <>
-                      {remoteTrack.participantIdentity.split("-")[0] ===
-                        "seller" &&
-                      remoteTrack.trackPublication.kind === "video" ? (
-                        <div>
-                          <div
-                            className={`auction-buyer-video-container ${
-                              remoteTrack.participantIdentity === winner
-                                ? "winner"
-                                : ""
-                            }`}
-                          >
-                            <VideoComponent
-                              key={remoteTrack.trackPublication.trackSid}
-                              track={remoteTrack.trackPublication.videoTrack!}
-                              participantId={remoteTrack.participantIdentity}
-                            />
-                          </div>
-                          <span>{remoteTrack.participantIdentity}</span>
-                        </div>
-                      ) : (
-                        <AudioComponent
-                          key={remoteTrack.trackPublication.trackSid}
-                          track={remoteTrack.trackPublication.audioTrack!}
-                        />
-                      )}
-                    </>
-                  ))} */}
                 <div className="syschat">
                   {syschat.split("\n").map((line, index) => {
                     return <p key={index}>{line}</p>;
@@ -638,13 +578,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                   <div ref={sysChatEndRef}></div>
                 </div>
                 <CircularProgressBar />
-                {/* <div className="circle-container">
-                  <div className="circle">
-                    <div className="number" id="number">
-                      {countDown}
-                    </div>
-                  </div>
-                </div> */}
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
