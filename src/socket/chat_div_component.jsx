@@ -37,9 +37,9 @@ const ChatDivComponent = ({stompClient,messages}) => {
     useEffect(() => {
         // 일단은 이걸로 했는데 나중에는 서버에서 채팅을 받아올거니 수정해야함
         if (messages.length > 0) {
-            if( document.getElementsByClassName('side-menu-chat')[0].classList.contains('open') ) {
+            // if( document.getElementsByClassName('side-menu-chat')[0].classList.contains('open') ) {
                 messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-            }
+            // }
         }
     },[messages]);
 
@@ -49,24 +49,19 @@ const ChatDivComponent = ({stompClient,messages}) => {
             <div>
                 {messages.map((message, index) => (
                     <div key={index} className={`chat-info ${ message.senderName===user.id?"me":"" }`}>
-                        <span className="chat-profile">
-                        <img
-                            src="svg/user-icon.svg"
-                            alt="User Icon"
-                            className="user-icon"
-                        />
-                        </span>
                         <span className="chat-name">{message.senderName}</span>
                         <span className="chat-message">{message.message}</span>
                     </div>
                 ))}
                 <div ref={messageEndRef}></div>
             </div>
-            <div className="inputBox">                
-                <input type="text" id="message" placeholder="메세지를 입력하세요!"
-                value={message}
-                onChange={handleMessageChange}
-                onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+            <div className="inputBox">
+                <div className="inputDiv">
+                    <input type="text" id="message" placeholder="메세지를 입력하세요!"
+                    value={message}
+                    onChange={handleMessageChange}
+                    onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+                </div>                
             </div>
         </>
     );
