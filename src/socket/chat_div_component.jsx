@@ -23,6 +23,11 @@ const ChatDivComponent = ({stompClient,messages}) => {
         };
         try {
             stompClient.send("/pub/message/"+PUBLIC_ROOM_NO, {}, JSON.stringify(msg));
+
+            // Phaser에 채팅 메시지 이벤트 생성
+            window.dispatchEvent(new CustomEvent('chat-message', {
+                detail: { sender: user.id, message: message }
+            }));
         } catch (error) {
             console.error('Error sending message: ', error);
         }

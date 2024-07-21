@@ -31,6 +31,11 @@ const Chat = ({stompClient}) => {
     const showMessage = (message) => {
         // console.log(message);
         setMessages(prevMessages => [...prevMessages, message]);
+
+        // 게임 씬에 채팅 메시지 이벤트 발생
+        window.dispatchEvent(new CustomEvent('chat-message', {
+            detail: { sender: message.senderName, message: message.message }
+        }));
     }; 
      
     return (
