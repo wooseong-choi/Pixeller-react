@@ -34,6 +34,8 @@ import {
 
 // 캔버스 컨페티
 import confetti from "canvas-confetti";
+import { CircularProgress } from "@nextui-org/react";
+import CircularProgressBar from "../UI/CircularProgressBar.jsx";
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -91,8 +93,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
     const [syschat, setSyschat] = useState(""); // 시스템 채팅
     const [bidder, setBidder] = useState(""); // 입찰자
-
-    const [sellerCam, setSellerCam] = useState<TrackInfo | null>(null); // 판매자 화상 데이터
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -202,6 +202,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       undefined
     ); // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
     const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]); // TrackInfo 객체는 화상 회의에 참가하는 다른 사용자의 비디오 트랙을 나타냄
+    const [sellerCam, setSellerCam] = useState<TrackInfo[]>([]); // 판매자 화상 데이터
 
     useImperativeHandle(ref, () => ({
       leaveRoom,
@@ -354,10 +355,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           participant: RemoteParticipant
         ) => {
           if (participant.identity.split("-")[0] === "seller") {
-            setSellerCam({
-              trackPublication: publication,
-              participantIdentity: participant.identity,
-            });
+            setSellerCam((prev) => [
+              ...prev,
+              {
+                trackPublication: publication,
+                participantIdentity: participant.identity,
+              },
+            ]);
           } else {
             setRemoteTracks((prev) => [
               ...prev,
@@ -378,7 +382,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           participant: RemoteParticipant
         ) => {
           if (participant.identity.split("-")[0] === "seller") {
-            setSellerCam(null);
+            setSellerCam([]);
           }
           setRemoteTracks((prev) =>
             prev.filter(
@@ -414,38 +418,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       if (room) {
         room.localParticipant.setMicrophoneEnabled(isMicOpen);
       }
-      // if (localTrack) {
-      //   if (localTrack.isMuted && !isMicOpen) {
-      //     localTrack.unmute();
-      //   } else if (!localTrack.isMuted && isMicOpen) {
-      //     localTrack.mute();
-      //   } else {
-      //     console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-      //   }
-      // } else {
-      //   console.log("localTrack is undefined");
-      // }
     }
 
     async function camController(isCamOpen: boolean) {
       if (room) {
         room.localParticipant.setCameraEnabled(isCamOpen);
       }
-      // if (localTrack) {
-      //   if (localTrack.isUpstreamPaused && !isCamOpen) {
-      //     localTrack.resumeUpstream();
-      //   } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-      //     localTrack.pauseUpstream();
-      //   } else {
-      //     console.log(
-      //       "undefined status: ",
-      //       localTrack.isUpstreamPaused,
-      //       isCamOpen
-      //     );
-      //   }
-      // } else {
-      //   console.log("localTrack is undefined");
-      // }
     }
 
     async function leaveRoom() {
@@ -490,7 +468,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 중");
           setIsAuctionStarted(true);
           setEverAuctionStarted(true);
-          // handleStart();
+          
           await joinRoom();
           socketRef.current.emit("start", {
             room: props.auctionRoomId,
@@ -502,12 +480,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 종료");
           setIsAuctionStarted(false);
 
-          // handleStop();
           await leaveRoom();
-          // socketRef.current.emit("end", {
-          //   room: props.auctionRoomId,
-          //   price: currentPrice,
-          // });
+
           // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
         }
       } else {
@@ -582,60 +556,28 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                     local={true}
                   />
                 )}
-                {!isSeller && sellerCam && (
-                  <>
-                    <VideoComponent
-                      track={sellerCam.trackPublication.videoTrack!}
-                      participantId={sellerCam.participantIdentity}
-                    />
-                    <AudioComponent
-                      track={sellerCam.trackPublication.audioTrack!}
-                    />
-                  </>
-                )}
-                {/* {!isSeller &&
-                  remoteTracks.map((remoteTrack) => (
-                    <>
-                      {remoteTrack.participantIdentity.split("-")[0] ===
-                        "seller" &&
-                      remoteTrack.trackPublication.kind === "video" ? (
-                        <div>
-                          <div
-                            className={`auction-buyer-video-container ${
-                              remoteTrack.participantIdentity === winner
-                                ? "winner"
-                                : ""
-                            }`}
-                          >
-                            <VideoComponent
-                              key={remoteTrack.trackPublication.trackSid}
-                              track={remoteTrack.trackPublication.videoTrack!}
-                              participantId={remoteTrack.participantIdentity}
-                            />
-                          </div>
-                          <span>{remoteTrack.participantIdentity}</span>
-                        </div>
-                      ) : (
-                        <AudioComponent
-                          key={remoteTrack.trackPublication.trackSid}
-                          track={remoteTrack.trackPublication.audioTrack!}
-                        />
-                      )}
-                    </>
-                  ))} */}
+                {!isSeller &&
+                  sellerCam.map((sellerTrack) => {
+                    return sellerTrack.trackPublication.kind === "video" ? (
+                      <VideoComponent
+                        key={sellerTrack.trackPublication.trackSid}
+                        track={sellerTrack.trackPublication.videoTrack!}
+                        participantId={sellerTrack.participantIdentity}
+                      />
+                    ) : (
+                      <AudioComponent
+                        key={sellerTrack.trackPublication.trackSid}
+                        track={sellerTrack.trackPublication.audioTrack!}
+                      />
+                    );
+                  })}
                 <div className="syschat">
                   {syschat.split("\n").map((line, index) => {
                     return <p key={index}>{line}</p>;
                   })}
                   <div ref={sysChatEndRef}></div>
                 </div>
-                <div className="circle-container">
-                  <div className="circle">
-                    <div className="number" id="number">
-                      {countDown}
-                    </div>
-                  </div>
-                </div>
+                <CircularProgressBar />
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
