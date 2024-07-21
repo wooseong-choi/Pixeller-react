@@ -8,7 +8,7 @@ import ChatPublic from "../../socket/chat_public";
 
 const URL = '//lionreport.pixeller.net/chat';
 
-const ChatBox = () => {
+const ChatBox = ({roomIdFirstSend}) => {
     const [chatPublicComponent, setChatPublicComponent] = useState(null);
     const [chatPrivateComponent, setChatPrivateComponent] = useState(null);
     const [stompClient, setStompClient] = useState(null);
@@ -49,17 +49,16 @@ const ChatBox = () => {
     }, [stompClient]);
 
     useEffect(() => {
-        if (stompClient) {
-            if (!chatPublicComponent) {
-                setChatPublicComponent(<ChatPublic stompClient={stompClient} />);
-            }
-            if (!chatPrivateComponent) {
-                setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
-            }
-
+        if (stompClient && !chatPublicComponent) {
+          setChatPublicComponent(<ChatPublic stompClient={stompClient} />);
         }
-    }, [stompClient, chatPublicComponent, chatPrivateComponent]);
-
+    }, [stompClient, chatPublicComponent]);
+    
+    useEffect(() => {
+        if (stompClient && roomIdFirstSend) {
+            setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} />);
+        }   
+    }, [stompClient, roomIdFirstSend]);
 
     return (
         <>  

@@ -35,6 +35,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isAuctionAlert, setIsAuctionAlert] = useState(false);
   const [isSellector, setIsSellector] = useState(false);
 
+  const [roomIdFirstSend, setRoomIdFirstSend] = useState(null);
+
   const OpenViduRef = useRef(null);
 
   useEffect(() => {
@@ -214,7 +216,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
+            <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -224,7 +226,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div> */}
+            </div>
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
@@ -234,13 +236,13 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? <ProductBox closePLModal={closePLModal} /> : null}
+              {isPLListOpen ? <ProductBox closePLModal={closePLModal} setRoomIdFirstSend={setRoomIdFirstSend} /> : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox />
+              <ChatBox roomIdFirstSend={roomIdFirstSend}/>
             </div>
           </div>
-          {/* <Bottom
+          <Bottom
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
@@ -251,7 +253,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
-          /> */}
+          />
         </div>
       </div>
     </>
