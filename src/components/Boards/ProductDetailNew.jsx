@@ -28,7 +28,7 @@ const ProductDetailNew = ({ productData }) => {
   //   });
   // }, [productId]);
 
-  productData.fileImage = ["모짜르트.jpg", "누군지모름.jpg", "베토벤.jpg"];
+  // productData.fileImage = ["모짜르트.jpg", "누군지모름.jpg", "베토벤.jpg"];
 
   // 이미지 swiper
   useEffect(() => {
