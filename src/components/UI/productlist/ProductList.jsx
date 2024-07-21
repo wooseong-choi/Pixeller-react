@@ -9,8 +9,20 @@ import { axiosCRUDInstance } from "../../../api/axios.jsx";
 const ProductList = ({products}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  // Throttle function to limit the execution of the event handler
+  const throttle = (func, delay) => {
+    let lastCall = 0;
+    return (...args) => {
+      const now = new Date().getTime();
+      if (now - lastCall >= delay) {
+        lastCall = now;
+        return func(...args);
+      }
+    };
+  };
+
   useEffect(() => {
-    const handleSwipe = (e) => {
+    const handleSwipe = throttle((e) => {
       if (e.deltaY > 0) {
         // 스와이프 아래로
         setSelectedIndex((prevIndex) =>
@@ -22,7 +34,7 @@ const ProductList = ({products}) => {
           prevIndex > 0 ? prevIndex - 1 : prevIndex
         );
       }
-    };
+    },1000); // 1 second delay
 
     window.addEventListener("wheel", handleSwipe);
 
@@ -106,7 +118,7 @@ const ProductList = ({products}) => {
                   </div>
                   <div className="new-product-DM-div">
                     <div>
-                    <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기gg!!!</span>
+                    <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기</span>
                     </div>
                   </div>
                 </div>

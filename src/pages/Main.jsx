@@ -15,6 +15,8 @@ import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductBox from "../components/UI/ProductBox.jsx";
 import AlertAuction from "../components/alert/AlertAuction.jsx";
 import SellerProducts from "../components/UI/SellerProducts.jsx";
+import ChatBox from "../components/UI/ChatBox.jsx";
+
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -233,6 +235,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div>
             <div className="product_list_div">
               {isPLListOpen ? <ProductBox closePLModal={closePLModal} /> : null}
+            </div>
+            <div className="chat_list_div">
+              <ChatBox />
             </div>
           </div>
           <Bottom
