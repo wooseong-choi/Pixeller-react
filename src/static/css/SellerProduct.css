@@ -79,7 +79,7 @@
   width: 100%;
 }
 
-.selected {
+.seller-product .selected {
   border: 2px solid #2359e4;
   /* background-color: #2359e4; */
 }

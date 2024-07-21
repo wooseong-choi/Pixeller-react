@@ -56,6 +56,14 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
                 />
               </div>
             ))}
+          {!products && (
+            <div>
+              <div>
+                <img src="icon/Items.png" alt="" />
+              </div>
+              <div>등록하신 상품이 없습니다.</div>
+            </div>
+          )}
           <div className="seller-product-footer">
             <button onClick={handleSelector}>선택 완료</button>
           </div>
