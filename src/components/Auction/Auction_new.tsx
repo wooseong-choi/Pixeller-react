@@ -165,14 +165,14 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     };
     const handleMinBid = (event) => {
       if (isAuctionStarted) {
-        setBidPrice((prev) => prev + 500);
-        bidding(bidPrice + 500);
+        setBidPrice(maxBidPrice + 500);
+        bidding(maxBidPrice + 500);
       }
     };
     const handleMinBidTimes = (event) => {
       if (isAuctionStarted) {
-        setBidPrice((prev) => prev + 1000);
-        bidding(bidPrice + 1000);
+        setBidPrice(maxBidPrice + 1000);
+        bidding(maxBidPrice + 1000);
       }
     };
 

@@ -995,16 +995,16 @@ class GameScene extends Phaser.Scene {
     // this.Player.moveTo(3000, 320);
     // }
 
-    // if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
-    //   window.dispatchEvent(
-    //     new CustomEvent("start-video", {
-    //       detail: {
-    //         uid: this.uid,
-    //         unsername: this.username,
-    //       },
-    //     })
-    //   );
-    // }
+    if (Phaser.Input.Keyboard.JustDown(this.oKey)) {
+      window.dispatchEvent(
+        new CustomEvent("start-video", {
+          detail: {
+            uid: this.uid,
+            unsername: this.username,
+          },
+        })
+      );
+    }
 
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");
