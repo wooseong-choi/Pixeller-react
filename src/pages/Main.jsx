@@ -6,6 +6,7 @@ import List from "../components/List";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
+// import { gsap } from "gsap/gsap-core";
 // import Auction from "../components/Auction/Auction.jsx";
 // import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
@@ -109,8 +110,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     setIsAuctionAlert(false);
   };
 
+  const startAuction = () => {
+    console.log("Main 에서 찍는 start Auction!");
+    setIsAuctionAlert(true);
+  };
+
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
+    window.addEventListener("start-auction", startAuction);
   });
 
   return (
