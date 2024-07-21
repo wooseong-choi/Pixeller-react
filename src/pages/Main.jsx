@@ -6,13 +6,17 @@ import List from "../components/List";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
+// import { gsap } from "gsap/gsap-core";
 // import Auction from "../components/Auction/Auction.jsx";
 // import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
 import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductBox from "../components/UI/ProductBox.jsx";
+import AlertAuction from "../components/alert/AlertAuction.jsx";
+import SellerProducts from "../components/UI/SellerProducts.jsx";
 import ChatBox from "../components/UI/ChatBox.jsx";
+
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -28,6 +32,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isAuctionOpen, setIsAuctionOpen] = useState(false);
   const [auctionProduct, setAuctionProductState] = useState(null);
   const [isPLListOpen, setIsPLListOpen] = useState(false);
+  const [isAuctionAlert, setIsAuctionAlert] = useState(false);
+  const [isSellector, setIsSellector] = useState(false);
 
   const OpenViduRef = useRef(null);
 
@@ -85,13 +91,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const toggleMIC = () => {
-    console.log("toggleMIC");
     setIsMicOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
-    console.log("toggleCam");
     setIsCamOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
   };
@@ -104,8 +108,18 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     setIsPLListOpen(true);
   };
 
+  const closeAlert = () => {
+    setIsAuctionAlert(false);
+  };
+
+  const startAuction = () => {
+    // setIsAuctionAlert(true);
+    setIsSellector(true);
+  };
+
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
+    window.addEventListener("start-auction", startAuction);
   });
 
   return (
@@ -113,14 +127,48 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
+            {/* <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-            </div>
+            </div> */}
             <div className="Modals">
               <div>
+                {isSellector ? (
+                  <div
+                    className="modal-background auction-alert"
+                    onClick={setIsSellector}
+                  >
+                    <div
+                      className="modal-alert-wrapper"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <SellerProducts
+                        sellerOpen={setIsSellector}
+                        sellectProduct={setAuctionProduct}
+                        alertAuction={setIsAuctionAlert}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+                {isAuctionAlert ? (
+                  <div
+                    className="modal-background auction-alert"
+                    onClick={closeAlert}
+                  >
+                    <div
+                      className="modal-alert-wrapper"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <AlertAuction
+                        product={auctionProduct}
+                        auctionStart={setIsAuctionOpen}
+                        auctionClose={closeAlert}
+                      />
+                    </div>
+                  </div>
+                ) : null}
                 {isProductDetailOpen ? (
                   <div className="modal-background" onClick={closePDModal}>
                     <div
@@ -151,21 +199,12 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               </div>
               <div>
                 {isAuctionOpen ? (
-                  // <Auction_OpenVidu
-                  //   isSeller={true}
-                  //   auctionRoomId={auctionProduct.id}
-                  //   handleClose={closeAuctionModal}
-                  //   auctionProduct={auctionProduct.id}
-                  //   userName={userName}
-                  //   auctionPrice={auctionProduct.price}
-                  //   ref={OpenViduRef}
-                  // />
                   <Auction_new
                     handleClose={closeAuctionModal}
                     isSeller={true}
                     userName={userName}
-                    auctionRoomId={auctionProduct.id}
-                    auctionProduct={auctionProduct.id}
+                    auctionRoomId={auctionProduct.productId}
+                    auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
                     ref={OpenViduRef}
                   />
@@ -195,9 +234,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? (
-              <ProductBox closePLModal={closePLModal}/>
-              ):null}
+              {isPLListOpen ? <ProductBox closePLModal={closePLModal} /> : null}
             </div>
             <div className="chat_list_div">
               <ChatBox />
@@ -213,6 +250,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsMicOpen={toggleMIC}
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
+            setIsAuctionAlert={setIsAuctionAlert}
           />
         </div>
       </div>

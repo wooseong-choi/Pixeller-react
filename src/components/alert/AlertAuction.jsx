@@ -1,7 +1,13 @@
 import React from "react";
 import "../../static/css/AlertAuction.css";
 
-const AlertAuction = (handlerStart, handleClose) => {
+const AlertAuction = ({ auctionStart, auctionClose, product }) => {
+  const handleClose = () => {
+    auctionClose(false);
+  };
+  const handleStart = () => {
+    auctionStart(true);
+  };
   return (
     <>
       <div className="alert-auction">
@@ -15,13 +21,13 @@ const AlertAuction = (handlerStart, handleClose) => {
         <div className="auction-alert-container">
           <div className="alert-text">
             <h2>경매 시작</h2>
-            <p>해당 물건으로 경매를 시작하실건가요?</p>
+            <p>{product?.name}의 경매가 시작됩니다.</p>
           </div>
           <div className="alert-buttons">
             <button className="btn-close" onClick={handleClose}>
               취소하기
             </button>
-            <button className="btn-start" onClick={handlerStart}>
+            <button className="btn-start" onClick={handleStart}>
               시작하기
             </button>
           </div>
