@@ -128,7 +128,7 @@ const ProductDetail = ({
               <button
                 className="join-auction"
                 onClick={() => {
-                  handleSetAuctionProduct(productId);
+                  handleSetAuctionProduct(product);
                   handleSetIsAuctionOpen();
                 }}
               >
