@@ -66,37 +66,6 @@ const ProductBox = ({closePLModal}) => {
               </div>
           </div>
           <div className="product-create-wrap">
-            {/* <div className="product-create-content">
-              <div className="product-create-content-top">
-                <div className="product-create-content-top-left">
-                  <div className="product-create-content-top-left-subject">
-                    <span>상품명</span>
-                  </div>
-                  <div className="product-create-content-top-left-input">
-                    <input type="text" placeholder="상품명을 입력해주세요."/>
-                  </div>
-                </div>
-                <div className="product-create-content-top-right">
-                  <div className="product-create-content-top-right-subject">
-                    <span>상품 가격</span>
-                  </div>
-                  <div className="product-create-content-top-right-input">
-                    <input type="text" placeholder="상품 가격을 입력해주세요."/>
-                  </div>
-                </div>
-              </div>
-              <div className="product-create-content-bottom">
-                <div className="product-create-content-bottom-subject">
-                  <span>상품 설명</span>
-                </div>
-                <div className="product-create-content-bottom-input">
-                  <textarea placeholder="상품 설명을 입력해주세요."></textarea>
-                </div>
-              </div>
-              <div className="product-create-content-button">
-                <button>등록하기</button>
-              </div>
-            </div> */}
             <ProductCreate handleClose={closePLModal} />
           </div>
         </div>

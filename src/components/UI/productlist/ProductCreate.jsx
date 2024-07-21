@@ -4,8 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { axiosCRUDInstance } from "../../../api/axios";
 import axios from "axios";
 const ProductCreate = ({ handleClose }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
-
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const uri = "//lionreport.pixeller.net";
 
   useEffect(() => {
@@ -23,40 +22,12 @@ const ProductCreate = ({ handleClose }) => {
   }, [handleClose]);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-    handleFileListChange(event.target.files);
-  };
-
-  let selectedFiles = [];
-
-  const handleFileListChange = (files) => {
-    const fileList = document.getElementById("file-list");
-    for (let i = 0; i < files.length; i++) {
-      selectedFiles.push(files[i]);
-      const item = document.createElement("div");
-      const fileName = document.createTextNode(files[i].name);
-      const deleteButton = document.createElement("button");
-      deleteButton.addEventListener("click", (event) => {
-        item.remove();
-        event.preventDefault();
-        deleteFile(files[i]);
-      });
-      deleteButton.innerText = "X";
-      item.appendChild(fileName);
-      item.appendChild(deleteButton);
-      fileList.appendChild(item);
-    }
+    const files = Array.from(event.target.files);
+    setSelectedFiles([...selectedFiles, ...files]);
   };
 
   const deleteFile = (deleteFile) => {
-    const inputFile = document.querySelector('input[name="imgFiles"]');
-    const dataTransfer = new DataTransfer();
-    selectedFiles = selectedFiles.filter((file) => file !== deleteFile);
-    selectedFiles.forEach((file) => {
-      dataTransfer.items.add(file);
-    });
-    inputFile.files = dataTransfer.files;
-    setSelectedFile(inputFile.files[0] || null);
+    setSelectedFiles(selectedFiles.filter(file => file !== deleteFile));
   };
 
   const user = sessionStorage.getItem("username");
@@ -207,11 +178,11 @@ const ProductCreate = ({ handleClose }) => {
               <label className="label-upload">사진 업로드</label>
               <div className="photo-upload">
                 <div className="upload-placeholder">
-                  {selectedFile ? null : (
-                    <span
+                  {selectedFiles.length === 0 && (
+                      <span
                       className="plus-icon"
                       onClick={() => document.getElementById("file-input").click()}
-                    >
+                      >
                       <img src="icon/svg/sagin.svg" alt="plus" />
                     </span>
                   )}
@@ -224,14 +195,17 @@ const ProductCreate = ({ handleClose }) => {
                     onChange={handleFileChange}
                     multiple
                   />
-                  {selectedFile ? (
-                    <img
-                      src={URL.createObjectURL(selectedFile)}
-                      alt="Preview"
-                      className="uploaded-image"
-                      onClick={() => document.getElementById("file-input").click()}
-                    />
-                  ) : null}
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="file-item">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index}`}
+                        className="uploaded-image"
+                        onClick={() => document.getElementById("file-input").click()}
+                      />
+                      <button type="button" onClick={() => deleteFile(file)}>X</button>
+                    </div>
+                  ))}
                 </div>
                 <div className="file_list_header" style={{ display: "none" }}>
                   <div className="file_list_header_task">

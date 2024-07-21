@@ -378,7 +378,7 @@ class GameScene extends Phaser.Scene {
 
     // Tab 키 추가
     this.tabKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.TAB
+      Phaser.Input.Keyboard.KeyCodes.TAB, false
     );
 
     // 총알 생성

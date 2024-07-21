@@ -25,8 +25,6 @@ const List = ({
   setIsOpen,
   isChatOpen,
   setIsChatOpen,
-  // isNotiOpen,
-  // setIsNotiOpen,
   openPDModal,
   openPCModal,
   setTotalProductCounts
@@ -192,7 +190,7 @@ const List = ({
           </div>
         </div>
 
-        <nav className="chat-content public active">{chatPublicComponent}</nav>
+        {/* <nav className="chat-content public active">{chatPublicComponent}</nav> */}
         <nav className="chat-content private ">{chatPrivateComponent}</nav>
         <nav className="chat-content user-list ">{chatUserListComponent}</nav>
         <div className="chat-rooms">
