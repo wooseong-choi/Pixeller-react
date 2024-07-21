@@ -14,6 +14,7 @@ import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductBox from "../components/UI/ProductBox.jsx";
 import AlertAuction from "../components/alert/AlertAuction.jsx";
+import SellerProducts from "../components/UI/SellerProducts.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -30,6 +31,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [auctionProduct, setAuctionProductState] = useState(null);
   const [isPLListOpen, setIsPLListOpen] = useState(false);
   const [isAuctionAlert, setIsAuctionAlert] = useState(false);
+  const [isSellector, setIsSellector] = useState(false);
 
   const OpenViduRef = useRef(null);
 
@@ -87,13 +89,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const toggleMIC = () => {
-    console.log("toggleMIC");
     setIsMicOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
-    console.log("toggleCam");
     setIsCamOpen((prev) => !prev);
     if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
   };
@@ -111,8 +111,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   };
 
   const startAuction = () => {
-    console.log("Main 에서 찍는 start Auction!");
-    setIsAuctionAlert(true);
+    // setIsAuctionAlert(true);
+    setIsSellector(true);
   };
 
   useEffect(() => {
@@ -133,6 +133,22 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div> */}
             <div className="Modals">
               <div>
+                {isSellector ? (
+                  <div
+                    className="modal-background auction-alert"
+                    onClick={setIsSellector}
+                  >
+                    <div
+                      className="modal-alert-wrapper"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <SellerProducts
+                        sellerOpen={setIsSellector}
+                        sellectProduct={setAuctionProduct}
+                      />
+                    </div>
+                  </div>
+                ) : null}
                 {isAuctionAlert ? (
                   <div
                     className="modal-background auction-alert"
@@ -179,15 +195,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               </div>
               <div>
                 {isAuctionOpen ? (
-                  // <Auction_OpenVidu
-                  //   isSeller={true}
-                  //   auctionRoomId={auctionProduct.id}
-                  //   handleClose={closeAuctionModal}
-                  //   auctionProduct={auctionProduct.id}
-                  //   userName={userName}
-                  //   auctionPrice={auctionProduct.price}
-                  //   ref={OpenViduRef}
-                  // />
                   <Auction_new
                     handleClose={closeAuctionModal}
                     isSeller={true}
