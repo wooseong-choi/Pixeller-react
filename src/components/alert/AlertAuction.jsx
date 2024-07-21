@@ -5,7 +5,9 @@ const AlertAuction = ({ auctionStart, auctionClose, product }) => {
   const handleClose = () => {
     auctionClose(false);
   };
-
+  const handleStart = () => {
+    auctionStart(true);
+  };
   return (
     <>
       <div className="alert-auction">
@@ -25,7 +27,7 @@ const AlertAuction = ({ auctionStart, auctionClose, product }) => {
             <button className="btn-close" onClick={handleClose}>
               취소하기
             </button>
-            <button className="btn-start" onClick={auctionStart}>
+            <button className="btn-start" onClick={handleStart}>
               시작하기
             </button>
           </div>

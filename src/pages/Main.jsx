@@ -161,7 +161,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     >
                       <AlertAuction
                         product={auctionProduct}
-                        auctionStart={null}
+                        auctionStart={setIsAuctionOpen}
                         auctionClose={closeAlert}
                       />
                     </div>
@@ -201,8 +201,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     handleClose={closeAuctionModal}
                     isSeller={true}
                     userName={userName}
-                    auctionRoomId={auctionProduct.id}
-                    auctionProduct={auctionProduct.id}
+                    auctionRoomId={auctionProduct.productId}
+                    auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
                     ref={OpenViduRef}
                   />
