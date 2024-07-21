@@ -8,7 +8,6 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
   };
 
   const handleSelector = () => {
-    console.log("selected: ", selected);
     if (selected) {
       sellectProduct(selected);
       alertAuction(true);
@@ -26,7 +25,6 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
 
   const getMyProducts = async () => {
     const product = await checkSellerProduct();
-    // console.log("debug: ", product);
     setProducts(product);
   };
 
