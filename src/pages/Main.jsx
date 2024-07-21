@@ -112,12 +112,12 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
+            {/* <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-            </div>
+            </div> */}
             <div className="Modals">
               <div>
                 {isProductDetailOpen ? (
