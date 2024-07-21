@@ -12,6 +12,8 @@ const SellerProducts = ({ sellerOpen, sellectProduct, alertAuction }) => {
     if (selected) {
       sellectProduct(selected);
       alertAuction(true);
+    } else {
+      alert("상품을 선택해주세요.");
     }
   };
 
