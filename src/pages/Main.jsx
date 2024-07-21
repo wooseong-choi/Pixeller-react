@@ -214,7 +214,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            <div className={`lists ${isListOpen ? "open" : ""}`}>
+            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -224,7 +224,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div>
+            </div> */}
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
@@ -240,7 +240,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               <ChatBox />
             </div>
           </div>
-          <Bottom
+          {/* <Bottom
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
@@ -251,7 +251,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
-          />
+          /> */}
         </div>
       </div>
     </>
