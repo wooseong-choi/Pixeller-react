@@ -1,0 +1,61 @@
+/* Keyframes for a smooth blinking effect */
+@keyframes smooth-blink {
+  0%,
+  100% {
+    border-color: #3498db; /* Soft blue color for initial and final state */
+  }
+  50% {
+    border-color: #2ecc71; /* Soft green color for the middle state */
+  }
+}
+
+/* Keyframes for countdown animation */
+@keyframes count-down {
+  0% {
+    content: "5";
+  }
+  20% {
+    content: "4";
+  }
+  40% {
+    content: "3";
+  }
+  60% {
+    content: "2";
+  }
+  80% {
+    content: "1";
+  }
+  100% {
+    content: "5"; /* Loop back to 5 */
+  }
+}
+
+/* Styling for the sleek blinking circle */
+.sleek-circle {
+  width: 120px; /* Fixed width of the circle */
+  height: 120px; /* Fixed height of the circle */
+  border: 10px solid #3498db; /* Initial border color is soft blue */
+  border-radius: 50%; /* Makes it a circle */
+  background-color: white; /* Fill color of the circle */
+  animation: smooth-blink 1s infinite; /* Apply smooth blinking animation */
+  display: flex; /* Flexbox for centering content */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  position: relative; /* For positioning the numbers */
+  box-sizing: border-box; /* Ensures border is included in dimensions */
+  overflow: hidden; /* Ensure no overflow of content */
+}
+
+/* Styling for the number inside the circle */
+.sleek-circle::before {
+  content: "5"; /* Initial number */
+  position: absolute; /* Absolute positioning */
+  font-size: 80px; /* Larger font size for the numbers */
+  color: black; /* Color of the numbers */
+  animation: count-down 5s linear infinite; /* Countdown animation */
+  top: 55%; /* Adjust vertical positioning */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the number */
+  font-weight: bold; /* Font weight */
+}
