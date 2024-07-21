@@ -77,3 +77,19 @@ body {
 .modal-active #canvas-parent {
   pointer-events: none;
 }
+
+.modal-background.auction-alert {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-alert-wrapper {
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

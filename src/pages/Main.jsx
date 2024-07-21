@@ -12,6 +12,7 @@ import Auction_new from "../components/Auction/Auction_new.tsx";
 import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductBox from "../components/UI/ProductBox.jsx";
+import AlertAuction from "../components/alert/AlertAuction.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -27,6 +28,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isAuctionOpen, setIsAuctionOpen] = useState(false);
   const [auctionProduct, setAuctionProductState] = useState(null);
   const [isPLListOpen, setIsPLListOpen] = useState(false);
+  const [isAuctionAlert, setIsAuctionAlert] = useState(false);
 
   const OpenViduRef = useRef(null);
 
@@ -103,6 +105,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     setIsPLListOpen(true);
   };
 
+  const closeAlert = () => {
+    setIsAuctionAlert(false);
+  };
+
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
   });
@@ -120,6 +126,22 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             </div> */}
             <div className="Modals">
               <div>
+                {isAuctionAlert ? (
+                  <div
+                    className="modal-background auction-alert"
+                    onClick={closeAlert}
+                  >
+                    <div
+                      className="modal-alert-wrapper"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <AlertAuction
+                        product={productId}
+                        auctionClose={closeAlert}
+                      />
+                    </div>
+                  </div>
+                ) : null}
                 {isProductDetailOpen ? (
                   <div className="modal-background" onClick={closePDModal}>
                     <div
@@ -194,9 +216,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? (
-              <ProductBox closePLModal={closePLModal}/>
-              ):null}
+              {isPLListOpen ? <ProductBox closePLModal={closePLModal} /> : null}
             </div>
           </div>
           <Bottom
@@ -209,6 +229,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsMicOpen={toggleMIC}
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
+            setIsAuctionAlert={setIsAuctionAlert}
           />
         </div>
       </div>
