@@ -9,6 +9,7 @@ import "./Main.css";
 // import { gsap } from "gsap/gsap-core";
 // import Auction from "../components/Auction/Auction.jsx";
 // import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
+import VideoCanvas from "../components/OpenVidu/VideoCanvas.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
 import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
@@ -16,7 +17,6 @@ import ProductBox from "../components/UI/ProductBox.jsx";
 import AlertAuction from "../components/alert/AlertAuction.jsx";
 import SellerProducts from "../components/UI/SellerProducts.jsx";
 import ChatBox from "../components/UI/ChatBox.jsx";
-
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -38,6 +38,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [roomIdFirstSend, setRoomIdFirstSend] = useState(null);
 
   const OpenViduRef = useRef(null);
+  const MainVidRef = useRef(null);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -60,9 +61,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   }, [isOpen, isChatOpen]);
 
   const startVideoStream = async (e) => {
+    console.log("이벤트 발생");
     e.preventDefault();
-    if (isViduOpen && OpenViduRef.current) {
-      OpenViduRef.current.leaveRoom();
+    if (isViduOpen && MainVidRef.current) {
+      MainVidRef.current.leaveRoom();
     }
     isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
@@ -129,12 +131,21 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            {/* <div className={`cam-div active ${isViduOpen ? "active" : ""}`}>
+            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
               <button
                 className="video-button"
                 onClick={startVideoStream}
               ></button>
-            </div> */}
+              {isViduOpen ? (
+                <VideoCanvas
+                  userName={userName}
+                  auctionRoomId={"wholeMap"}
+                  isMicOpen={isMicOpen}
+                  isCamOpen={isCamOpen}
+                  ref={MainVidRef}
+                />
+              ) : null}
+            </div>
             <div className="Modals">
               <div>
                 {isSellector ? (
