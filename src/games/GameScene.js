@@ -900,11 +900,13 @@ class GameScene extends Phaser.Scene {
         direction: this.Player.direction,
       };
 
-      this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-      console.log("move", user);
-      this.socket.emit("move", user);
-
-      this.lastPositionUpdateTime = time;
+      if( user.uid != null && user.uid != undefined ){
+        this.Player.oldPosition = { x: this.player.x, y: this.player.y };
+        console.log("move", user);
+        this.socket.emit("move", user);
+        
+        this.lastPositionUpdateTime = time;
+      } 
     }
 
     // 조준선 표시 / 숨김
