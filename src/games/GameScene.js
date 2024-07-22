@@ -219,13 +219,11 @@ class GameScene extends Phaser.Scene {
     this.socket.on("disconnecting", function () {
       console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
-      sessionStorage.removeItem("username");
     });
 
     this.socket.on("disconnect", function () {
       console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
-      sessionStorage.removeItem("username");
     });
 
     this.socket.on("error", (error) => {
