@@ -8,10 +8,12 @@ import ChatPublic from "../../socket/chat_public";
 
 const URL = '//lionreport.pixeller.net/chat';
 
-const ChatBox = ({roomIdFirstSend}) => {
+const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend}) => {
     const [chatPublicComponent, setChatPublicComponent] = useState(null);
     const [chatPrivateComponent, setChatPrivateComponent] = useState(null);
     const [stompClient, setStompClient] = useState(null);
+    const [chatPrivateShow, setChatPrivateShow] = useState(false);
+
     useEffect(() => {
         if (!stompClient) {
             const connect = () => {
@@ -54,18 +56,59 @@ const ChatBox = ({roomIdFirstSend}) => {
         }
     }, [stompClient, chatPublicComponent]);
     
+    
     useEffect(() => {
-        if (stompClient && roomIdFirstSend) {
-            setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} />);
+        if (stompClient && !chatPrivateComponent) {
+            setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend} />);
+            setChatPrivateShow(true);
         }   
-    }, [stompClient, roomIdFirstSend]);
+    }, [stompClient, chatPrivateComponent]);
+    
+    // useEffect(() => {
+    //     if (stompClient) {
+    //         setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}  />);
+    //         setChatPrivateShow(true);
+    //     }   
+    // }, [stompClient, roomIdFirstSend]);
+
+
+    const resetRoomId = () => {
+        setRoomIdFirstSend(null);
+        setChatPrivateComponent(null);
+        setTimeout(() => {
+            setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={null} setRoomIdFirstSend={setRoomIdFirstSend}  />);
+        }, 0);
+    }
+
+    const chatDivMinimize = () => {
+        const target = document.getElementsByClassName('chat_list');
+        for(let i=0; i<target.length; i++) {
+            if(target[i].classList.contains('minimize')){
+                target[i].classList.remove('minimize');
+            }else{
+                target[i].classList.add('minimize');
+            }
+        }
+    }
+
+    const showPrivateRoom = () => {
+        setChatPrivateShow(!chatPrivateShow);
+    }
+
 
     return (
         <>  
             <div className="chat_list">
                 {chatPublicComponent}
+                <div className="chat-room-btn-box">
+                    {roomIdFirstSend != null ? 
+                        <div className="return-menu" onClick={resetRoomId}></div>:
+                        <div className="show-private" onClick={showPrivateRoom}></div>
+                    }
+                    <div className="win-minimize" onClick={chatDivMinimize}></div>
+                </div>
             </div>
-            <div className="chat_list private">
+            <div className={`chat_list private ${chatPrivateShow ? "active":""}`} >
                 {chatPrivateComponent}
             </div>
         </>

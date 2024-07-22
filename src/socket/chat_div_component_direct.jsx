@@ -14,7 +14,6 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
     };
  
     const sendMessage = () => {
-        alert('메세지 보내기!');
         // const msg = document.getElementById("message").value;
         if(message.trim() === "") return;
         const msg = {
@@ -31,7 +30,7 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
     useEffect(() => {
         // 일단은 이걸로 했는데 나중에는 서버에서 채팅을 받아올거니 수정해야함
         if (messages.length > 0) {
-            if( document.getElementsByClassName('side-menu-chat')[0].classList.contains('open') ) {
+            if( document.querySelector('.chat_list.private').classList.contains('active') ) {
                 messageEndRef.current.scrollIntoView({ behavior: "smooth" });
             }
         }
@@ -43,13 +42,6 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
             <div>
                 {messages.map((message, index) => (
                     <div key={index} className={`chat-info ${ message.senderName===user.id?"me":"" }`}>
-                        <span className="chat-profile">
-                        <img
-                            src="svg/user-icon.svg"
-                            alt="User Icon"
-                            className="user-icon"
-                        />
-                        </span>
                         <span className="chat-name">{message.senderName}</span>
                         <span className="chat-message">{message.message}</span>
                     </div>
