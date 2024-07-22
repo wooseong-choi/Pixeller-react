@@ -213,13 +213,13 @@ class GameScene extends Phaser.Scene {
     // 웹 소켓 끊겼을 때 발생 이벤트
     this.socket.on("disconnecting", function () {
       console.log("Socket.IO disconnected.");
-      this.socket.emit("leave");
+      this.socket?.emit("leave");
       sessionStorage.removeItem("username");
     });
 
     this.socket.on("disconnect", function () {
       console.log("Socket.IO disconnected.");
-      this.socket.emit("leave");
+      this.socket?.emit("leave");
       sessionStorage.removeItem("username");
     });
 
@@ -287,7 +287,7 @@ class GameScene extends Phaser.Scene {
     this.load.audio("shoot", "./sounds/gun_hand.mp3");
 
     // 상품진열
-    this.load.image('defaultProductImage', './icon/items.png');
+    this.load.image("defaultProductImage", "./icon/items.png");
 
     // font
     // this.load.bitmapFont(
@@ -388,7 +388,8 @@ class GameScene extends Phaser.Scene {
 
     // Tab 키 추가
     this.tabKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.TAB, false
+      Phaser.Input.Keyboard.KeyCodes.TAB,
+      false
     );
 
     // 총알 생성
@@ -793,17 +794,15 @@ class GameScene extends Phaser.Scene {
     try {
       const products = await getAllProducts();
       // console.log('Fetched products:', products);
-      const areas = [
-        { x: 1260, y: 968, width: 120, height: 50 }
-      ];
+      const areas = [{ x: 1260, y: 968, width: 120, height: 50 }];
       if (products.length > 0 && areas.length > 0) {
         this.displayProduct(products, areas[0]);
       }
     } catch (error) {
-      console.error('Failed to load products', error);
+      console.error("Failed to load products", error);
     }
   }
-  
+
   displayProduct(products, area) {
     let currentIndex = 0;
     const updateDisplay = () => {
@@ -812,30 +811,30 @@ class GameScene extends Phaser.Scene {
       const imageKey = `product_${product.productId}`;
       if (product.imageFileUrls) {
         this.load.image(imageKey, product.imageFileUrls);
-        this.load.once('complete', () => {
+        this.load.once("complete", () => {
           this.createProductSprite(area, imageKey, product);
         });
         this.load.start();
       } else {
-        this.createProductSprite(area, 'defaultProductImage', product);
+        this.createProductSprite(area, "defaultProductImage", product);
       }
       currentIndex = (currentIndex + 1) % products.length;
     };
-  
+
     // 초기 표시
     updateDisplay();
-  
+
     // 5초마다 다음 제품으로 업데이트
     this.time.addEvent({
       delay: 5000,
       callback: updateDisplay,
-      loop: true
+      loop: true,
     });
   }
-  
+
   createProductSprite(area, imageKey, product) {
     const { x, y, width, height } = area;
-    
+
     // 기존 스프라이트와 텍스트 제거
     if (this.productSprite) {
       this.productSprite.destroy();
@@ -843,19 +842,24 @@ class GameScene extends Phaser.Scene {
     if (this.productText) {
       this.productText.destroy();
     }
-    
+
     // 새 이미지 스프라이트 생성
     this.productSprite = this.add.image(x, y, imageKey);
     this.productSprite.setDisplaySize(width, height);
-    
+
     // 새 상품 정보 텍스트 추가
-    this.productText = this.add.text(x, y + height/2 + 10, `${product.name}\n${product.price}원`, { 
-      fontSize: '12px', 
-      fill: '#fff',
-      backgroundColor: '#000',
-      padding: { x: 5, y: 5 },
-      resolution: 4
-    });
+    this.productText = this.add.text(
+      x,
+      y + height / 2 + 10,
+      `${product.name}\n${product.price}원`,
+      {
+        fontSize: "12px",
+        fill: "#fff",
+        backgroundColor: "#000",
+        padding: { x: 5, y: 5 },
+        resolution: 4,
+      }
+    );
     this.productText.setOrigin(0.5, 0);
   }
 
