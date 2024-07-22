@@ -570,18 +570,16 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
                   {!isSeller && localTrack && (
-                    <div>
-                      <div
-                        className={`auction-buyer-video-container ${
-                          username === winner ? "winner" : ""
-                        } ${username === bidder ? "bidder" : ""}`}
-                      >
-                        <VideoComponent
-                          track={localTrack}
-                          participantId={participantName}
-                          local={true}
-                        />
-                      </div>
+                    <div
+                      className={`auction-buyer-video-container ${
+                        username === winner ? "winner" : ""
+                      } ${username === bidder ? "bidder" : ""}`}
+                    >
+                      <VideoComponent
+                        track={localTrack}
+                        participantId={participantName}
+                        local={true}
+                      />
                     </div>
                   )}
                   {remoteTracks.map((remoteTrack) => (
