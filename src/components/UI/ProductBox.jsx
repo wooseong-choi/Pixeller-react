@@ -6,7 +6,7 @@ import ProductList from "./productlist/ProductList.jsx";
 import ProductSearchList from "./productlist/ProductSearchList.jsx";
 import ProductCreate from "./productlist/ProductCreate.jsx";
 
-const ProductBox = ({closePLModal}) => {
+const ProductBox = ({closePLModal, setRoomIdFirstSend}) => {
   const [writeMode, setWriteMode] = useState(false);
   const [sidebarItems, setSidebarItems] = useState([]);
 
@@ -87,7 +87,7 @@ const ProductBox = ({closePLModal}) => {
               </div>
           </div>
           <div className="product-list-wrap">
-            <ProductList products={sidebarItems} />
+            <ProductList products={sidebarItems} setRoomIdFirstSend={setRoomIdFirstSend} />
           </div>
           <div className="product-search-wrap">
             <ProductSearchList products={sidebarItems} />

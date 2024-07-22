@@ -6,7 +6,7 @@ import Swiper from 'swiper/bundle';
 import '../../../static/css/swiper-bundle.min.css';
 import { axiosCRUDInstance } from "../../../api/axios.jsx";
 
-const ProductList = ({products}) => {
+const ProductList = ({products, setRoomIdFirstSend}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Throttle function to limit the execution of the event handler
@@ -66,9 +66,10 @@ const ProductList = ({products}) => {
         },
       });
       const result = response.data;
-
+      console.log('result',result );
       if (result.success) {
         const roomId = result.data["roomId"];
+        setRoomIdFirstSend(roomId);
       } else {
         console.error("Failed to start chat:", result.message);
       }
