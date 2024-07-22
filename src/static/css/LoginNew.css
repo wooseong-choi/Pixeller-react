@@ -88,19 +88,21 @@
   transition: none !important;
 }
 
-
-.login-form, .create-form {
+.login-form,
+.create-form {
   width: 100%;
   max-width: 400px;
 }
 
-.login-form label,.create-form label  {
+.login-form label,
+.create-form label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
-.login-form input,.create-form input  {
+.login-form input,
+.create-form input {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -109,7 +111,8 @@
   border: 1px solid #ccc;
 }
 
-.login-form button, .create-form button {
+.login-form button,
+.create-form button {
   width: 100%;
   padding: 10px;
   background-color: #007bff;
@@ -120,7 +123,8 @@
   cursor: pointer;
 }
 
-.login-form button:hover,.create-form button:hover {
+.login-form button:hover,
+.create-form button:hover {
   background-color: #0056b3;
 }
 
@@ -166,13 +170,15 @@
   margin-bottom: 30px;
 }
 
-.login-form label, .create-form label {
+.login-form label,
+.create-form label {
   font-size: 20px;
   font-weight: 200;
   color: #222;
 }
 
-#password, #create-password  {
+#password,
+#create-password {
   background-image: url(../../../public/svg/Password.svg);
   background-size: 25px 25px;
   background-position: 15px 50%;
@@ -183,7 +189,8 @@
   line-height: 40px;
 }
 
-#username, #create-username {
+#username,
+#create-username {
   background-image: url(../../../public/svg/Email.svg);
   background-size: 25px 25px;
   background-position: 15px 50%;
