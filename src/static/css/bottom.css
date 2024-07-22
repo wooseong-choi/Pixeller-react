@@ -173,7 +173,7 @@ body {
 }
 .chat_list_div {
   left: 1em;
-  opacity: 0.5;
+  /* opacity: 0.5; */
 }
 
 .chat_list_div:hover{
@@ -194,6 +194,12 @@ body {
   height: calc( 50vh - 40px ); /* 전체 화면 높이 */
   padding-bottom: 40px;
   background-color: rgba(255, 255, 255, 0.2);
+} 
+
+.chat_list.private {
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  display: none;
 } 
 
 .product_list.search-mode .product-list-wrap {
@@ -574,3 +580,4 @@ body {
   width: 90%;
   margin: auto;
 }
+

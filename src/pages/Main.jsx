@@ -35,6 +35,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isAuctionAlert, setIsAuctionAlert] = useState(false);
   const [isSellector, setIsSellector] = useState(false);
 
+  const [roomIdFirstSend, setRoomIdFirstSend] = useState(null);
+
   const OpenViduRef = useRef(null);
   const MainVidRef = useRef(null);
 
@@ -245,10 +247,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? <ProductBox closePLModal={closePLModal} /> : null}
+              {isPLListOpen ? <ProductBox closePLModal={closePLModal} setRoomIdFirstSend={setRoomIdFirstSend} /> : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox />
+              <ChatBox roomIdFirstSend={roomIdFirstSend}/>
             </div>
           </div>
           <Bottom

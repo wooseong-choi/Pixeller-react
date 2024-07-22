@@ -18,7 +18,6 @@ const Chat = ({stompClient}) => {
                     showMessage(JSON.parse(message.body));
                 });
             };
-
             subscribe();
         }
     }, [stompClient]);
