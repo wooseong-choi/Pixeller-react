@@ -794,21 +794,30 @@ class GameScene extends Phaser.Scene {
     try {
       const products = await getAllProducts();
       // console.log('Fetched products:', products);
-      const areas = [{ x: 1260, y: 968, width: 120, height: 50 }];
-      if (products.length > 0 && areas.length > 0) {
-        this.displayProduct(products, areas[0]);
-      }
+
+      const areas = [
+        { x: 1260, y: 978, width: 112, height: 50 },
+        { x: 1618, y: 978, width: 112, height: 50 },
+        { x: 1618, y: 1200, width: 112, height: 50 },
+      ];
+      areas.forEach((area, index) => {
+        if (index < products.length) {
+          this.displayProduct(products, area, index);
+        }
+      });
+
     } catch (error) {
       console.error("Failed to load products", error);
     }
   }
+  
+  displayProduct(products, area, startIndex) {
+    let currentIndex = startIndex;
 
-  displayProduct(products, area) {
-    let currentIndex = 0;
     const updateDisplay = () => {
       const product = products[currentIndex];
       // console.log('Displaying product:', product);
-      const imageKey = `product_${product.productId}`;
+      const imageKey = `product_${product.productId}_${area.x}_${area.y}`;
       if (product.imageFileUrls) {
         this.load.image(imageKey, product.imageFileUrls);
         this.load.once("complete", () => {
@@ -826,7 +835,7 @@ class GameScene extends Phaser.Scene {
 
     // 5초마다 다음 제품으로 업데이트
     this.time.addEvent({
-      delay: 5000,
+      delay: 4000,
       callback: updateDisplay,
       loop: true,
     });
@@ -836,31 +845,27 @@ class GameScene extends Phaser.Scene {
     const { x, y, width, height } = area;
 
     // 기존 스프라이트와 텍스트 제거
-    if (this.productSprite) {
-      this.productSprite.destroy();
+    if (this[`productSprite_${x}_${y}`]) {
+      this[`productSprite_${x}_${y}`].destroy();
     }
-    if (this.productText) {
-      this.productText.destroy();
+    if (this[`productText_${x}_${y}`]) {
+      this[`productText_${x}_${y}`].destroy();
     }
 
     // 새 이미지 스프라이트 생성
-    this.productSprite = this.add.image(x, y, imageKey);
-    this.productSprite.setDisplaySize(width, height);
 
+    this[`productSprite_${x}_${y}`] = this.add.image(x, y, imageKey);
+    this[`productSprite_${x}_${y}`].setDisplaySize(width, height);
+    
     // 새 상품 정보 텍스트 추가
-    this.productText = this.add.text(
-      x,
-      y + height / 2 + 10,
-      `${product.name}\n${product.price}원`,
-      {
-        fontSize: "12px",
-        fill: "#fff",
-        backgroundColor: "#000",
-        padding: { x: 5, y: 5 },
-        resolution: 4,
-      }
-    );
-    this.productText.setOrigin(0.5, 0);
+    this[`productText_${x}_${y}`] = this.add.text(x, y + height/2 + 10, `${product.name}\n${product.price}원`, { 
+      fontSize: '12px', 
+      fill: '#fff',
+      backgroundColor: '#000',
+      padding: { x: 5, y: 5 },
+      resolution: 4
+    });
+    this[`productText_${x}_${y}`].setOrigin(0.5, 0);
   }
 
   /**
@@ -896,7 +901,7 @@ class GameScene extends Phaser.Scene {
       };
 
       this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-      // console.log("move", user);
+      console.log("move", user);
       this.socket.emit("move", user);
 
       this.lastPositionUpdateTime = time;

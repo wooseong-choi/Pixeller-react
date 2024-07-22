@@ -17,6 +17,7 @@ sudo pm2 save # 현재 실행 중인 프로세스 목록 저장
 # cd $REPOSITORY
 
 # sudo npm install --legacy-peer-deps
+# sudo npm install framer-motion
 # sudo npm install -g pm2
 
 # sudo npm run build # 프로젝트 빌드
