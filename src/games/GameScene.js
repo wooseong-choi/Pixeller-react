@@ -607,7 +607,7 @@ class GameScene extends Phaser.Scene {
     this.specialAreas.forEach((area) => {
       const x = area.x - area.width / 2;
       const y = area.y - area.height / 2;
-      graphics.strokeRect(x, y, area.width, area.height);
+      // graphics.strokeRect(x, y, area.width, area.height);
     });
 
     graphics.lineStyle(2, 0x00ff00);
@@ -615,7 +615,7 @@ class GameScene extends Phaser.Scene {
     this.centralAreas.forEach((area) => {
       const x = area.x - area.width / 2;
       const y = area.y - area.height / 2;
-      graphics.strokeRect(x, y, area.width, area.height);
+      // graphics.strokeRect(x, y, area.width, area.height);
       this.createMessageBox(area);
     });
   }
@@ -623,7 +623,7 @@ class GameScene extends Phaser.Scene {
   // setAlpha : 투명도 조절
   // setOrigin : 텍스트의 중심점 조절
   createMessageBox(area) {
-    const messageBox = this.add.container(area.x, area.y - 50).setAlpha(0);
+    const messageBox = this.add.container(area.x, area.y - 100).setAlpha(0);
     const background = this.add.graphics();
     background.fillStyle(0x000000, 0.7);
     background.fillRoundedRect(-100, -20, 200, 40, 10);
@@ -907,7 +907,7 @@ class GameScene extends Phaser.Scene {
 
       if( user.uid != null && user.uid != undefined ){
         this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-        console.log("move", user);
+        // console.log("move", user);
         this.socket.emit("move", user);
         
         this.lastPositionUpdateTime = time;
