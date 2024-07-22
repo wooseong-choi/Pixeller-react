@@ -219,13 +219,11 @@ class GameScene extends Phaser.Scene {
     this.socket.on("disconnecting", function () {
       console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
-      sessionStorage.removeItem("username");
     });
 
     this.socket.on("disconnect", function () {
       console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
-      sessionStorage.removeItem("username");
     });
 
     this.socket.on("error", (error) => {
@@ -801,15 +799,17 @@ class GameScene extends Phaser.Scene {
       // console.log('Fetched products:', products);
 
       const areas = [
-        { x: 1260, y: 978, width: 112, height: 50 },
-        { x: 1618, y: 978, width: 112, height: 50 },
-        { x: 1618, y: 1200, width: 112, height: 50 },
+        { x: 1444, y: 1127, width: 220, height: 160 },
       ];
-      areas.forEach((area, index) => {
-        if (index < products.length) {
-          this.displayProduct(products, area, index);
-        }
-      });
+      
+      if (products.length > 0) {
+        this.displayProduct(products, areas[0], 0);
+      }
+      // areas.forEach((area, index) => {
+      //   if (index < products.length) {
+      //     this.displayProduct(products, area, index);
+      //   }
+      // });
 
     } catch (error) {
       console.error("Failed to load products", error);

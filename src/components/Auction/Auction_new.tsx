@@ -117,6 +117,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       sysChatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    // socket 관련
+    const socketRef = useRef<any>();
+
     const calculateOpacity = (index) => {
       return 1 - (index / syschat.length) * 0.5;
     };
@@ -218,13 +221,16 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         }
       );
 
+      // 경매 화상 참여
+      const join = async () => {
+        await joinRoom();
+      };
+      join();
+
       return () => {
         room?.disconnect();
       };
     }, []);
-
-    // socket 관련
-    const socketRef = useRef<any>();
 
     useEffect(() => {
       getProductById(productId).then((res) => {
@@ -287,10 +293,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setBidder(data.username);
             setCountDown(10);
             break;
-          case "countdown":
-            break;
-          case "message":
-            break;
+          // case "countdown":
+          //   break;
+          // case "message":
+          //   break;
+          // case "leave":
+          //   break;
           case "join":
             if (data.done) {
               setAuctionStatusText("경매 종료");
@@ -302,14 +310,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               setEverAuctionStarted(true);
             }
             break;
-          case "leave":
-            break;
           case "start":
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
             break;
           case "end":
-            // setEndText("52000원에 만두님이 트랙패드의 낙찰자가 되셨습니다.");
+            setAuctionStatusText("경매 종료");
+            setIsAuctionStarted(false);
             setWinner(data.winner);
             setEndText(
               `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
@@ -450,44 +457,60 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       e.preventDefault();
 
       if (isSeller) {
-        // 경매 시작 로직 작성
         if (everAuctionStarted && !isAuctionStarted) {
           alert("이미 경매가 완료되었습니다.");
         } else if (isAuctionStarted === false && everAuctionStarted === false) {
-          setAuctionStatusText("경매 중");
-          setIsAuctionStarted(true);
-          setEverAuctionStarted(true);
-
-          await joinRoom();
           socketRef.current.emit("start", {
             room: props.auctionRoomId,
             init_price: initialPrice,
           });
-
-          // 경매 종료 로직 작성
-        } else if (isAuctionStarted === true && everAuctionStarted === true) {
-          setAuctionStatusText("경매 종료");
-          setIsAuctionStarted(false);
-
-          await leaveRoom();
-
-          // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
-        }
-      } else {
-        if (isAuctionStarted && !everAuctionStarted) {
-          joinRoom();
-          handleStart();
-          setEverAuctionStarted(true);
           setAuctionStatusText("경매 중");
-        } else if (isAuctionStarted && everAuctionStarted) {
-          // 여기서 판매자 분기쳐야함.
-          handleStop();
-          leaveRoom();
-          setIsAuctionStarted(false);
-          setAuctionStatusText("경매 종료");
-          // alert("경매가 시작되지 않았습니다.");
         }
       }
+
+      // if (isSeller) {
+      //   // 경매 시작 로직 작성
+      //   if (everAuctionStarted && !isAuctionStarted) {
+      //     alert("이미 경매가 완료되었습니다.");
+      //   } else if (isAuctionStarted === false && everAuctionStarted === false) {
+      //     setAuctionStatusText("경매 중");
+      //     setIsAuctionStarted(true);
+      //     setEverAuctionStarted(true);
+
+      //     await joinRoom();
+      //     socketRef.current.emit("start", {
+      //       room: props.auctionRoomId,
+      //       init_price: initialPrice,
+      //     });
+
+      //     // 경매 종료 로직 작성
+      //   } else if (isAuctionStarted === true && everAuctionStarted === true) {
+      //     setAuctionStatusText("경매 종료");
+      //     setIsAuctionStarted(false);
+
+      //     await leaveRoom();
+
+      //     // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
+      //   }
+      // } else {
+      //   if (everAuctionStarted && !isAuctionStarted) {
+      //     alert("이미 경매가 완료되었습니다.");
+      //   } else if (isAuctionStarted && AuctionStatusText === "경매 중") {
+
+      //   }
+      //   if (isAuctionStarted) {
+      //     joinRoom();
+      //     handleStart();
+      //     setEverAuctionStarted(true);
+      //     setAuctionStatusText("경매 중");
+      //   } else if (isAuctionStarted && everAuctionStarted) {
+      //     handleStop();
+      //     leaveRoom();
+      //     setIsAuctionStarted(false);
+      //     setAuctionStatusText("경매 종료");
+      //     // alert("경매가 시작되지 않았습니다.");
+      //   }
+      // }
     };
 
     // 금액을 올바른 형식으로 표시하는 함수
