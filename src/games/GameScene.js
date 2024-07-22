@@ -905,7 +905,7 @@ class GameScene extends Phaser.Scene {
 
       if( user.uid != null && user.uid != undefined ){
         this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-        console.log("move", user);
+        // console.log("move", user);
         this.socket.emit("move", user);
         
         this.lastPositionUpdateTime = time;

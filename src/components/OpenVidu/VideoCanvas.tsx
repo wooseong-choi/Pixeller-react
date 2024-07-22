@@ -25,6 +25,8 @@ type VideoCanvasProps = {
   userName: string;
   auctionRoomId: string;
   isSeller: boolean;
+  setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
+  Room: Room;
 };
 
 export type VideoCanvasHandle = {
@@ -68,7 +70,6 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       props.userName
     ); // 참가자 이름
     const [roomName, setRoomName] = useState<string>(props.auctionRoomId); // 화상 회의 방 이름
-    const isSeller = props.isSeller; // 판매자 여부
 
     useImperativeHandle(ref, () => ({
       leaveRoom,

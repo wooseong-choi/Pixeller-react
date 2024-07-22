@@ -43,6 +43,9 @@ type AuctionSellerProps = {
   auctionPrice: number;
   isSeller: boolean;
   handleClose: () => void;
+  AuctionRoom: Room | undefined;
+  setAuctionRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
+  startVideoStream: () => void;
 };
 
 type Product = {
@@ -68,12 +71,11 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
     // init data
-    const username = props.userName;
     const [isSeller, setIsSeller] = useState(props.isSeller);
     // const URL = "ws://localhost:3333/auction";
     const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
-
+    const username = props.userName;
     const productId = props.auctionRoomId;
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,6 +114,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     } = useSpeechRecognition(initialPrice);
     const [bidAid, setBidAid] = useState(false);
 
+    // 시스템 채팅
     const sysChatEndRef = useRef<HTMLDivElement | null>(null);
     const scrollToBottom = () => {
       sysChatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -119,6 +122,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     // socket 관련
     const socketRef = useRef<any>();
+
+    //////////////////////////
+    // 선언된 변수들 정의 끝 //
+    /////////////////////////
 
     const calculateOpacity = (index) => {
       return 1 - (index / syschat.length) * 0.5;
@@ -155,7 +162,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         room: props.auctionRoomId,
         bid_price: price,
         username: username,
-        product_id: props.auctionRoomId,
+        product_id: productId,
         bid_time: new Date().toISOString(),
       });
     };
@@ -195,7 +202,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const participantName = isSeller ? "seller-" + username : username!;
 
     // OpenVidu token 세션 접속 정보
-    const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
+    // const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
     const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>(
       undefined
     ); // LocalVideoTrack 객체는 로컬 사용자의 비디오 트랙을 나타냄
@@ -209,17 +216,24 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     }));
 
     useEffect(() => {
+      window.removeEventListener("start-video", props.startVideoStream);
+      console.log("제거됨?");
+      return () => {
+        window.addEventListener("start-video", props.startVideoStream);
+        console.log("추가됨?");
+      };
+    }, []);
+
+    useEffect(() => {
       // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
-      checkSellerTrueOrFalse(props.userName, props.auctionRoomId).then(
-        (res) => {
-          if (res) {
-            setIsSeller(true);
-          } else {
-            setIsSeller(false);
-            setAuctionStatusText("경매 전");
-          }
+      checkSellerTrueOrFalse(username, productId).then((res) => {
+        if (res) {
+          setIsSeller(true);
+        } else {
+          setIsSeller(false);
+          setAuctionStatusText("경매 전");
         }
-      );
+      });
 
       // 경매 화상 참여
       const join = async () => {
@@ -228,7 +242,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       join();
 
       return () => {
-        room?.disconnect();
+        // room?.disconnect();
+        leaveRoom();
+        // props.AuctionRoom?.disconnect();
       };
     }, []);
 
@@ -313,6 +329,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           case "start":
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
+            setEverAuctionStarted(true);
             break;
           case "end":
             setAuctionStatusText("경매 종료");
@@ -322,11 +339,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
             );
             setIsEnd(true);
+            handleConfetti();
             setTimeout(() => {
               setIsEnd(false);
               setEndText("");
             }, 5000);
-            handleConfetti();
             break;
           default:
             break;
@@ -341,7 +358,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     async function joinRoom() {
       const room = new Room();
-      setRoom(room);
+      props.setAuctionRoom(room);
+      // setRoom(room);
 
       room.on(
         RoomEvent.TrackSubscribed,
@@ -411,23 +429,25 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     }
 
     async function micController(isMicOpen: boolean) {
-      if (room) {
-        room.localParticipant.setMicrophoneEnabled(isMicOpen);
+      if (props.AuctionRoom) {
+        props.AuctionRoom.localParticipant.setMicrophoneEnabled(isMicOpen);
       }
     }
 
     async function camController(isCamOpen: boolean) {
-      if (room) {
-        room.localParticipant.setCameraEnabled(isCamOpen);
+      if (props.AuctionRoom) {
+        props.AuctionRoom.localParticipant.setCameraEnabled(isCamOpen);
       }
     }
 
     async function leaveRoom() {
       // Leave the room by calling 'disconnect' method over the Room object
-      await room?.disconnect();
+      // await room?.disconnect();
+      await props.AuctionRoom?.disconnect();
 
       // Reset the state
-      setRoom(undefined);
+      // setRoom(undefined);
+      props.setAuctionRoom(undefined);
       setLocalTrack(undefined);
       setRemoteTracks([]);
     }
@@ -465,6 +485,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             init_price: initialPrice,
           });
           setAuctionStatusText("경매 중");
+        } else {
+          setAuctionStatusText("경매 종료");
         }
       }
 
