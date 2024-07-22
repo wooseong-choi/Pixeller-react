@@ -123,6 +123,7 @@
   justify-content: center;
   padding: 10px;
   margin-bottom: 20px;
+  height: auto;
 }
 
 .auction-buyer-video-container .winner {
@@ -188,6 +189,7 @@
   overflow: hidden;
   margin-bottom: 10px;
   z-index: 2;
+  height: auto;
 }
 
 .video-container video {
@@ -412,6 +414,7 @@
   flex-direction: column; /* 세로 방향으로 정렬 */
   justify-content: center; /* 세로 중앙 정렬 */
   border-radius: 5px;
+  width: 100%;
 }
 
 .auction-new-right-right {
