@@ -5,11 +5,12 @@ import { UserDTO } from "../api/dto/user.js";
 import { loginS } from "../api/login.jsx";
 import GLogin from "../components/GLogin";
 import { gsap } from "gsap/gsap-core";
+import { TextPlugin } from "gsap/TextPlugin";
 import CustomButton from "../components/alert/CustomButton.jsx";
 import axios from "axios";
 
 import "../static/css/LoginNew.css";
-
+gsap.registerPlugin(TextPlugin);
 const LoginNew = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -82,7 +83,6 @@ const LoginNew = () => {
           if (res === "success") {
             navigate("/main");
           }
-
         } else {
           alert(response.data.msg);
         }
@@ -92,15 +92,15 @@ const LoginNew = () => {
         return alert("에러가 발생했습니다.");
       });
   };
-  
+
   const handleTransitionEnd = (e) => {
     if (animationDone) {
       if (isLoginView) {
-        document.getElementById('registerView').style.display = "none";
-        document.getElementById('loginView').style.display = "flex";
+        document.getElementById("registerView").style.display = "none";
+        document.getElementById("loginView").style.display = "flex";
       } else {
-        document.getElementById('loginView').style.display = "none";
-        document.getElementById('registerView').style.display = "flex";
+        document.getElementById("loginView").style.display = "none";
+        document.getElementById("registerView").style.display = "flex";
       }
       setAnimationDone(false);
     }
@@ -162,7 +162,10 @@ const LoginNew = () => {
             <button type="button" onClick={handleLogin}>
               Login
             </button>
-            <div className="footer-create" onClick={() => setIsLoginView(false)}>
+            <div
+              className="footer-create"
+              onClick={() => setIsLoginView(false)}
+            >
               Create Account
             </div>
           </form>
@@ -175,12 +178,16 @@ const LoginNew = () => {
         </div>
         <div
           id="registerView"
-          className={`login-page-right ${isLoginView ? "fade-out" : "fade-in"} hide`}
+          className={`login-page-right ${
+            isLoginView ? "fade-out" : "fade-in"
+          } hide`}
           onTransitionEnd={handleTransitionEnd}
         >
           <h2 className="login-page-header">Create Account</h2>
           <form className="create-form">
-            <label htmlFor="username" for="create-username" >Email Address</label>
+            <label htmlFor="username" for="create-username">
+              Email Address
+            </label>
             <input
               type="text"
               id="create-username"
@@ -189,7 +196,9 @@ const LoginNew = () => {
               placeholder="Enter username"
               onChange={handleCreateUsernameChange}
             />
-            <label htmlFor="password"  for="create-password" >Password</label>
+            <label htmlFor="password" for="create-password">
+              Password
+            </label>
             <input
               type="password"
               id="create-password"
@@ -202,7 +211,8 @@ const LoginNew = () => {
               Create
             </button>
             <div className="footer-create">
-              Already have an account? <span onClick={() => setIsLoginView(true)}>Login</span>
+              Already have an account?{" "}
+              <span onClick={() => setIsLoginView(true)}>Login</span>
             </div>
           </form>
         </div>
