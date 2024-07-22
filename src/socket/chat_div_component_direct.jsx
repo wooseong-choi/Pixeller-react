@@ -14,7 +14,7 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
     };
  
     const sendMessage = () => {
-        // alert('메세지 보내기');
+        alert('메세지 보내기!');
         // const msg = document.getElementById("message").value;
         if(message.trim() === "") return;
         const msg = {

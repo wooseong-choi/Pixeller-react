@@ -134,15 +134,20 @@ class GameScene extends Phaser.Scene {
         case "move":
           // console.log(data);
           const user = data.user;
+          if(user){
 
-          // 움직인 유저 정보만 받아와서 갱신해주기
-          if (this.OPlayer[user.uid]) {
-            const otherPlayer = this.OPlayer[user.uid];
-            if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
-              otherPlayer.moveTo(user.x, user.y, user.direction);
-              otherPlayer.setMoving(true);
-            } else {
-              otherPlayer.setMoving(false);
+            if (user.uid != null && user.uid != undefined){
+              
+              // 움직인 유저 정보만 받아와서 갱신해주기
+              if (this.OPlayer[user.uid]) {
+                const otherPlayer = this.OPlayer[user.uid];
+                if (otherPlayer.x !== user.x || otherPlayer.y !== user.y) {
+                  otherPlayer.moveTo(user.x, user.y, user.direction);
+                  otherPlayer.setMoving(true);
+                } else {
+                  otherPlayer.setMoving(false);
+                }
+              }
             }
           }
           break;
@@ -898,11 +903,13 @@ class GameScene extends Phaser.Scene {
         direction: this.Player.direction,
       };
 
-      this.Player.oldPosition = { x: this.player.x, y: this.player.y };
-      console.log("move", user);
-      this.socket.emit("move", user);
-
-      this.lastPositionUpdateTime = time;
+      if( user.uid != null && user.uid != undefined ){
+        this.Player.oldPosition = { x: this.player.x, y: this.player.y };
+        console.log("move", user);
+        this.socket.emit("move", user);
+        
+        this.lastPositionUpdateTime = time;
+      } 
     }
 
     // 조준선 표시 / 숨김

@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ChatDivComponentDirect from './chat_div_component_direct';
 
-const Chat = ({stompClient}) => {
+const Chat = ({stompClient,roomIdFirstSend}) => {
     const [messages, setMessages] = useState([]);
     const [chatList, setChatList] = useState([]);
     const user = jwtDecode(sessionStorage.getItem('user') );
@@ -15,7 +15,7 @@ const Chat = ({stompClient}) => {
     const [chatPage, setChatPage] = useState(0);
     const [chatsize, setChatSize] = useState(10);
 
-    const [chatRoomId, setChatRoomId] = useState(null);
+    const [chatRoomId, setChatRoomId] = useState(roomIdFirstSend);
 
     useEffect(() => {
         if (stompClient) {
