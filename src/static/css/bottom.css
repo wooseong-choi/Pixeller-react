@@ -575,6 +575,16 @@ body {
   padding: 5px 10px;
   margin-bottom: 5px;
   font-size: 1.5em;
+  
+  
+  background-color: #fff;
+  padding: 10px 20px;
+  margin: 10px 0;
+  position: relative;
+  border: 2px solid #000;
+  transform: rotate(-2deg); /* Slight rotation for effect */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  margin-top: 20px;
 }
 
 .chat_list_div .chat-message {
@@ -585,6 +595,12 @@ body {
 .chat_list_div .chat-name {
   display: block;
   color: #a1a1a1;
+  position: absolute;
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  color: darkblue;
+  transform: rotate(2deg);
 }
 
 .chat_list_div .chat-name.me {
@@ -624,5 +640,8 @@ body {
   opacity: 1;
   cursor: pointer;
 }
+
+
+
 
 
