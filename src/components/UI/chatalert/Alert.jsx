@@ -22,8 +22,11 @@ const Alert = ({ message, senderName, duration, roomId, setRoomIdFirstSend }) =>
 
   return (
     <div className={`alert ${show ? 'show' : 'hide'}`} onClick={roomOpenHandler}>
+      <div className='content-div'>
         <span className='sender'>{senderName}</span>
         <span className='message'>{message}</span>
+      </div>
+      <button className='close' onClick={() => setShow(false)}>확인하기</button>
     </div>
   );
 };
