@@ -17,6 +17,7 @@ import ProductBox from "../components/UI/ProductBox.jsx";
 import AlertAuction from "../components/alert/AlertAuction.jsx";
 import SellerProducts from "../components/UI/SellerProducts.jsx";
 import ChatBox from "../components/UI/ChatBox.jsx";
+import Alert from "../components/UI/chatalert/Alert.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
@@ -39,6 +40,22 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const OpenViduRef = useRef(null);
   const MainVidRef = useRef(null);
+
+  
+  const [alertMessage, setAlertMessage] = useState(null);
+
+  const showAlert = () => {
+      // setAlertMessage('This is an alert message!');
+      setTimeout(() => {
+          setAlertMessage(null);
+      }, 3000); // 3초 후에 alert를 숨깁니다.
+  };
+
+  useEffect(() => {
+      if (alertMessage != null) {
+          showAlert();
+      }
+  }, [alertMessage]);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -250,7 +267,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               {isPLListOpen ? <ProductBox closePLModal={closePLModal} setRoomIdFirstSend={setRoomIdFirstSend} /> : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}/>
+              <ChatBox roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend} setAlertMessage={setAlertMessage}/>
             </div>
           </div>
           <Bottom
@@ -265,6 +282,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
           />
+          {alertMessage != null ? 
+          <Alert message={alertMessage.message} senderName={alertMessage.senderName} duration={3000} roomId={alertMessage.roomId} setRoomIdFirstSend={setRoomIdFirstSend} />
+          :null}
         </div>
       </div>
     </>
