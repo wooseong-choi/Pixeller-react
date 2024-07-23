@@ -194,13 +194,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     // *** 경매 타이머 이벤트 ***
     const [countDown, setCountDown] = useState(10);
 
-    function updateNumber(timer): void {
-      if (countDown > 0) {
-        setCountDown((prev) => prev - 1);
-      } else {
-        clearInterval(timer);
-      }
-    }
+    // function updateNumber(timer): void {
+    //   if (countDown > 0) {
+    //     setCountDown((prev) => prev - 1);
+    //   } else {
+    //     clearInterval(timer);
+    //   }
+    // }
 
     // OpenVidu 토큰 요청 정보
     const roomName = props.auctionRoomId + "auction";
@@ -227,6 +227,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     };
 
     useEffect(() => {
+      console.log("변경이 감지되었습니다. joinReady: ", joinReady);
       if (joinReady) {
         console.log("join ready, joining room");
         join();
@@ -282,7 +283,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           case "bid":
             setMaxBidPrice(data.bid_price);
             setBidder(data.username);
-            setCountDown(10);
+            // setCountDown(10);
+            bidSound
+              .play()
+              .catch((error) => console.error("Error playing sound:", error));
             break;
           // case "countdown":
           //   break;
@@ -328,8 +332,11 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       checkSellerTrueOrFalse(username, productId).then((res) => {
         if (res) {
           setIsSeller(true);
+          setParticipantName("seller-" + username);
+          console.log("판매자입니다.");
         } else {
           setIsSeller(false);
+          console.log("구매자입니다.");
         }
         setJoinReady(true);
       });

@@ -280,6 +280,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 <ProductBox
                   closePLModal={closePLModal}
                   setRoomIdFirstSend={setRoomIdFirstSend}
+                  setAuctionProduct={setAuctionProduct}
+                  setIsAuctionOpen={setIsAuctionOpen}
                 />
               ) : null}
             </div>
@@ -291,7 +293,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
           </div>
-          <Bottom
+          {/* <Bottom
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
@@ -303,7 +305,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
             setAuctionProduct={setAuctionProduct}
-          />
+          /> */}
           {alertMessage != null ? (
             <Alert
               message={alertMessage.message}
