@@ -48,11 +48,13 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
                 ))}
                 <div ref={messageEndRef}></div>
             </div>
-            <div className="inputBox">                
-                <input type="text" id="message" placeholder="메세지를 입력하세요!"
-                value={message}
-                onChange={handleMessageChange}
-                onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+            <div className="inputBox">  
+                <div className="inputDiv">   
+                    <input type="text" id="message" placeholder="메세지를 입력하세요!"
+                    value={message}
+                    onChange={handleMessageChange}
+                    onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+                </div>               
             </div>
         </>
     );
