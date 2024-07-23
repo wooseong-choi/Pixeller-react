@@ -354,7 +354,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setIsAuctionStarted(false);
             setWinner(data.winner);
             setEndText(
-              `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
+              `축하합니다! ${data.winner}님이 ${data.bid_price}원에 낙찰받으셨습니다!`
             );
             setIsEnd(true);
             handleConfetti();
