@@ -155,12 +155,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       const defaults = {
         spread: 360,
         ticks: 70,
-        gravity: 0,
-        decay: 0.95,
-        startVelocity: 30,
+        gravity: 3,
+        decay: 0.97,
+        startVelocity: 20,
         zIndex: 1003,
         shapes: ['circle'],
-        colors: ['#FFD700', '#FFDF00', '#F0E68C']
+        colors: ['#FFD700', '#FFDF00', '#F0E68C'],
+        origin: { x: 0.5, y: 0.3 }
       };
     
       confetti({
@@ -169,7 +170,14 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         scalar: 2,
         shapes: ['circle']
       });
-    
+      
+      confetti({
+        ...defaults,
+        particleCount: 80,
+        scalar: 2,
+        shapes: ['circle']
+      });
+      
       confetti({
         ...defaults,
         particleCount: 80,

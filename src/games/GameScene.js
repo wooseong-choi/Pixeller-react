@@ -744,13 +744,24 @@ class GameScene extends Phaser.Scene {
     for (let key in this.temp_OPlayer) {
       const user = this.temp_OPlayer[key];
 
+      if (!this.OPlayer[key]) {
+        console.error(`OPlayer not initialized for key: ${key}`);
+        continue;
+      }
+
+
       const rand_0_9 = Math.floor(Math.random() * 6);
       const oplayer_sprite = this.OPlayer[key].Create(
         user.x,
         user.y,
         "player" + rand_0_9
       );
-      this.players.add(oplayer_sprite);
+      // this.players.add(oplayer_sprite);
+      if (oplayer_sprite && oplayer_sprite.body) {
+        this.players.add(oplayer_sprite);
+      } else {
+        console.error(`Failed to create valid sprite for OPlayer: ${key}`);
+      }
     }
 
     // 다른 플레이어들을 players 그룹에 추가하여 충돌 판정 관리
