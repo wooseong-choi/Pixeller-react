@@ -79,7 +79,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const bidSound = new Audio("/sounds/bidding_sound.wav");
+    // const bidSound = new Audio("/sounds/bidding_sound.wav");
+    const bidSound = new Audio("/sounds/bidding_sound.mp3");
 
     // 경매 관련
     const [AuctionStatusText, setAuctionStatusText] = useState("경매 시작");
