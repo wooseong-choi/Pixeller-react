@@ -6,7 +6,7 @@ import Swiper from 'swiper/bundle';
 import '../../../static/css/swiper-bundle.min.css';
 import { axiosCRUDInstance } from "../../../api/axios.jsx";
 
-const ProductList = ({products, setRoomIdFirstSend}) => {
+const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuctionOpen}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Throttle function to limit the execution of the event handler
@@ -34,7 +34,7 @@ const ProductList = ({products, setRoomIdFirstSend}) => {
           prevIndex > 0 ? prevIndex - 1 : prevIndex
         );
       }
-    },1000); // 1 second delay
+    },500); // 1 second delay
 
     window.addEventListener("wheel", handleSwipe);
 
@@ -78,6 +78,11 @@ const ProductList = ({products, setRoomIdFirstSend}) => {
     }
   }
 
+  const handleSetAuctionProduct = (productId) => {
+    setAuctionProduct(productId);
+    setIsAuctionOpen(true);
+  };
+
   // console.log(products);
   return (
     <>
@@ -119,7 +124,10 @@ const ProductList = ({products, setRoomIdFirstSend}) => {
                   </div>
                   <div className="new-product-DM-div">
                     <div>
-                    <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기</span>
+                      <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기</span>
+                    </div>
+                    <div>
+                      <span onClick={()=>{handleSetAuctionProduct(item);}} data-uid={item.memberDto.memberId} >경매하러가기</span>
                     </div>
                   </div>
                 </div>
