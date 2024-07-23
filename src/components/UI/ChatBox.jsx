@@ -8,11 +8,12 @@ import ChatPublic from "../../socket/chat_public";
 
 const URL = '//lionreport.pixeller.net/chat';
 
-const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend}) => {
+const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend, setAlertMessage}) => {
     const [chatPublicComponent, setChatPublicComponent] = useState(null);
     const [chatPrivateComponent, setChatPrivateComponent] = useState(null);
     const [stompClient, setStompClient] = useState(null);
     const [chatPrivateShow, setChatPrivateShow] = useState(false);
+
 
     useEffect(() => {
         if (!stompClient) {
@@ -31,6 +32,7 @@ const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend}) => {
                         setStompClient(client);
                         client.subscribe(`/sub/chat-room/info/${user.uid}`, (message) => {
                             console.log('알람 확인',JSON.parse(message.body));
+                            setAlertMessage(JSON.parse(message.body));
                         });
                     },
                     (error) => {
@@ -56,21 +58,23 @@ const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend}) => {
         }
     }, [stompClient, chatPublicComponent]);
     
+    useEffect(() => {
+        if (stompClient && roomIdFirstSend != null) {
+            setChatPrivateComponent(null);
+            setTimeout(() => {
+                setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}  />);
+            },0);
+            setChatPrivateShow(true);
+        }   
+    }, [roomIdFirstSend]);
     
     useEffect(() => {
         if (stompClient && !chatPrivateComponent) {
             setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend} />);
-            setChatPrivateShow(true);
+            // setChatPrivateShow(true);
         }   
     }, [stompClient, chatPrivateComponent]);
     
-    // useEffect(() => {
-    //     if (stompClient) {
-    //         setChatPrivateComponent(<ChatDirect stompClient={stompClient} roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}  />);
-    //         setChatPrivateShow(true);
-    //     }   
-    // }, [stompClient, roomIdFirstSend]);
-
 
     const resetRoomId = () => {
         setRoomIdFirstSend(null);
