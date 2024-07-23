@@ -31,7 +31,7 @@ const ProductDetailNew = ({ productData }) => {
             {productData.fileImage.map((url, index) => (
               <>
                 <div key={index} className="swiper-slide">
-                  <img src={url} alt="product" />
+                  <img src={url} alt={`product-${index}`} />
                 </div>
               </>
             ))}

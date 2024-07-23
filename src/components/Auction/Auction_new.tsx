@@ -143,10 +143,46 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     // 경매 종료 시 낙찰자를 축하하는 함수
     const handleConfetti = () => {
       confetti({
-        particleCount: 200,
-        spread: 90,
+        particleCount: 1000,
+        spread: 360,
         origin: { y: 0.6 },
         zIndex: 1003,
+      });
+    };
+
+    // 입찰 효과 함수
+    const triggerCoinConfetti = () => {
+      const defaults = {
+        spread: 360,
+        ticks: 70,
+        gravity: 3,
+        decay: 0.97,
+        startVelocity: 20,
+        zIndex: 1003,
+        shapes: ['circle'],
+        colors: ['#FFD700', '#FFDF00', '#F0E68C'],
+        origin: { x: 0.5, y: 0.3 }
+      };
+    
+      confetti({
+        ...defaults,
+        particleCount: 80,
+        scalar: 2,
+        shapes: ['circle']
+      });
+      
+      confetti({
+        ...defaults,
+        particleCount: 80,
+        scalar: 2,
+        shapes: ['circle']
+      });
+      
+      confetti({
+        ...defaults,
+        particleCount: 80,
+        scalar: 3,
+        shapes: ['circle']
       });
     };
 
@@ -166,7 +202,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         product_id: productId,
         bid_time: new Date().toISOString(),
       });
-
+      
+      triggerCoinConfetti();
       bidSound
         .play()
         .catch((error) => console.error("Error playing sound:", error));
@@ -284,6 +321,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setMaxBidPrice(data.bid_price);
             setBidder(data.username);
             // setCountDown(10);
+            triggerCoinConfetti();
             bidSound
               .play()
               .catch((error) => console.error("Error playing sound:", error));
