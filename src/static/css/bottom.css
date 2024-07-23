@@ -191,7 +191,7 @@ body {
 }
 
 .chat_list {
-  height: calc( 50vh - 40px ); /* 전체 화면 높이 */
+  height: calc( 80vh - 40px ); /* 전체 화면 높이 */
   padding-bottom: 40px;
   background-color: rgba(255, 255, 255, 0.2);
 } 
@@ -200,6 +200,13 @@ body {
   background-color: rgb(255, 255, 255);
   position: absolute;
   display: none;
+} 
+.chat_list.private.active {
+  display: block;  
+}
+
+.chat_list.minimize {
+  height: 0; /* 전체 화면 높이 */
 } 
 
 .product_list.search-mode .product-list-wrap {
@@ -560,6 +567,7 @@ body {
   max-width: 100%;
   padding: 5px 10px;
   margin-bottom: 5px;
+  font-size: 1.5em;
 }
 
 .chat_list_div .chat-message {
@@ -579,5 +587,34 @@ body {
 .inputBox .inputDiv {
   width: 90%;
   margin: auto;
+}
+
+.chat-room-btn-box {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  display: flex;
+}
+
+.win-minimize {
+  background: url("../../../public/icon/svg/window_minimize.svg") no-repeat 0px center;
+}
+.return-menu {
+  background: url("../../../public/icon/svg/return-list.svg") no-repeat 0px center;
+  background-size: contain;
+}
+.show-private {
+  background: url("../../../public/icon/svg/list_icon.svg") no-repeat 0px center;
+  background-size: contain;
+}
+.win-minimize, .return-menu, .show-private {
+  height: 30px;
+  width: 30px;
+  opacity: 0.5;
+}
+.win-minimize:hover, .return-menu:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 

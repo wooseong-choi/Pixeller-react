@@ -46,35 +46,35 @@ const List = ({
 
   const [sendChatId, setSendChatId] = useState(null);
 
-  useEffect(() => {
-    if (!stompClient) {
-        const connect = () => {
-            const socket = new SockJS(URL);
-            const client = Stomp.over(socket);
+  // useEffect(() => {
+  //   if (!stompClient) {
+  //       const connect = () => {
+  //           const socket = new SockJS(URL);
+  //           const client = Stomp.over(socket);
     
-            // Retrieve the token (this is a simplified example, you might get it from an auth context or API)
-            const token = sessionStorage.getItem('user');
-            // Connect with token in headers
-            client.connect(
-                { 'Authorization': `Bearer ${token}` },
-                (frame) => {
-                    console.log('Connected: ' + frame);
-                    setStompClient(client);
-                },
-                (error) => {
-                    console.error('Connection error: ', error);
-                }
-            );
+  //           // Retrieve the token (this is a simplified example, you might get it from an auth context or API)
+  //           const token = sessionStorage.getItem('user');
+  //           // Connect with token in headers
+  //           client.connect(
+  //               { 'Authorization': `Bearer ${token}` },
+  //               (frame) => {
+  //                   console.log('Connected: ' + frame);
+  //                   setStompClient(client);
+  //               },
+  //               (error) => {
+  //                   console.error('Connection error: ', error);
+  //               }
+  //           );
     
-            return () => {
-                if (client.connected) {
-                    client.disconnect();
-                }
-            };
-        };
-        connect();
-    }
-  }, [stompClient]);
+  //           return () => {
+  //               if (client.connected) {
+  //                   client.disconnect();
+  //               }
+  //           };
+  //       };
+  //       connect();
+  //   }
+  // }, [stompClient]);
   
   useEffect(() => {
     const handleUserList = (e) => {
@@ -91,23 +91,23 @@ const List = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (stompClient) {
-      if (!chatPublicComponent) {
-        setChatPublicComponent(<ChatPublic stompClient={stompClient} />);
-      }
-      if (!chatPrivateComponent) {
-        setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
-      }
+  // useEffect(() => {
+  //   if (stompClient) {
+  //     if (!chatPublicComponent) {
+  //       setChatPublicComponent(<ChatPublic stompClient={stompClient} />);
+  //     }
+  //     if (!chatPrivateComponent) {
+  //       setChatPrivateComponent(<ChatDirect stompClient={stompClient} />);
+  //     }
 
-    }
-  }, [stompClient, chatPublicComponent, chatPrivateComponent]);
+  //   }
+  // }, [stompClient, chatPublicComponent, chatPrivateComponent]);
 
-  useEffect(() => {
-    // if (!chatUserListComponent) {
-    setChatUserListComponent(<ChatUserList stompClient={stompClient} chatUserList={chatUserList} setSendChatId={setSendChatId} />);
-    // }
-  },[chatUserList, sendChatId]);
+  // useEffect(() => {
+  //   // if (!chatUserListComponent) {
+  //   setChatUserListComponent(<ChatUserList stompClient={stompClient} chatUserList={chatUserList} setSendChatId={setSendChatId} />);
+  //   // }
+  // },[chatUserList, sendChatId]);
 
   const toggleMenu = (val, method) => {
     method(!val);
@@ -175,7 +175,7 @@ const List = ({
         <ProductList openPDModal={openPDModal} openPCModal={openPCModal} setTotalProductCounts={setTotalProductCounts}/>
       </div>
 
-      <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>
+      {/* <div className={`side-menu-chat ${isChatOpen ? "open" : ""}`}>
         <button
           className="menu-toggle"
           onClick={() => {
@@ -190,7 +190,7 @@ const List = ({
           </div>
         </div>
 
-        {/* <nav className="chat-content public active">{chatPublicComponent}</nav> */}
+        <nav className="chat-content public active">{chatPublicComponent}</nav>
         <nav className="chat-content private ">{chatPrivateComponent}</nav>
         <nav className="chat-content user-list ">{chatUserListComponent}</nav>
         <div className="chat-rooms">
@@ -198,7 +198,7 @@ const List = ({
           <div className="chat-room private" onClick={chatRoomHandler}></div>
           <div className="chat-room user-list " onClick={chatRoomHandler}></div>
         </div>
-      </div>
+      </div> */}
       <Alert stompClient={stompClient}/>
     </>
   );

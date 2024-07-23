@@ -85,6 +85,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const bidSound = new Audio('/sounds/bidding_sound.wav');
+
     // 경매 관련
     const [AuctionStatusText, setAuctionStatusText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
@@ -170,6 +172,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         product_id: productId,
         bid_time: new Date().toISOString(),
       });
+
+      bidSound.play().catch(error => console.error("Error playing sound:", error));
     };
 
     const handleBid = (event) => {

@@ -607,7 +607,7 @@ class GameScene extends Phaser.Scene {
     this.specialAreas.forEach((area) => {
       const x = area.x - area.width / 2;
       const y = area.y - area.height / 2;
-      graphics.strokeRect(x, y, area.width, area.height);
+      // graphics.strokeRect(x, y, area.width, area.height);
     });
 
     graphics.lineStyle(2, 0x00ff00);
@@ -615,7 +615,7 @@ class GameScene extends Phaser.Scene {
     this.centralAreas.forEach((area) => {
       const x = area.x - area.width / 2;
       const y = area.y - area.height / 2;
-      graphics.strokeRect(x, y, area.width, area.height);
+      // graphics.strokeRect(x, y, area.width, area.height);
       this.createMessageBox(area);
     });
   }
@@ -623,7 +623,7 @@ class GameScene extends Phaser.Scene {
   // setAlpha : 투명도 조절
   // setOrigin : 텍스트의 중심점 조절
   createMessageBox(area) {
-    const messageBox = this.add.container(area.x, area.y - 50).setAlpha(0);
+    const messageBox = this.add.container(area.x, area.y - 100).setAlpha(0);
     const background = this.add.graphics();
     background.fillStyle(0x000000, 0.7);
     background.fillRoundedRect(-100, -20, 200, 40, 10);
@@ -799,15 +799,17 @@ class GameScene extends Phaser.Scene {
       // console.log('Fetched products:', products);
 
       const areas = [
-        { x: 1260, y: 978, width: 112, height: 50 },
-        { x: 1618, y: 978, width: 112, height: 50 },
-        { x: 1618, y: 1200, width: 112, height: 50 },
+        { x: 1444, y: 1127, width: 220, height: 160 },
       ];
-      areas.forEach((area, index) => {
-        if (index < products.length) {
-          this.displayProduct(products, area, index);
-        }
-      });
+      
+      if (products.length > 0) {
+        this.displayProduct(products, areas[0], 0);
+      }
+      // areas.forEach((area, index) => {
+      //   if (index < products.length) {
+      //     this.displayProduct(products, area, index);
+      //   }
+      // });
 
     } catch (error) {
       console.error("Failed to load products", error);
