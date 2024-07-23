@@ -41,11 +41,9 @@ type AuctionSellerProps = {
   userName: string;
   auctionRoomId: string;
   auctionPrice: number;
-  isSeller: boolean;
   handleClose: () => void;
   AuctionRoom: Room | undefined;
   setAuctionRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
-  startVideoStream: () => void;
 };
 
 type Product = {
@@ -71,12 +69,19 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
     // init data
-    const [isSeller, setIsSeller] = useState(props.isSeller);
+    const [isSeller, setIsSeller] = useState(false);
     // const URL = "ws://localhost:3333/auction";
     const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
     const username = props.userName;
     const productId = props.auctionRoomId;
+
+    useEffect(() => {
+      if (productId === "" || productId === undefined || productId === null) {
+        alert("상품 정보가 없습니다.");
+        return;
+      }
+    }, []);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -214,15 +219,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       micController,
       camController,
     }));
-
-    useEffect(() => {
-      window.removeEventListener("start-video", props.startVideoStream);
-      console.log("제거됨?");
-      return () => {
-        window.addEventListener("start-video", props.startVideoStream);
-        console.log("추가됨?");
-      };
-    }, []);
 
     useEffect(() => {
       // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
@@ -447,7 +443,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
       // Reset the state
       // setRoom(undefined);
-      props.setAuctionRoom(undefined);
+      // props.setAuctionRoom(undefined);
       setLocalTrack(undefined);
       setRemoteTracks([]);
     }

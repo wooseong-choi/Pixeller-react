@@ -39,7 +39,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const [room, setRoom] = useState(undefined); // Room 객체 화상 회의에 대한 정보를 담고 있는 객체
 
-  const OpenViduRef = useRef(null);
+  const AuctionVidRef = useRef(null);
   const MainVidRef = useRef(null);
 
   useEffect(() => {
@@ -64,10 +64,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const startVideoStream = async (e) => {
     e.preventDefault();
+    console.log("현재", isViduOpen);
     if (isViduOpen && MainVidRef.current) {
-      MainVidRef.current.leaveRoom();
-    } else {
-      if (OpenViduRef.current) OpenViduRef.current.leaveRoom();
+      console.log("그래서 여기 동작함?");
+      await MainVidRef.current.leaveRoom();
     }
     isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
@@ -91,7 +91,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const closeAuctionModal = () => {
     setIsAuctionOpen(false);
-    if (OpenViduRef.current) OpenViduRef.current.leaveRoom();
+    if (AuctionVidRef.current) AuctionVidRef.current.leaveRoom();
   };
 
   const setAuctionProduct = (product) => {
@@ -100,13 +100,13 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const toggleMIC = () => {
     setIsMicOpen((prev) => !prev);
-    if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
+    if (AuctionVidRef.current) AuctionVidRef.current.micController(isMicOpen);
     if (MainVidRef.current) MainVidRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
     setIsCamOpen((prev) => !prev);
-    if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
+    if (AuctionVidRef.current) AuctionVidRef.current.camController(isCamOpen);
     if (MainVidRef.current) MainVidRef.current.camController(isCamOpen);
   };
 
@@ -219,15 +219,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 ) : null}
               </div>
               <div>
-                {isAuctionOpen ? (
+                {isAuctionOpen && auctionProduct ? (
                   <Auction_new
                     handleClose={closeAuctionModal}
-                    isSeller={true}
                     userName={userName}
                     auctionRoomId={auctionProduct.productId}
                     auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
-                    ref={OpenViduRef}
+                    ref={AuctionVidRef}
                     setAuctionRoom={setRoom}
                     AuctionRoom={room}
                   />

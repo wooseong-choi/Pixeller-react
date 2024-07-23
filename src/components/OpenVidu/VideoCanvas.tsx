@@ -85,12 +85,14 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 
       return () => {
         console.log("component unmount");
+        leaveRoom();
       };
     }, []);
 
     async function joinRoom() {
       const room = new Room();
-      setRoom(room);
+      props.setRoom(room);
+      // setRoom(room);
 
       room.on(
         RoomEvent.TrackSubscribed,
@@ -182,10 +184,12 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
 
     async function leaveRoom() {
       // Leave the room by calling 'disconnect' method over the Room object
-      await room?.disconnect();
+      // await room?.disconnect();
+      await props.Room?.disconnect();
 
       // Reset the state
-      setRoom(undefined);
+      // props.setRoom(undefined);
+      // setRoom(undefined);
       setLocalTrack(undefined);
       setRemoteTracks([]);
     }
