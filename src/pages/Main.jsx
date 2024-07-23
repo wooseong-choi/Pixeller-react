@@ -18,8 +18,8 @@ import { jwtDecode } from "jwt-decode";
 import { Room } from "livekit-client";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
-  // const userName = sessionStorage.getItem("username");
-  const userName = jwtDecode(sessionStorage.getItem("user")).username;
+  const userName = sessionStorage.getItem("username");
+  // const userName = jwtDecode(sessionStorage.getItem("user")).username;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -48,6 +48,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       "https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
+    console.log("room", room);
 
     return () => {
       document.head.removeChild(link);
@@ -64,12 +65,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const startVideoStream = async (e) => {
     e.preventDefault();
-    console.log("현재", isViduOpen);
-    if (isViduOpen && MainVidRef.current) {
-      console.log("그래서 여기 동작함?");
-      await MainVidRef.current.leaveRoom();
+    console.log("debug: ", isViduOpen);
+    console.log("room: ", room);
+    if (isViduOpen) {
+      if (MainVidRef.current) MainVidRef.current.leaveRoom();
+      setIsViduOpen(false);
+    } else {
+      setIsViduOpen(true);
     }
-    isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
 
   const openPDModal = (product) => {
@@ -223,6 +226,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   <Auction_new
                     handleClose={closeAuctionModal}
                     userName={userName}
+                    isSeller={true}
                     auctionRoomId={auctionProduct.productId}
                     auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
@@ -264,7 +268,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ) : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}/>
+              <ChatBox
+                roomIdFirstSend={roomIdFirstSend}
+                setRoomIdFirstSend={setRoomIdFirstSend}
+              />
             </div>
           </div>
           <Bottom
