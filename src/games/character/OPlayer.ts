@@ -186,6 +186,7 @@ class OPlayer implements iChara {
   // }
 
   async moveTo(x: number, y: number, direction: string) {
+    // Calculate the distance to the target
     if (!this.player) {
       console.error("Player not initialized");
       return;
@@ -194,89 +195,40 @@ class OPlayer implements iChara {
     const dy = y - this.player.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     this.direction = direction;
-  
-    const duration = (distance / this.speed) * 10;
-  
+
+    // Calculate the duration for the tween based on the distance to the target
+    const duration = (distance / this.speed) * 10; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
+
+    // Create a tween that updates the player's position
     return new Promise<void>((resolve) => {
-      if (this.obj && this.obj.tweens && typeof this.obj.tweens.add === 'function') {
-        // player tween
-        this.obj.tweens.add({
-          targets: this.player,
-          x: x,
-          y: y,
-          duration: duration,
-          ease: "Linear",
-          onUpdate: () => {
-            if (this.nameText) {
-              this.nameText.setPosition(this.player.x, this.player.y - 28);
-            }
-          },
-          onComplete: () => {
-            this.onMove = false;
-            if (this.player && this.player.anims) this.player.anims.pause();
-            resolve();
-          },
-        });
-  
-        if (this.onMove && this.player.anims) {
-          const animationKey = `${this.preset}_walk_${direction}`;
-          if (this.player.anims.exists(animationKey)) {
-            this.player.play(animationKey, true);
-          } else {
-            console.warn(`Animation ${animationKey} not found`);
-          }
-        }
-      } else {
-        console.error("Tween manager not available");
-        resolve();
+      this.obj.tweens.add({
+        targets: [this.nameText],
+        x: x,
+        y: y - 28,
+        duration: duration,
+        ease: "Linear",
+        onComplete: () => {
+          resolve();
+        },
+      });
+      this.obj.tweens.add({
+        targets: [this.player],
+        x: x,
+        y: y,
+        duration: duration,
+        ease: "Linear",
+        onComplete: () => {
+          this.onMove = false;
+          if (this.player.anims) this.player.anims.pause();
+          resolve();
+        },
+      });
+
+      if (this.onMove && this.player && this.player.anims) {
+        this.player.anims.play(`${this.preset}_${direction}`, true);
       }
     });
   }
-  // 0724 보존식
-  // async moveTo(x: number, y: number, direction: string) {
-  //   // Calculate the distance to the target
-  //   if (!this.player) {
-  //     console.error("Player not initialized");
-  //     return;
-  //   }
-  //   const dx = x - this.player.x;
-  //   const dy = y - this.player.y;
-  //   const distance = Math.sqrt(dx * dx + dy * dy);
-  //   this.direction = direction;
-
-  //   // Calculate the duration for the tween based on the distance to the target
-  //   const duration = (distance / this.speed) * 10; // speed is in pixels per second, so multiply by 1000 to get duration in milliseconds
-
-  //   // Create a tween that updates the player's position
-  //   return new Promise<void>((resolve) => {
-  //     this.obj.tweens.add({
-  //       targets: [this.nameText],
-  //       x: x,
-  //       y: y - 28,
-  //       duration: duration,
-  //       ease: "Linear",
-  //       onComplete: () => {
-  //         resolve();
-  //       },
-  //     });
-  //     this.obj.tweens.add({
-  //       targets: [this.player],
-  //       x: x,
-  //       y: y,
-  //       duration: duration,
-  //       ease: "Linear",
-  //       onComplete: () => {
-  //         this.onMove = false;
-  //         if (this.player.anims) this.player.anims.pause();
-  //         resolve();
-  //       },
-  //     });
-
-  //     if (this.onMove && this.player && this.player.anims) {
-  //       this.player.anims.play(`${this.preset}_${direction}`, true);
-  //     }
-  //   });
-  // }
 
   moveToBlock(x: number, y: number) {
     if (!this.player) {
