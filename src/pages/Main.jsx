@@ -265,7 +265,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ) : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox roomIdFirstSend={roomIdFirstSend} />
+              <ChatBox roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend}/>
             </div>
           </div>
           <Bottom

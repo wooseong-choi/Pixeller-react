@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ChatDivComponentDirect from './chat_div_component_direct';
 
-const Chat = ({stompClient,roomIdFirstSend}) => {
+const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
     const [messages, setMessages] = useState([]);
     const [chatList, setChatList] = useState([]);
     const user = jwtDecode(sessionStorage.getItem('user') );
@@ -22,7 +22,7 @@ const Chat = ({stompClient,roomIdFirstSend}) => {
             const subscribe = () => {
                 // stompClient.send(`/sub/chat-room/${user.uid}?page=${page}&size=${size}`);
                 stompClient.subscribe(`/sub/chat-room/${user.uid}`, (res) => {
-                    // console.log('TㅅT',res);
+                    console.log('TㅅT',res);
                     showChatList(JSON.parse(res.body));
                 });
                 stompClient.send(`/pub/chat-room/${user.uid}`,{},JSON.stringify({
@@ -52,12 +52,14 @@ const Chat = ({stompClient,roomIdFirstSend}) => {
     }, [chatRoomId]);
 
     const showChatList = (cl) => {
+        console.log('showChatList',cl);
         if(cl.content.length > 0){
+            console.log(cl.content);
             if(cl.currentPage === 0) setChatList(cl.content);
             else if(cl.currentPage > 0) setChatList(prevList => [...cl.content, ...prevList]);
         }
         // setMessages(prevMessages => [...prevMessages, message]);
-        // console.log(chatList);
+        console.log(chatList);
     }; 
 
     const joinRoomHandler = (e) => {
@@ -65,12 +67,12 @@ const Chat = ({stompClient,roomIdFirstSend}) => {
         console.log(roomId);
         const splitedRoomId = roomId.split('-')[1];
         setChatRoomId(splitedRoomId);
-
-        setRoomListNavigater();
+        setRoomIdFirstSend(splitedRoomId);
+        // setRoomListNavigater();
     }
 
     const setRoomListNavigater = () => {
-        document.querySelector('.chat-room.private').classList.add('room-list-navi');
+        // document.querySelector('.chat-room.private').classList.add('room-list-navi');
     }
     
     const showMessage = (message) => {
@@ -103,6 +105,7 @@ const Chat = ({stompClient,roomIdFirstSend}) => {
                 {chatList.map((chat, index) => (
                     <div key={index} id={`roomid-${chat.chatRoomId}`} className={`chatbox `} onClick={joinRoomHandler}>
                         <span className="chat-room-id">{chat.chatRoomId}</span>
+                        <span className="chat-room-name">{chat.name}</span>
                         <span className="chat-room-message">{chat.message}</span>
                     </div>
                 ))}
