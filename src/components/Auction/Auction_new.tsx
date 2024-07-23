@@ -39,6 +39,7 @@ type TrackInfo = {
 
 type AuctionSellerProps = {
   userName: string;
+  isSeller: boolean;
   auctionRoomId: string;
   auctionPrice: number;
   handleClose: () => void;
@@ -69,7 +70,8 @@ let LIVEKIT_URL = "https://openvidu.pixeller.net/"; // The URL of your LiveKit s
 const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
   (props, ref) => {
     // init data
-    const [isSeller, setIsSeller] = useState(false);
+    const [isSeller, setIsSeller] = useState(props.isSeller);
+    const [joinReady, setJoinReady] = useState(false);
     // const URL = "ws://localhost:3333/auction";
     const URL = "//api.pixeller.net/auction";
     const token = sessionStorage.getItem("user");
@@ -85,7 +87,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const bidSound = new Audio('/sounds/bidding_sound.wav');
+    const bidSound = new Audio("/sounds/bidding_sound.wav");
 
     // 경매 관련
     const [AuctionStatusText, setAuctionStatusText] = useState("경매 시작");
@@ -173,7 +175,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         bid_time: new Date().toISOString(),
       });
 
-      bidSound.play().catch(error => console.error("Error playing sound:", error));
+      bidSound
+        .play()
+        .catch((error) => console.error("Error playing sound:", error));
     };
 
     const handleBid = (event) => {
@@ -224,6 +228,15 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       camController,
     }));
 
+    // 경매 화상 참여
+    const join = async () => {
+      await joinRoom();
+    };
+
+    useEffect(() => {
+      join();
+    }, [joinReady]);
+
     useEffect(() => {
       // axios 날려서 현재 플레이어가 판매자인지 구매자인지 확인
       checkSellerTrueOrFalse(username, productId).then((res) => {
@@ -233,13 +246,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setIsSeller(false);
           setAuctionStatusText("경매 전");
         }
+        setJoinReady(true);
       });
-
-      // 경매 화상 참여
-      const join = async () => {
-        await joinRoom();
-      };
-      join();
 
       return () => {
         // room?.disconnect();
