@@ -15,6 +15,7 @@ const App = ({
   setIsCamOpen,
   isCamOpen,
   setIsAuctionAlert,
+  setAuctionProduct,
 }) => {
   const currentUser = sessionStorage.getItem("username");
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
@@ -25,6 +26,7 @@ const App = ({
 
   const handleDEBUG = () => {
     setIsAuctionAlert(true);
+    // setAuctionProduct()
   };
 
   return (

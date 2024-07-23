@@ -305,7 +305,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
-          /> */}
+            setAuctionProduct={setAuctionProduct}
           {alertMessage != null ? 
           <Alert message={alertMessage.message} senderName={alertMessage.senderName} duration={3000} roomId={alertMessage.roomId} setRoomIdFirstSend={setRoomIdFirstSend} />
           :null}
