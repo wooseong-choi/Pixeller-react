@@ -86,8 +86,9 @@ const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend, setAlertMessage}) => {
 
     const chatDivMinimize = () => {
         const target = document.getElementsByClassName('chat_list');
+        const isRemove = target[0].classList.contains('minimize');
         for(let i=0; i<target.length; i++) {
-            if(target[i].classList.contains('minimize')){
+            if(isRemove){
                 target[i].classList.remove('minimize');
             }else{
                 target[i].classList.add('minimize');

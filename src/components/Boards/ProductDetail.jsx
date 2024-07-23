@@ -59,7 +59,7 @@ const ProductDetail = ({
   };
 
   const handleSetIsAuctionOpen = () => {
-    setIsAuctionOpen(true);
+    // setIsAuctionOpen(true);
   };
 
   const handleDelete = async () => {

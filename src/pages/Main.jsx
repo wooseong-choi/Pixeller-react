@@ -257,7 +257,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            <div className={`lists ${isListOpen ? "open" : ""}`}>
+            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -267,7 +267,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div>
+            </div> */}
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
@@ -281,6 +281,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 <ProductBox
                   closePLModal={closePLModal}
                   setRoomIdFirstSend={setRoomIdFirstSend}
+                  setAuctionProduct={setAuctionProduct}
+                  setIsAuctionOpen={setIsAuctionOpen}
                 />
               ) : null}
             </div>
@@ -292,7 +294,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
           </div>
-          <Bottom
+          {/* <Bottom
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             isChatOpen={isChatOpen}
@@ -304,7 +306,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
             setAuctionProduct={setAuctionProduct}
-          />
           {alertMessage != null ? 
           <Alert message={alertMessage.message} senderName={alertMessage.senderName} duration={3000} roomId={alertMessage.roomId} setRoomIdFirstSend={setRoomIdFirstSend} />
           :null}

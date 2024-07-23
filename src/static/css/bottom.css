@@ -345,6 +345,10 @@ body {
   cursor: pointer;
 }
 
+.new-product-DM-div span {
+  cursor: pointer;
+}
+
 .product-search-wrap .searchbox {
   line-height: 40px;
   width: 100%;
@@ -548,6 +552,9 @@ body {
   position: fixed;
   bottom: 0;
   padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+.chat_list_div .chat_list.minimize .inputBox {
+  display: none;
 }
 
 .chat_list_div .chat_list .inputBox input {

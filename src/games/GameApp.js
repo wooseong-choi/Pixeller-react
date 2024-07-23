@@ -43,11 +43,11 @@ const GameApp = () => {
           },
         },
         scale: {
-          mode: Phaser.Scale.FIT,
-          autoCenter: Phaser.Scale.CENTER_BOTH,
-          // mode: Phaser.Scale.ScaleModes.RESIZE,
-          // width: window.innerWidth,
-          // height: window.innerHeight,
+          // mode: Phaser.Scale.FIT,
+          // autoCenter: Phaser.Scale.CENTER_BOTH,
+          mode: Phaser.Scale.ScaleModes.RESIZE,
+          width: window.innerWidth,
+          height: window.innerHeight,
         },
       };
       window.game = new Phaser.Game(config);
