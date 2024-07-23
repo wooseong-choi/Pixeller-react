@@ -185,7 +185,7 @@ const LoginNew = () => {
         >
           <h2 className="login-page-header">Create Account</h2>
           <form className="create-form">
-            <label htmlFor="username" for="create-username">
+            <label htmlFor="create-username" >
               Email Address
             </label>
             <input
@@ -196,7 +196,7 @@ const LoginNew = () => {
               placeholder="Enter username"
               onChange={handleCreateUsernameChange}
             />
-            <label htmlFor="password" for="create-password">
+            <label htmlFor="create-password" >
               Password
             </label>
             <input

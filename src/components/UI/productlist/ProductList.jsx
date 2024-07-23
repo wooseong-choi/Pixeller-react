@@ -1,12 +1,12 @@
 // SidebarSection.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import Swiper JS
 import Swiper from 'swiper/bundle';
 // import Swiper styles
 import '../../../static/css/swiper-bundle.min.css';
 import { axiosCRUDInstance } from "../../../api/axios.jsx";
 
-const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuctionOpen}) => {
+const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuctionOpen, goProductId}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Throttle function to limit the execution of the event handler
@@ -34,7 +34,7 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
           prevIndex > 0 ? prevIndex - 1 : prevIndex
         );
       }
-    },500); // 1 second delay
+    },300); // 1 second delay
 
     window.addEventListener("wheel", handleSwipe);
 
@@ -83,7 +83,16 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
     setIsAuctionOpen(true);
   };
 
-  // console.log(products);
+  useEffect(() => {
+    if (goProductId ) {
+      document.querySelectorAll('.product-item-card' ).forEach((item, index) => {
+        if (item.id === `product-${goProductId}`) {
+          setSelectedIndex(index);
+        }
+      });
+    }
+  }, [goProductId]);
+
   return (
     <>
         {products.map((item, index) => (
