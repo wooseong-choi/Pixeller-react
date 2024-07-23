@@ -513,7 +513,7 @@ class GameScene extends Phaser.Scene {
     // });
     // bgm1.play();
     
-    // this.loadAndDisplayProducts();
+    this.loadAndDisplayProducts();
   }
 
   handleChatMessage(event) {
@@ -794,85 +794,85 @@ class GameScene extends Phaser.Scene {
     }
   }
 
-  // async loadAndDisplayProducts() {
-  //   try {
-  //     const products = await getAllProducts();
-  //     // console.log('Fetched products:', products);
+  async loadAndDisplayProducts() {
+    try {
+      const products = await getAllProducts();
+      // console.log('Fetched products:', products);
 
-  //     const areas = [
-  //       { x: 1444, y: 1127, width: 220, height: 160 },
-  //     ];
+      const areas = [
+        { x: 1444, y: 1127, width: 220, height: 160 },
+      ];
       
-  //     if (products.length > 0) {
-  //       this.displayProduct(products, areas[0], 0);
-  //     }
-  //     // areas.forEach((area, index) => {
-  //     //   if (index < products.length) {
-  //     //     this.displayProduct(products, area, index);
-  //     //   }
-  //     // });
+      if (products.length > 0) {
+        this.displayProduct(products, areas[0], 0);
+      }
+      // areas.forEach((area, index) => {
+      //   if (index < products.length) {
+      //     this.displayProduct(products, area, index);
+      //   }
+      // });
 
-  //   } catch (error) {
-  //     console.error("Failed to load products", error);
-  //   }
-  // }
+    } catch (error) {
+      console.error("Failed to load products", error);
+    }
+  }
   
-  // displayProduct(products, area, startIndex) {
-  //   let currentIndex = startIndex;
+  displayProduct(products, area, startIndex) {
+    let currentIndex = startIndex;
 
-  //   const updateDisplay = () => {
-  //     const product = products[currentIndex];
-  //     // console.log('Displaying product:', product);
-  //     const imageKey = `product_${product.productId}_${area.x}_${area.y}`;
-  //     if (product.imageFileUrls) {
-  //       this.load.image(imageKey, product.imageFileUrls);
-  //       this.load.once("complete", () => {
-  //         this.createProductSprite(area, imageKey, product);
-  //       });
-  //       this.load.start();
-  //     } else {
-  //       this.createProductSprite(area, "defaultProductImage", product);
-  //     }
-  //     currentIndex = (currentIndex + 1) % products.length;
-  //   };
+    const updateDisplay = () => {
+      const product = products[currentIndex];
+      // console.log('Displaying product:', product);
+      const imageKey = `product_${product.productId}_${area.x}_${area.y}`;
+      if (product.imageFileUrls) {
+        this.load.image(imageKey, product.imageFileUrls);
+        this.load.once("complete", () => {
+          this.createProductSprite(area, imageKey, product);
+        });
+        this.load.start();
+      } else {
+        this.createProductSprite(area, "defaultProductImage", product);
+      }
+      currentIndex = (currentIndex + 1) % products.length;
+    };
 
-  //   // 초기 표시
-  //   updateDisplay();
+    // 초기 표시
+    updateDisplay();
 
-  //   // 5초마다 다음 제품으로 업데이트
-  //   this.time.addEvent({
-  //     delay: 4000,
-  //     callback: updateDisplay,
-  //     loop: true,
-  //   });
-  // }
+    // 5초마다 다음 제품으로 업데이트
+    this.time.addEvent({
+      delay: 4000,
+      callback: updateDisplay,
+      loop: true,
+    });
+  }
 
-  // createProductSprite(area, imageKey, product) {
-  //   const { x, y, width, height } = area;
+  createProductSprite(area, imageKey, product) {
+    const { x, y, width, height } = area;
 
-  //   // 기존 스프라이트와 텍스트 제거
-  //   if (this[`productSprite_${x}_${y}`]) {
-  //     this[`productSprite_${x}_${y}`].destroy();
-  //   }
-  //   if (this[`productText_${x}_${y}`]) {
-  //     this[`productText_${x}_${y}`].destroy();
-  //   }
+    // 기존 스프라이트와 텍스트 제거
+    if (this[`productSprite_${x}_${y}`]) {
+      this[`productSprite_${x}_${y}`].destroy();
+    }
+    if (this[`productText_${x}_${y}`]) {
+      this[`productText_${x}_${y}`].destroy();
+    }
 
-  //   // 새 이미지 스프라이트 생성
+    // 새 이미지 스프라이트 생성
 
-  //   this[`productSprite_${x}_${y}`] = this.add.image(x, y, imageKey);
-  //   this[`productSprite_${x}_${y}`].setDisplaySize(width, height);
+    this[`productSprite_${x}_${y}`] = this.add.image(x, y, imageKey);
+    this[`productSprite_${x}_${y}`].setDisplaySize(width, height);
     
-  //   // 새 상품 정보 텍스트 추가
-  //   this[`productText_${x}_${y}`] = this.add.text(x, y + height/2 + 10, `${product.name}\n${product.price}원`, { 
-  //     fontSize: '12px', 
-  //     fill: '#fff',
-  //     backgroundColor: '#000',
-  //     padding: { x: 5, y: 5 },
-  //     resolution: 4
-  //   });
-  //   this[`productText_${x}_${y}`].setOrigin(0.5, 0);
-  // }
+    // 새 상품 정보 텍스트 추가
+    this[`productText_${x}_${y}`] = this.add.text(x, y + height/2 + 10, `${product.name}\n${product.price}원`, { 
+      fontSize: '12px', 
+      fill: '#fff',
+      backgroundColor: '#000',
+      padding: { x: 5, y: 5 },
+      resolution: 4
+    });
+    this[`productText_${x}_${y}`].setOrigin(0.5, 0);
+  }
 
   /**
    * 게임이 실행되는 동안 계속 호출되는 함수입니다.
