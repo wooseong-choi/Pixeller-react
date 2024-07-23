@@ -285,6 +285,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             isCamOpen={isCamOpen}
             setIsCamOpen={toggleCam}
             setIsAuctionAlert={setIsAuctionAlert}
+            setAuctionProduct={setAuctionProduct}
           />
         </div>
       </div>

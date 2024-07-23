@@ -95,10 +95,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [everAuctionStarted, setEverAuctionStarted] = useState(false);
     const initialPrice = props.auctionPrice; // 초기 경매 시작 가격
     const [winner, setWinner] = useState(""); // 낙찰자
+    const [bidder, setBidder] = useState(""); // 입찰자
     const [bidPrice, setBidPrice] = useState(initialPrice); // 현재 입찰가
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
     const [syschat, setSyschat] = useState(""); // 시스템 채팅
-    const [bidder, setBidder] = useState(""); // 입찰자
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -212,7 +212,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     // OpenVidu 토큰 요청 정보
     const roomName = props.auctionRoomId + "auction";
-    const participantName = isSeller ? "seller-" + username : username!;
+    // const participantName = isSeller ? "seller-" + username : username!;
+    const [participantName, setParticipantName] = useState(username);
 
     // OpenVidu token 세션 접속 정보
     // const [room, setRoom] = useState<Room | undefined>(undefined); // Room 객체 화상 회의에 대한 정보
@@ -234,7 +235,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     };
 
     useEffect(() => {
-      join();
+      if (joinReady) {
+        console.log("join ready, joining room");
+        join();
+      }
     }, [joinReady]);
 
     useEffect(() => {
@@ -244,7 +248,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setIsSeller(true);
         } else {
           setIsSeller(false);
-          setAuctionStatusText("경매 전");
         }
         setJoinReady(true);
       });
@@ -455,7 +458,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
       // Reset the state
       // setRoom(undefined);
-      // props.setAuctionRoom(undefined);
+      props.setAuctionRoom(undefined);
       setLocalTrack(undefined);
       setRemoteTracks([]);
     }
