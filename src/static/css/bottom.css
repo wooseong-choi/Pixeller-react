@@ -543,9 +543,12 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 10px 30px;
-  background-color: aliceblue;
+  padding: 30px;
   font-size: 20px;
+}
+
+.chat_list_div .chat_list.private > div:first-child {
+  background-color: aliceblue;
 }
 
 .chat_list_div .chat_list .inputBox {
@@ -600,7 +603,7 @@ body {
   position: absolute;
   position: absolute;
   top: -20px;
-  left: -20%;
+  left: -20px;
   color: darkblue;
   transform: rotate(2deg);
 }
