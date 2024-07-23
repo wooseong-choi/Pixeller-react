@@ -367,6 +367,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     async function joinRoom() {
       const room = new Room();
       props.setAuctionRoom(room);
+      console.log("room : ", room);
       // setRoom(room);
 
       room.on(
@@ -635,10 +636,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                       />
                     </div>
                   )}
-                  {remoteTracks.map((remoteTrack) => (
+                  {remoteTracks.map((remoteTrack, index) => (
                     <>
                       {remoteTrack.trackPublication.kind === "video" ? (
-                        <div>
+                        <div key = {index}>
                           <div
                             className={`auction-buyer-video-container ${
                               remoteTrack.participantIdentity === winner
