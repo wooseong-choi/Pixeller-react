@@ -512,6 +512,7 @@ class GameScene extends Phaser.Scene {
     //   bgm1.play();
     // });
     // bgm1.play();
+    
     this.loadAndDisplayProducts();
   }
 
