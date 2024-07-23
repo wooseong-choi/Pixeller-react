@@ -7,6 +7,7 @@ const AlertAuction = ({ auctionStart, auctionClose, product }) => {
   };
   const handleStart = () => {
     auctionStart(true);
+    auctionClose(false);
   };
   return (
     <>

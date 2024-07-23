@@ -6,28 +6,29 @@ import List from "../components/List";
 import ProductDetail from "../components/Boards/ProductDetail.jsx";
 import ProductCreate from "../components/Boards/ProductCreate.jsx";
 import "./Main.css";
-// import { gsap } from "gsap/gsap-core";
-// import Auction from "../components/Auction/Auction.jsx";
-// import Auction_OpenVidu from "../components/Auction/Auction_seller.tsx";
+import "../static/css/VideoComponent.css";
 import VideoCanvas from "../components/OpenVidu/VideoCanvas.tsx";
 import Auction_new from "../components/Auction/Auction_new.tsx";
-import "../static/css/VideoComponent.css";
 import BottomMenu from "../components/UI/BottomMenu.jsx";
 import ProductBox from "../components/UI/ProductBox.jsx";
 import AlertAuction from "../components/alert/AlertAuction.jsx";
 import SellerProducts from "../components/UI/SellerProducts.jsx";
 import ChatBox from "../components/UI/ChatBox.jsx";
+import { jwtDecode } from "jwt-decode";
+import { Room } from "livekit-client";
 import Alert from "../components/UI/chatalert/Alert.jsx";
 
 const Main = ({ isListOpen, setIsListOpen }) => {
   const userName = sessionStorage.getItem("username");
+  // const userName = jwtDecode(sessionStorage.getItem("user")).username;
+
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
-  const [productId, setProductId] = useState(null);
   const [totalProductCounts, setTotalProductCounts] = useState(0);
+  const [productId, setProductId] = useState(null);
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [isMicOpen, setIsMicOpen] = useState(false);
   const [isAuctionOpen, setIsAuctionOpen] = useState(false);
@@ -35,10 +36,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isPLListOpen, setIsPLListOpen] = useState(false);
   const [isAuctionAlert, setIsAuctionAlert] = useState(false);
   const [isSellector, setIsSellector] = useState(false);
-
   const [roomIdFirstSend, setRoomIdFirstSend] = useState(null);
 
-  const OpenViduRef = useRef(null);
+  const [room, setRoom] = useState(undefined); // Room 객체 화상 회의에 대한 정보를 담고 있는 객체
+
+  const AuctionVidRef = useRef(null);
   const MainVidRef = useRef(null);
 
   
@@ -63,6 +65,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       "https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
+    console.log("room", room);
 
     return () => {
       document.head.removeChild(link);
@@ -78,12 +81,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   }, [isOpen, isChatOpen]);
 
   const startVideoStream = async (e) => {
-    console.log("이벤트 발생");
     e.preventDefault();
-    if (isViduOpen && MainVidRef.current) {
-      MainVidRef.current.leaveRoom();
+    console.log("debug: ", isViduOpen);
+    console.log("room: ", room);
+    if (isViduOpen) {
+      if (MainVidRef.current) MainVidRef.current.leaveRoom();
+      setIsViduOpen(false);
+    } else {
+      setIsViduOpen(true);
     }
-    isViduOpen ? setIsViduOpen(false) : setIsViduOpen(true);
   };
 
   const openPDModal = (product) => {
@@ -105,6 +111,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const closeAuctionModal = () => {
     setIsAuctionOpen(false);
+    if (AuctionVidRef.current) AuctionVidRef.current.leaveRoom();
   };
 
   const setAuctionProduct = (product) => {
@@ -113,12 +120,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const toggleMIC = () => {
     setIsMicOpen((prev) => !prev);
-    if (OpenViduRef.current) OpenViduRef.current.micController(isMicOpen);
+    if (AuctionVidRef.current) AuctionVidRef.current.micController(isMicOpen);
+    if (MainVidRef.current) MainVidRef.current.micController(isMicOpen);
   };
 
   const toggleCam = () => {
     setIsCamOpen((prev) => !prev);
-    if (OpenViduRef.current) OpenViduRef.current.camController(isCamOpen);
+    if (AuctionVidRef.current) AuctionVidRef.current.camController(isCamOpen);
+    if (MainVidRef.current) MainVidRef.current.camController(isCamOpen);
   };
 
   const closePLModal = () => {
@@ -141,7 +150,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
     window.addEventListener("start-auction", startAuction);
-  });
+  }, []);
 
   return (
     <>
@@ -160,6 +169,8 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   isMicOpen={isMicOpen}
                   isCamOpen={isCamOpen}
                   ref={MainVidRef}
+                  setRoom={setRoom}
+                  Room={room}
                 />
               ) : null}
             </div>
@@ -228,15 +239,17 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 ) : null}
               </div>
               <div>
-                {isAuctionOpen ? (
+                {isAuctionOpen && auctionProduct ? (
                   <Auction_new
                     handleClose={closeAuctionModal}
-                    isSeller={true}
                     userName={userName}
+                    isSeller={true}
                     auctionRoomId={auctionProduct.productId}
                     auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
-                    ref={OpenViduRef}
+                    ref={AuctionVidRef}
+                    setAuctionRoom={setRoom}
+                    AuctionRoom={room}
                   />
                 ) : null}
               </div>
@@ -264,10 +277,19 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? <ProductBox closePLModal={closePLModal} setRoomIdFirstSend={setRoomIdFirstSend} /> : null}
+              {isPLListOpen ? (
+                <ProductBox
+                  closePLModal={closePLModal}
+                  setRoomIdFirstSend={setRoomIdFirstSend}
+                />
+              ) : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox roomIdFirstSend={roomIdFirstSend} setRoomIdFirstSend={setRoomIdFirstSend} setAlertMessage={setAlertMessage}/>
+              <ChatBox 
+                roomIdFirstSend={roomIdFirstSend} 
+                setRoomIdFirstSend={setRoomIdFirstSend} 
+                setAlertMessage={setAlertMessage}
+              />
             </div>
           </div>
           <Bottom
