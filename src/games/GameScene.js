@@ -824,6 +824,7 @@ class GameScene extends Phaser.Scene {
       const product = products[currentIndex];
       // console.log('Displaying product:', product);
       const imageKey = `product_${product.productId}_${area.x}_${area.y}`;
+      console.log('imageKeys : ',imageKey);
       if (product.imageFileUrls) {
         this.load.image(imageKey, product.imageFileUrls);
         this.load.once("complete", () => {

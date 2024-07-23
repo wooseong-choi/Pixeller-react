@@ -1,6 +1,6 @@
 // SidebarSection.js
 import React, { useEffect, useState } from "react";
-const ProductSearchList = ({products}) => {
+const ProductSearchList = ({products, setGoProductIdHandler}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -14,6 +14,11 @@ const ProductSearchList = ({products}) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
   // console.log(products);
+
+  const goProductDetail = (productId) => {
+    setGoProductIdHandler( productId );
+  }
+
   return (
     <>
         <input type="text" className="searchbox" placeholder="상품을 찾아보세요" onChange={handleSearch}/>
@@ -23,6 +28,7 @@ const ProductSearchList = ({products}) => {
           key={item.productId}
           id={`search-${item.productId}`}
           className="search-item-card"
+          onClick={() => { goProductDetail(item.productId); }}
           >
             <div className="search-bottom">
                 <div className="new-product-search-info">

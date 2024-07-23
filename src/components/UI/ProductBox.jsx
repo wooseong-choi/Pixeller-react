@@ -12,6 +12,8 @@ const ProductBox = ({closePLModal, setRoomIdFirstSend, setAuctionProduct, setIsA
 
   const [searchMode, setSearchMode] = useState(false);
 
+  const [goProductId, setGoProductId] = useState(null);
+
   useEffect(() => {
     getAllProducts().then((res) => {
       console.log(res);
@@ -44,6 +46,12 @@ const ProductBox = ({closePLModal, setRoomIdFirstSend, setAuctionProduct, setIsA
   const writeModeHandler = (e) => {
     setWriteMode(!writeMode);
 
+  }
+
+  const setGoProductIdHandler = (productId) => {
+    setGoProductId(productId);
+    setSearchMode(false);
+    document.querySelector('.product_list').classList.remove('search-mode');
   }
 
   const dmHandler = (e) => {
@@ -87,10 +95,10 @@ const ProductBox = ({closePLModal, setRoomIdFirstSend, setAuctionProduct, setIsA
               </div>
           </div>
           <div className="product-list-wrap">
-            <ProductList products={sidebarItems} setRoomIdFirstSend={setRoomIdFirstSend} setAuctionProduct={setAuctionProduct} setIsAuctionOpen={setIsAuctionOpen} />
+            <ProductList products={sidebarItems} setRoomIdFirstSend={setRoomIdFirstSend} setAuctionProduct={setAuctionProduct} setIsAuctionOpen={setIsAuctionOpen} goProductId={goProductId} />
           </div>
           <div className="product-search-wrap">
-            <ProductSearchList products={sidebarItems} />
+            <ProductSearchList products={sidebarItems} setGoProductIdHandler={setGoProductIdHandler} />
           </div>
         </div>
       }  
