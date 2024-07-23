@@ -43,20 +43,19 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const AuctionVidRef = useRef(null);
   const MainVidRef = useRef(null);
 
-  
   const [alertMessage, setAlertMessage] = useState(null);
 
   const showAlert = () => {
-      // setAlertMessage('This is an alert message!');
-      setTimeout(() => {
-          setAlertMessage(null);
-      }, 3000); // 3초 후에 alert를 숨깁니다.
+    // setAlertMessage('This is an alert message!');
+    setTimeout(() => {
+      setAlertMessage(null);
+    }, 3000); // 3초 후에 alert를 숨깁니다.
   };
 
   useEffect(() => {
-      if (alertMessage != null) {
-          showAlert();
-      }
+    if (alertMessage != null) {
+      showAlert();
+    }
   }, [alertMessage]);
 
   useEffect(() => {
@@ -243,7 +242,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   <Auction_new
                     handleClose={closeAuctionModal}
                     userName={userName}
-                    isSeller={true}
+                    isSeller={false}
                     auctionRoomId={auctionProduct.productId}
                     auctionProduct={auctionProduct.productId}
                     auctionPrice={auctionProduct.price}
@@ -285,9 +284,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               ) : null}
             </div>
             <div className="chat_list_div">
-              <ChatBox 
-                roomIdFirstSend={roomIdFirstSend} 
-                setRoomIdFirstSend={setRoomIdFirstSend} 
+              <ChatBox
+                roomIdFirstSend={roomIdFirstSend}
+                setRoomIdFirstSend={setRoomIdFirstSend}
                 setAlertMessage={setAlertMessage}
               />
             </div>
@@ -305,9 +304,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsAuctionAlert={setIsAuctionAlert}
             setAuctionProduct={setAuctionProduct}
           />
-          {alertMessage != null ? 
-          <Alert message={alertMessage.message} senderName={alertMessage.senderName} duration={3000} roomId={alertMessage.roomId} setRoomIdFirstSend={setRoomIdFirstSend} />
-          :null}
+          {alertMessage != null ? (
+            <Alert
+              message={alertMessage.message}
+              senderName={alertMessage.senderName}
+              duration={3000}
+              roomId={alertMessage.roomId}
+              setRoomIdFirstSend={setRoomIdFirstSend}
+            />
+          ) : null}
         </div>
       </div>
     </>
