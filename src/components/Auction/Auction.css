@@ -115,15 +115,16 @@
   background-color: #ffffff;
   border-radius: 15px;
   width: 100%;
-  max-width: 300px;
-  min-height: 200px;
+  /* max-width: 300px;
+  min-height: 200px; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 10px;
   margin-bottom: 20px;
-  height: auto;
+  /* height: auto; */
+  height: 100%;
 }
 
 .auction-buyer-video-container .winner {
@@ -190,6 +191,7 @@
   margin-bottom: 10px;
   z-index: 2;
   height: auto;
+  width: auto;
 }
 
 .video-container video {
@@ -270,6 +272,7 @@
   background-color: #000;
   border-radius: 15px 0 0 15px;
   transition: transform 0.3s ease-in-out; /* 슬라이드 효과를 위한 transition 추가 */
+  overflow-y: auto;
 }
 
 /* 슬라이드 아웃 상태 정의 */
@@ -402,6 +405,9 @@
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 20px;
 }
 
 .auction-new-right-left > div {
@@ -642,4 +648,29 @@ body {
 
 .bidder {
   border: 2px solid #2359e4;
+}
+
+.price-animation-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 15em;
+  z-index: 1004;
+}
+
+.price-animation-overlay .animated-max-bid-price {
+  font-size: 0.35em;
+  color: #2359e4;
+  background-color: unset!important;
+  border-radius: unset;
+  padding: 0;
+  cursor: none;
+  margin-bottom: 0px;
+  width: auto;
+  line-height: inherit;
+}
+
+.auction-new-right-right .title h1 .animated-max-bid-price{
+  display: inline-block;
 }
