@@ -720,6 +720,20 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                         </>
                       )
                   )}
+                  {remoteTracks.map(
+                    (remoteTrack, index) => (
+                        <>
+                          {remoteTrack.trackPublication.kind === "video" ? (
+                            null
+                          ) : (
+                            <AudioComponent
+                              key={remoteTrack.trackPublication.trackSid}
+                              track={remoteTrack.trackPublication.audioTrack!}
+                            />
+                          )}
+                        </>
+                      )
+                  )}
                 </div>
                 <div className="auction-new-right-right">
                 <div className="title">
