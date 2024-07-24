@@ -572,7 +572,7 @@ body {
 }
 
 .chat_list_div .chat_list .inputBox input {
-  width: 100%;
+  width: calc(100% - 60px);
   height: 40px;
   border: 1px solid #A1A1A1;
   border-radius: 5px;
@@ -652,7 +652,7 @@ body {
   height: 40px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #117466; /* Initial background color */
+  background-color: #000; /* Initial background color */
   transition: background-color 1ms linear; /* Transition for smooth change */
 }
 
