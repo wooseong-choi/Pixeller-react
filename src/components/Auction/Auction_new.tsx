@@ -159,30 +159,30 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         decay: 0.97,
         startVelocity: 20,
         zIndex: 1003,
-        shapes: ['circle'],
-        colors: ['#FFD700', '#FFDF00', '#F0E68C'],
-        origin: { x: 0.5, y: 0.3 }
+        shapes: ["circle"],
+        colors: ["#FFD700", "#FFDF00", "#F0E68C"],
+        origin: { x: 0.5, y: 0.3 },
       };
-    
+
       confetti({
         ...defaults,
         particleCount: 80,
         scalar: 2,
-        shapes: ['circle']
+        shapes: ["circle"],
       });
-      
+
       confetti({
         ...defaults,
         particleCount: 80,
         scalar: 2,
-        shapes: ['circle']
+        shapes: ["circle"],
       });
-      
+
       confetti({
         ...defaults,
         particleCount: 80,
         scalar: 3,
-        shapes: ['circle']
+        shapes: ["circle"],
       });
     };
 
@@ -202,7 +202,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         product_id: productId,
         bid_time: new Date().toISOString(),
       });
-      
+
       triggerCoinConfetti();
       bidSound
         .play()
@@ -653,63 +653,61 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
               </div>
               <div className="auction-new-right-bottom">
                 <div className="auction-new-right-left">
-                  {!isSeller && localTrack && (
-                    <div
-                      className={`auction-buyer-video-container ${
-                        username === winner ? "winner" : ""
-                      } ${username === bidder ? "bidder" : ""}`}
-                    >
-                      <VideoComponent
-                        track={localTrack}
-                        participantId={participantName}
-                        local={true}
-                      />
-                    </div>
-                  )}
-                  {remoteTracks.map((remoteTrack, index) => (
-                    <>
-                      {remoteTrack.trackPublication.kind === "video" ? (
-                        <div key={index}>
-                          <div
-                            className={`auction-buyer-video-container ${
-                              remoteTrack.participantIdentity === winner
-                                ? "winner"
-                                : ""
-                            } ${
-                              remoteTrack.participantIdentity === bidder
-                                ? "bidder"
-                                : ""
-                            }`}
-                          >
-                            <VideoComponent
-                              key={remoteTrack.trackPublication.trackSid}
-                              track={remoteTrack.trackPublication.videoTrack!}
-                              participantId={remoteTrack.participantIdentity}
-                            />
-                          </div>
-                          <span>{remoteTrack.participantIdentity}</span>
-                        </div>
-                      ) : (
-                        <AudioComponent
-                          key={remoteTrack.trackPublication.trackSid}
-                          track={remoteTrack.trackPublication.audioTrack!}
+                  {!isSeller &&
+                    (bidder === "") !== (bidder === participantName) &&
+                    localTrack && (
+                      <div
+                        className={`auction-buyer-video-container ${
+                          username === winner ? "winner" : ""
+                        } ${username === bidder ? "bidder" : ""}`}
+                      >
+                        <VideoComponent
+                          track={localTrack}
+                          participantId={participantName}
+                          local={true}
                         />
-                      )}
-                    </>
-                  ))}
-                  {/* <div>
-                    <div>
-                      <img src="icon/svg/person.svg" />
-                    </div>
-                    <span>만두</span>
-                  </div>
-                  <div>
-                    <div>
-                      <img src="icon/svg/person.svg" />
-                    </div>
-                    <span>만두</span>
-                  </div>
-                   */}
+                      </div>
+                    )}
+                  {remoteTracks.map(
+                    (remoteTrack, index) =>
+                      (remoteTrack.participantIdentity === bidder ||
+                        remoteTrack.participantIdentity === winner) && (
+                        <>
+                          {remoteTrack.trackPublication.kind === "video" ? (
+                            <>
+                              <div
+                                key={index}
+                                className={`auction-buyer-video-container ${
+                                  remoteTrack.participantIdentity === winner
+                                    ? "winner"
+                                    : ""
+                                } ${
+                                  remoteTrack.participantIdentity === bidder
+                                    ? "bidder"
+                                    : ""
+                                }`}
+                              >
+                                <VideoComponent
+                                  key={remoteTrack.trackPublication.trackSid}
+                                  track={
+                                    remoteTrack.trackPublication.videoTrack!
+                                  }
+                                  participantId={
+                                    remoteTrack.participantIdentity
+                                  }
+                                />
+                              </div>
+                              <span>{remoteTrack.participantIdentity}</span>
+                            </>
+                          ) : (
+                            <AudioComponent
+                              key={remoteTrack.trackPublication.trackSid}
+                              track={remoteTrack.trackPublication.audioTrack!}
+                            />
+                          )}
+                        </>
+                      )
+                  )}
                 </div>
                 <div className="auction-new-right-right">
                   <div className="title">
