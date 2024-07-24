@@ -49,7 +49,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
     // setAlertMessage('This is an alert message!');
     setTimeout(() => {
       setAlertMessage(null);
-    }, 3000); // 3초 후에 alert를 숨깁니다.
+    }, 4000); // 3초 후에 alert를 숨깁니다.
   };
 
   useEffect(() => {
@@ -291,6 +291,15 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setRoomIdFirstSend={setRoomIdFirstSend}
                 setAlertMessage={setAlertMessage}
               />
+              {alertMessage != null ? (
+              <Alert
+                message={alertMessage.message}
+                senderName={alertMessage.senderName}
+                duration={3000}
+                roomId={alertMessage.roomId}
+                setRoomIdFirstSend={setRoomIdFirstSend}
+              />
+              ) : null} 
             </div>
           </div>
           {/* <Bottom
@@ -306,15 +315,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsAuctionAlert={setIsAuctionAlert}
             setAuctionProduct={setAuctionProduct}
           /> */}
-          {alertMessage != null ? (
-            <Alert
-              message={alertMessage.message}
-              senderName={alertMessage.senderName}
-              duration={3000}
-              roomId={alertMessage.roomId}
-              setRoomIdFirstSend={setRoomIdFirstSend}
-            />
-          ) : null}
+          
         </div>
       </div>
     </>

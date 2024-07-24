@@ -638,10 +638,18 @@ body {
 
 .chat-room-btn-box {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   z-index: 2;
+  width: 100%;
+  border-bottom: 1px solid;
+  background-color: rgb(0 0 0 / 0.3);
+  border-radius: 15px 15px 0 0;
+}
+
+.chat-room-btn-box-inner{
   display: flex;
+  justify-content: right;
 }
 
 .win-minimize {
@@ -660,7 +668,7 @@ body {
   width: 30px;
   opacity: 0.5;
 }
-.win-minimize:hover, .return-menu:hover {
+.win-minimize:hover, .return-menu:hover, .show-private:hover {
   opacity: 1;
   cursor: pointer;
 }
