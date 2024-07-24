@@ -5,9 +5,15 @@ const Alert = ({ message, senderName, duration, roomId, setRoomIdFirstSend }) =>
   const [show, setShow] = useState(false);
 
   console.log('Alert', message);
+  
+  const chatSound = new Audio("/sounds/chat_pop.mp3");
+
   useEffect(() => {
     if (message) {
       setShow(true);
+      chatSound
+        .play()
+        .catch((error) => console.error("Error playing chatSound:", error));
       const timer = setTimeout(() => {
         setShow(false);
       }, duration);
@@ -19,6 +25,7 @@ const Alert = ({ message, senderName, duration, roomId, setRoomIdFirstSend }) =>
   const roomOpenHandler = () => {
     setRoomIdFirstSend(roomId);
   }
+
 
   return (
     <div className={`alert ${show ? 'show' : 'hide'}`} onClick={roomOpenHandler}>

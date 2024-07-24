@@ -438,11 +438,11 @@ body {
   height: 50%;
   position: absolute;
   bottom: 0;
-  opacity: 0.4;
-  color: linear-gradient(to bottom, white, transparent);
+  /* opacity: 0.4; */
   background: linear-gradient(to bottom, white, transparent);
   background-color: rgba(204, 204, 204, 0.4);
   overflow-y: auto;
+  text-align: right;
 }
 .syschat:hover,
 .syschat:active,
