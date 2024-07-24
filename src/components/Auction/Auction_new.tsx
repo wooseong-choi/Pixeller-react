@@ -203,7 +203,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         gravity: 3,
         decay: 0.97,
         startVelocity: 20,
-        zIndex: 1003,
+        zIndex: 20000,
         shapes: ["circle"],
         colors: ["#FFD700", "#FFDF00", "#F0E68C"],
         origin: { x: 0.5, y: 0.3 },
