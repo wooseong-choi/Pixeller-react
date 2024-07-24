@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-const Bgm = ({clickPauseHandler, bgmRunning}) => {
+const Bgm = ({clickPauseHandler, bgmRunning, isAuctionOpen}) => {
   
   useEffect(() => {
     const audioElement = document.getElementById('audio');
@@ -11,7 +11,12 @@ const Bgm = ({clickPauseHandler, bgmRunning}) => {
 
   return (
     <div className="bottom_menu_item pause" onClick={clickPauseHandler}>
-        {bgmRunning ? <audio id="audio" src="bgm/MapleStory_-_Raindrop_Flower.mp3" autoPlay loop ></audio> : null}
+        {bgmRunning ? 
+          isAuctionOpen? 
+          <audio id="audio" src="bgm/Auction.mp3" autoPlay loop ></audio> 
+          :<audio id="audio" src="bgm/MapleStory_-_Raindrop_Flower.mp3" autoPlay loop ></audio> 
+          
+        : null}
         <img src="icon/svg/Pause.svg" alt="pause" />
     </div>
   );

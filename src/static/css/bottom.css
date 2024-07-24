@@ -137,7 +137,7 @@ body {
   padding: 0 10px;
   border: 3px solid black;
   border-radius: 2em;
-  z-index: 1001;
+  z-index: 10010;
   height: 60px;
   opacity: 0.5;
   position: relative;
@@ -165,7 +165,7 @@ body {
     skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) 
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)
   );
-  z-index: 9999;
+  z-index: 39999;
   margin: auto;
 }
 .product_list_div {
