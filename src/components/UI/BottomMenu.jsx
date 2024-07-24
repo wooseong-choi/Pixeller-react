@@ -7,6 +7,7 @@ const BottomMenu = ({
   openPLModal,
   setIsCamOpen,
   setIsMicOpen,
+  isAuctionOpen
 }) => {
   const user = sessionStorage.getItem("user");
   const [bgmRunning, setBgmRunning] = useState(true);
@@ -81,7 +82,7 @@ const BottomMenu = ({
       <div className="bottom_menu_item mic" onClick={clickMicHandler}>
         <img src="icon/svg/Mic.svg" alt="mic" />
       </div>
-      <Bgm clickPauseHandler={clickPauseHandler} bgmRunning={bgmRunning} />
+      <Bgm clickPauseHandler={clickPauseHandler} bgmRunning={bgmRunning} isAuctionOpen={isAuctionOpen}/>
       <div className="bottom_menu_item item off" onClick={clickItemHandler}>
         <img src="icon/svg/Item.svg" alt="item" />
       </div>

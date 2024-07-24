@@ -273,6 +273,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPLModal={openPLModal}
                 setIsCamOpen={toggleCam}
                 setIsMicOpen={toggleMIC}
+                isAuctionOpen={isAuctionOpen}
               />
             </div>
             <div className="product_list_div">
