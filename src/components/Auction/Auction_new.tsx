@@ -84,6 +84,42 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const bidSound = new Audio("/sounds/bidding_sound.mp3");
     const congratulation = new Audio("/sounds/congratulation.mp3");
 
+
+    const Auction_end = new Audio("/sounds/Auction_end.wav");
+    const Auction_start = new Audio("/sounds/Auction_start.wav");
+    
+    const bidVoice = [
+      new Audio("/sounds/bid_sound_1.wav"),
+      new Audio("/sounds/bid_sound_2.wav"),
+      new Audio("/sounds/bid_sound_3.wav"),
+      new Audio("/sounds/bid_sound_4.wav"),
+      new Audio("/sounds/bid_sound_5.wav"),
+      new Audio("/sounds/bid_sound_6.wav"),
+      new Audio("/sounds/bid_sound_7.wav"),
+      new Audio("/sounds/bid_sound_8.wav"),
+    ];
+
+    const countdown_sound = [
+      new Audio("/sounds/countdown_1.wav"),
+      new Audio("/sounds/countdown_2.wav"),
+      new Audio("/sounds/countdown_3.wav"),
+      new Audio("/sounds/countdown_4.wav"),
+      new Audio("/sounds/countdown_5.wav"),
+    ];
+    
+    const playRandomBidSound = () => {
+      const randomIndex = Math.floor(Math.random() * bidVoice.length);
+      bidVoice[randomIndex].play().catch((error) => console.error("Error playing sound:", error));
+    };
+
+    const playBidSounds = () => {
+      bidSound.play().catch((error) => console.error("Error playing bid sound:", error));
+      
+      setTimeout(() => {
+        playRandomBidSound();
+      }, 1000);
+    };
+
     // 경매 관련
     const [AuctionStatusText, setAuctionStatusText] = useState("경매 시작");
     const [isAuctionStarted, setIsAuctionStarted] = useState(false);
@@ -216,9 +252,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       });
 
       triggerCoinConfetti();
-      bidSound
-        .play()
-        .catch((error) => console.error("Error playing sound:", error));
+      playBidSounds();
     };
 
     const handleBid = (event) => {
@@ -334,9 +368,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setBidder(data.username);
             // setCountDown(10);
             triggerCoinConfetti();
-            bidSound
-              .play()
-              .catch((error) => console.error("Error playing sound:", error));
+            // playBidSounds();
+            break;
+          case "countdown":
+            countdown_sound[data.tick - 1].play().catch((error) => console.error("Error playing auction start sound:", error));            
             break;
           // case "countdown":
           //   break;
@@ -359,6 +394,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
             setEverAuctionStarted(true);
+            Auction_start.play().catch((error) => console.error("Error playing auction start sound:", error));
             break;
           case "end":
             setAuctionStatusText("경매 종료");
@@ -369,6 +405,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             );
             setIsEnd(true);
             handleConfetti();
+            Auction_end.play().catch((error) => console.error("Error playing auction end sound:", error));
             setTimeout(() => {
               setIsEnd(false);
               setEndText("");
