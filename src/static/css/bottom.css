@@ -547,10 +547,19 @@ body {
   font-size: 20px;
 }
 
-.chat_list_div .chat_list.private > div:first-child {
-  background-color: aliceblue;
+.chat_list_div .chat_list.private > div.chatList {
+  padding-left: 0;
+  padding-right: 0;
+  /* background-color: aliceblue; */
 }
 
+.chatList .chat-room-name {
+  padding-left: 20px;
+  font-weight: bold;
+}
+.chatList .chat-room-message {
+  padding-left: 20px;
+}
 .chat_list_div .chat_list .inputBox {
   width: 100%;
   text-align: center;
@@ -632,8 +641,19 @@ body {
 }
 
 .inputBox .inputDiv {
-  width: 90%;
-  margin: auto;
+  width: 100%;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.inputBox .inputDiv .sendBtn {
+  background: url("../../../public/icon/svg/send.svg") no-repeat center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #117466; /* Initial background color */
+  transition: background-color 1ms linear; /* Transition for smooth change */
 }
 
 .chat-room-btn-box {
@@ -642,9 +662,9 @@ body {
   top: 0;
   z-index: 2;
   width: 100%;
-  border-bottom: 1px solid;
-  background-color: rgb(0 0 0 / 0.3);
-  border-radius: 15px 15px 0 0;
+  border-bottom: 2px solid;
+  background-color: #FFF;
+   border-radius: 15px 15px 0 0;
 }
 
 .chat-room-btn-box-inner{

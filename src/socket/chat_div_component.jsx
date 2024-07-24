@@ -43,6 +43,22 @@ const ChatDivComponent = ({stompClient,messages}) => {
         }
     },[messages]);
 
+    useEffect(() => {
+        
+        let colorValue = 0;
+        
+        function updateBackgroundColor() {
+            const hexColor = colorValue.toString(16).padStart(6, '0');
+            document.querySelector('.inputDiv .sendBtn').style.backgroundColor = `#${hexColor}`;
+            colorValue = (colorValue + 1) % 0x1000000; // Reset to 0 after reaching 0xFFFFFF
+        }
+        
+        setInterval(updateBackgroundColor, 10); // Update every 1ms
+
+        return () => {
+            clearInterval(updateBackgroundColor);
+        };
+    });
 
     return (
         <>
@@ -61,6 +77,7 @@ const ChatDivComponent = ({stompClient,messages}) => {
                     value={message}
                     onChange={handleMessageChange}
                     onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+                    <span className='sendBtn' onClick={sendMessage}></span>
                 </div>                
             </div>
         </>
