@@ -171,7 +171,7 @@ const ProductDetail = ({ handleClose }) => {
       }
       // return response.data;
     } catch (error) {
-      throw error;
+      // throw error;
     }
   };
 
