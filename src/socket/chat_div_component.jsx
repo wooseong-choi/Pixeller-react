@@ -38,8 +38,9 @@ const ChatDivComponent = ({stompClient,messages}) => {
         // 일단은 이걸로 했는데 나중에는 서버에서 채팅을 받아올거니 수정해야함
         if (messages.length > 0) {
             // if( document.getElementsByClassName('side-menu-chat')[0].classList.contains('open') ) {
+            if(!document.querySelectorAll('.chat_list ')[0].classList.contains('minimize')) {   
                 messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-            // }
+            }
         }
     },[messages]);
 
