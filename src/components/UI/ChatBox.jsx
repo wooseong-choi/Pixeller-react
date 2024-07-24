@@ -106,11 +106,13 @@ const ChatBox = ({roomIdFirstSend, setRoomIdFirstSend, setAlertMessage}) => {
             <div className="chat_list">
                 {chatPublicComponent}
                 <div className="chat-room-btn-box">
-                    {roomIdFirstSend != null ? 
-                        <div className="return-menu" onClick={resetRoomId}></div>:
-                        <div className="show-private" onClick={showPrivateRoom}></div>
-                    }
-                    <div className="win-minimize" onClick={chatDivMinimize}></div>
+                    <div className="chat-room-btn-box-inner">
+                        {roomIdFirstSend != null ? 
+                            <div className="return-menu" onClick={resetRoomId}></div>:
+                            <div className="show-private" onClick={showPrivateRoom}></div>
+                        }
+                        <div className="win-minimize" onClick={chatDivMinimize}></div>
+                    </div>
                 </div>
             </div>
             <div className={`chat_list private ${chatPrivateShow ? "active":""}`} >

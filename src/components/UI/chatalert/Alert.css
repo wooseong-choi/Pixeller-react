@@ -1,9 +1,10 @@
 /* 기본 스타일 */
 .alert {
   position: fixed;
-  bottom: 16px;
+  /* bottom: 16px; */
+  top: 0%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(110%);
   background-color: #f44336;
   color: black;
   border-radius: 4px;
@@ -28,14 +29,14 @@
   display: flex;
   opacity: 1;
   transform: translateX(-50%) translateY(0);
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 /* 숨겨진 상태 */
 .alert.hide {
   display: none;
   opacity: 0;
-  transform: translateX(-50%) translateY(100%);
+  transform: translateX(-50%) translateY(110%);
 }
 
 .alert .sender {
@@ -63,6 +64,7 @@
   padding: 10px ;
   font-size: 20px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .alert .content-div {
