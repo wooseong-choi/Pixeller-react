@@ -54,6 +54,7 @@ const ChatDivComponentDirect = ({stompClient, messages, private_room_no}) => {
                     value={message}
                     onChange={handleMessageChange}
                     onKeyDown={(e)=>{ if( e.key === 'Enter') sendMessage(); }} />
+                    <span className='sendBtn' onClick={sendMessage}></span>
                 </div>               
             </div>
         </>
