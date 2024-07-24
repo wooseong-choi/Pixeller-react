@@ -23,6 +23,7 @@ import VideoComponent from "../OpenVidu/VideoComponent.tsx";
 import useSpeechRecognition from "./useSpeechRecognition.js";
 import { analyzeBid, convertToWon } from "./bidAnalyzer.js";
 import AuctionBidEffector from "./Auction_max_bid.jsx";
+import AnimatedBidPrice from "./Auction_BidPrice_Animated.jsx";
 import Tooltip from "../Tooltip.jsx";
 
 // AXIOS API 콜
@@ -79,7 +80,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const bidSound = new Audio("/sounds/bidding_sound.wav");
+    // const bidSound = new Audio("/sounds/bidding_sound.wav");
+    const bidSound = new Audio("/sounds/bidding_sound.mp3");
 
     // 경매 관련
     const [AuctionStatusText, setAuctionStatusText] = useState("경매 시작");
@@ -150,6 +152,8 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       });
     };
 
+    const [showPriceAnimation, setShowPriceAnimation] = useState(false);
+
     // 입찰 효과 함수
     const triggerCoinConfetti = () => {
       const defaults = {
@@ -184,6 +188,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         scalar: 3,
         shapes: ["circle"],
       });
+
+      setShowPriceAnimation(true);
+      setTimeout(() => setShowPriceAnimation(false), 1000);
     };
 
     const handleInputChange = (event) => {
@@ -353,7 +360,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setIsAuctionStarted(false);
             setWinner(data.winner);
             setEndText(
-              `축하합니다! ${data.winner}님이 ${data.bid_price}에 낙찰받으셨습니다!`
+              `축하합니다! ${data.winner}님이 ${data.bid_price}원에 낙찰받으셨습니다!`
             );
             setIsEnd(true);
             handleConfetti();
@@ -710,9 +717,14 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                   )}
                 </div>
                 <div className="auction-new-right-right">
-                  <div className="title">
-                    <h1>Price {<AuctionBidEffector price={maxBidPrice} />}</h1>
+                <div className="title">
+                    <h1>Price {<AnimatedBidPrice price={maxBidPrice} />}</h1>
                   </div>
+                  {showPriceAnimation && (
+                    <div className="price-animation-overlay">
+                      <AnimatedBidPrice price={maxBidPrice} />
+                    </div>
+                  )}
                   <div className="voice-input">
                     <span>원하시는 가격이 맞으신가요?</span>
                     <span

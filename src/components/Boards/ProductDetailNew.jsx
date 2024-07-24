@@ -29,11 +29,9 @@ const ProductDetailNew = ({ productData }) => {
         <div className="swiper-container swiper">
           <div className="swiper-wrapper">
             {productData.fileImage.map((url, index) => (
-              <>
-                <div key={index} className="swiper-slide">
-                  <img src={url} alt={`product-${index}`} />
-                </div>
-              </>
+              <div key={index} className="swiper-slide">
+                <img src={url} alt={`product-${index}`} />
+              </div>
             ))}
           </div>
           <div className="swiper-button-next"></div>

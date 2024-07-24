@@ -649,3 +649,28 @@ body {
 .bidder {
   border: 2px solid #2359e4;
 }
+
+.price-animation-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 15em;
+  z-index: 1004;
+}
+
+.price-animation-overlay .animated-max-bid-price {
+  font-size: 0.35em;
+  color: #2359e4;
+  background-color: unset!important;
+  border-radius: unset;
+  padding: 0;
+  cursor: none;
+  margin-bottom: 0px;
+  width: auto;
+  line-height: inherit;
+}
+
+.auction-new-right-right .title h1 .animated-max-bid-price{
+  display: inline-block;
+}
