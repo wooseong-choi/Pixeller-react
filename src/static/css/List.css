@@ -256,7 +256,7 @@
   display: flex;
   align-items: center;
   min-width: 160px;
-  border-radius: 1em 1em 1em 0;
+  border-radius: 1em;
   border: 1px solid #519c79;
   background-color: #fff;
   justify-content: center;
@@ -267,22 +267,11 @@
   margin-bottom: 30px;
 }
 .chat-info.me {
-  border-radius: 1em 1em 0 1em;
+  /* border-radius: 1em 1em 0 1em; */
+  border-radius: 1em;
   margin-left: auto;
 }
 
-.chat-info::after {
-  /* content: ''; */
-  position: absolute;
-  bottom: -10px; /* Position the arrow at the bottom of the bubble */
-  left: -10px; /* Adjust the position to the left corner */
-  rotate: 45deg;
-  width: 0;
-  height: 0;
-  border-width: 10px 10px 0;
-  border-style: solid;
-  border-color: #ffffff transparent transparent transparent;
-}
 .chat-profile {
   width: 25px;
   height: 25px;
