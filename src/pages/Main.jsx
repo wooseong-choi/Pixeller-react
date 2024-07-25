@@ -25,6 +25,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isViduOpen, setIsViduOpen] = useState(false);
+
   const [isProductDetailOpen, setProductDetailOpen] = useState(false);
   const [isProductCreateOpen, setProductCreateOpen] = useState(false);
   const [totalProductCounts, setTotalProductCounts] = useState(0);
@@ -81,13 +82,21 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const startVideoStream = async (e) => {
     e.preventDefault();
-    console.log("debug: ", isViduOpen);
-    console.log("room: ", room);
-    if (isViduOpen) {
-      if (MainVidRef.current) MainVidRef.current.leaveRoom();
-      setIsViduOpen(false);
+    console.log("startVideoStream", isViduOpen);
+
+    setIsViduOpen((prev) => !prev);
+
+    // toggleCamDiv();
+    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
+    console.log("end of startVideoStream", isViduOpen);
+  };
+
+  const toggleCamDiv = () => {
+    const camdiv = document.querySelector(".cam-div");
+    if (camdiv.classList.contains("active")) {
+      camdiv.classList.remove("active");
     } else {
-      setIsViduOpen(true);
+      camdiv.classList.add("active");
     }
   };
 
@@ -149,6 +158,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
     window.addEventListener("start-auction", startAuction);
+
+    return () => {
+      window.removeEventListener("start-video", startVideoStream);
+      window.removeEventListener("start-auction", startAuction);
+    };
   }, []);
 
   return (
@@ -156,12 +170,9 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       <div>
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
-            <div className={`cam-div ${isViduOpen ? "active" : ""}`}>
-              <button
-                className="video-button"
-                onClick={startVideoStream}
-              ></button>
-              {isViduOpen ? (
+            {/* <div className={"cam-div " + isViduOpen ? "active" : ""}> */}
+            {isViduOpen ? (
+              <div className={`cam-div active`}>
                 <VideoCanvas
                   userName={userName}
                   auctionRoomId={"wholeMap"}
@@ -170,9 +181,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   ref={MainVidRef}
                   setRoom={setRoom}
                   Room={room}
+                  isViduOpen={isViduOpen}
                 />
-              ) : null}
-            </div>
+              </div>
+            ) : null}
             <div className="Modals">
               <div>
                 {isSellector ? (
@@ -256,7 +268,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            <div className={`lists ${isListOpen ? "open" : ""}`}>
+            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -266,7 +278,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div>
+            </div> */}
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
@@ -293,14 +305,14 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 setAlertMessage={setAlertMessage}
               />
               {alertMessage != null ? (
-              <Alert
-                message={alertMessage.message}
-                senderName={alertMessage.senderName}
-                duration={3000}
-                roomId={alertMessage.roomId}
-                setRoomIdFirstSend={setRoomIdFirstSend}
-              />
-              ) : null} 
+                <Alert
+                  message={alertMessage.message}
+                  senderName={alertMessage.senderName}
+                  duration={3000}
+                  roomId={alertMessage.roomId}
+                  setRoomIdFirstSend={setRoomIdFirstSend}
+                />
+              ) : null}
             </div>
           </div>
           {/* <Bottom
@@ -316,7 +328,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             setIsAuctionAlert={setIsAuctionAlert}
             setAuctionProduct={setAuctionProduct}
           /> */}
-          
         </div>
       </div>
     </>
