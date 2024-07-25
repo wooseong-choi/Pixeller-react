@@ -100,10 +100,10 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const endVideoStream = async (e) => {
     e.preventDefault();
+    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
     // console.log("endVideoStream", isViduOpen);
     setIsViduOpen(false);
     // toggleCamDiv();
-    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
     // console.log("end of endVideoStream", isViduOpen);
   };
 
