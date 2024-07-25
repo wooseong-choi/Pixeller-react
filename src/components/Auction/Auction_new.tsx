@@ -84,10 +84,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const bidSound = new Audio("/sounds/bidding_sound.mp3");
     const congratulation = new Audio("/sounds/congratulation.mp3");
 
-
     const Auction_end = new Audio("/sounds/Auction_end.wav");
     const Auction_start = new Audio("/sounds/Auction_start.wav");
-    
+
     const bidVoice = [
       new Audio("/sounds/bid_sound_1.wav"),
       new Audio("/sounds/bid_sound_2.wav"),
@@ -106,15 +105,19 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       new Audio("/sounds/countdown_4.wav"),
       new Audio("/sounds/countdown_5.wav"),
     ];
-    
+
     const playRandomBidSound = () => {
       const randomIndex = Math.floor(Math.random() * bidVoice.length);
-      bidVoice[randomIndex].play().catch((error) => console.error("Error playing sound:", error));
+      bidVoice[randomIndex]
+        .play()
+        .catch((error) => console.log("Error playing sound:", error));
     };
 
     const playBidSounds = () => {
-      bidSound.play().catch((error) => console.error("Error playing bid sound:", error));
-      
+      bidSound
+        .play()
+        .catch((error) => console.log("Error playing bid sound:", error));
+
       setTimeout(() => {
         playRandomBidSound();
       }, 1000);
@@ -187,10 +190,10 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         origin: { y: 0.6 },
         zIndex: 1003,
       });
-      
+
       congratulation
         .play()
-        .catch((error) => console.error("Error playing sound:", error));
+        .catch((error) => console.log("Error playing sound:", error));
     };
 
     const [showPriceAnimation, setShowPriceAnimation] = useState(false);
@@ -369,12 +372,20 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             // setCountDown(10);
             triggerCoinConfetti();
             if (data.username !== username) {
-              bidSound.play().catch((error) => console.error("Error playing bid sound:", error));
+              bidSound
+                .play()
+                .catch((error) =>
+                  console.log("Error playing bid sound:", error)
+                );
             }
             // playBidSounds();
             break;
           case "countdown":
-            countdown_sound[data.tick - 1].play().catch((error) => console.error("Error playing auction start sound:", error));            
+            countdown_sound[data.tick - 1]
+              .play()
+              .catch((error) =>
+                console.log("Error playing auction start sound:", error)
+              );
             break;
           // case "countdown":
           //   break;
@@ -397,7 +408,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setAuctionStatusText("경매 중");
             setIsAuctionStarted(true);
             setEverAuctionStarted(true);
-            Auction_start.play().catch((error) => console.error("Error playing auction start sound:", error));
+            Auction_start.play().catch((error) =>
+              console.log("Error playing auction start sound:", error)
+            );
             break;
           case "end":
             setAuctionStatusText("경매 종료");
@@ -408,7 +421,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             );
             setIsEnd(true);
             handleConfetti();
-            Auction_end.play().catch((error) => console.error("Error playing auction end sound:", error));
+            Auction_end.play().catch((error) =>
+              console.log("Error playing auction end sound:", error)
+            );
             setTimeout(() => {
               setIsEnd(false);
               setEndText("");
@@ -749,20 +764,31 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                                   }
                                 />
                               </div>
-                              <span>{remoteTrack.participantIdentity}</span>
+                              {/* <span>{remoteTrack.participantIdentity}</span> */}
                             </>
-                          ) : (
-                            <AudioComponent
-                              key={remoteTrack.trackPublication.trackSid}
-                              track={remoteTrack.trackPublication.audioTrack!}
-                            />
-                          )}
+                          ) : // (
+                          //   <AudioComponent
+                          //     key={remoteTrack.trackPublication.trackSid}
+                          //     track={remoteTrack.trackPublication.audioTrack!}
+                          //   />
+                          // )}
+                          null}
                         </>
                       )
                   )}
+                  {remoteTracks.map((remoteTrack, index) => (
+                    <>
+                      {remoteTrack.trackPublication.kind === "video" ? null : (
+                        <AudioComponent
+                          key={remoteTrack.trackPublication.trackSid}
+                          track={remoteTrack.trackPublication.audioTrack!}
+                        />
+                      )}
+                    </>
+                  ))}
                 </div>
                 <div className="auction-new-right-right">
-                <div className="title">
+                  <div className="title">
                     <h1>Price {<AnimatedBidPrice price={maxBidPrice} />}</h1>
                   </div>
                   {showPriceAnimation && (
