@@ -60,6 +60,8 @@ class GameScene extends Phaser.Scene {
     this.messageBoxes = {};
     this.chatBubbles = {};
 
+    this.collisionRadius = 100; // 충돌 반경 설정
+
     this.socket.on("connect", function (data) {
       console.log(data);
     });
@@ -913,6 +915,8 @@ class GameScene extends Phaser.Scene {
         
         this.lastPositionUpdateTime = time;
       } 
+
+
     }
 
     // 조준선 표시 / 숨김
@@ -991,6 +995,17 @@ class GameScene extends Phaser.Scene {
       }
     }
 
+    // 충돌 반경 내에서의 충돌 감지
+    // 모든 플레이어 간의 충돌 반경 내에서의 충돌 감지
+    const playersArray = this.players.getChildren();
+    for (let i = 0; i < playersArray.length; i++) {
+      if(playersArray[i] != this.player){
+        if (this.checkProximity(this.player, playersArray[i])) {
+          this.handleProximityEvent(this.player, playersArray[i]);
+        }
+      }
+    }
+
     // 'Q' 키가 눌렸을 때 실행할 코드
     // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
     // this.Player.moveTo(600, 320);
@@ -1014,6 +1029,7 @@ class GameScene extends Phaser.Scene {
           detail: {
             uid: this.uid,
             unsername: this.username,
+            method: 'okey',
           },
         })
       );
@@ -1022,6 +1038,24 @@ class GameScene extends Phaser.Scene {
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");
     // }
+  }
+
+  checkProximity(player1, player2) {
+    return Phaser.Math.Distance.Between(player1.x, player1.y, player2.x, player2.y) < this.collisionRadius;
+  }
+
+  handleProximityEvent(player1, player2) {
+    console.log(`플레이어 ${player1}와 ${player2}가 충돌 반경 내에 있습니다!`);
+    // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
+    window.dispatchEvent(
+      new CustomEvent("start-video", {
+        detail: {
+          uid: this.uid,
+          unsername: this.username,
+          method: 'join'
+        },
+      })
+    );
   }
 
   checkPlayersInSpecialArea(centralAreaName) {

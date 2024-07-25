@@ -83,9 +83,16 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const startVideoStream = async (e) => {
     e.preventDefault();
     console.log("startVideoStream", isViduOpen);
-
+    
+    const detail = e.detail;
+    const isViduDivOpen = document.querySelector(".cam-div");
+    
+    if(detail.method === 'join' && isViduDivOpen) {
+      return false;
+    }
+    
     setIsViduOpen((prev) => !prev);
-
+    
     // toggleCamDiv();
     if (MainVidRef.current) await MainVidRef.current.leaveRoom();
     console.log("end of startVideoStream", isViduOpen);
@@ -181,7 +188,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   ref={MainVidRef}
                   setRoom={setRoom}
                   Room={room}
-                  isViduOpen={isViduOpen}
                 />
               </div>
             ) : null}
