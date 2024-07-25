@@ -83,6 +83,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const startVideoStream = async (e) => {
     e.preventDefault();
     // console.log("startVideoStream", isViduOpen);
+    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
 
     if (isViduOpen) {
       setIsViduOpen(false);
@@ -90,7 +91,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
       setIsViduOpen(true);
     }
     // toggleCamDiv();
-    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
     // console.log("end of startVideoStream", isViduOpen);
   };
 
@@ -171,7 +171,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             {/* <div className={"cam-div " + isViduOpen ? "active" : ""}> */}
             {isViduOpen ? (
               <div className={`cam-div active`}>
-                {isViduOpen ? (
                   <VideoCanvas
                     userName={userName}
                     auctionRoomId={"wholeMap"}
@@ -182,7 +181,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                     Room={room}
                     isViduOpen={isViduOpen}
                   />
-                ) : null}
               </div>
             ) : null}
             <div className="Modals">
@@ -268,7 +266,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            <div className={`lists ${isListOpen ? "open" : ""}`}>
+            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -278,7 +276,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div>
+            </div> */}
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
