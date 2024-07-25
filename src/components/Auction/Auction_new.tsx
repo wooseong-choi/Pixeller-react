@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { io } from "socket.io-client";
 import {
+  LocalParticipant,
   LocalVideoTrack,
   RemoteParticipant,
   RemoteTrack,
@@ -493,6 +494,13 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           }
         }
       );
+
+      room.on("activeSpeakersChanged", (speakers) => {
+        console.log("activeSpeakersChanged: ", speakers);
+        if (!isAuctionStarted) {
+          setBidder(speakers[0]?.identity);
+        }
+      });
 
       room.on(
         RoomEvent.TrackUnsubscribed,
