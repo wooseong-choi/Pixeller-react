@@ -595,50 +595,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
           setAuctionStatusText("경매 종료");
         }
       }
-
-      // if (isSeller) {
-      //   // 경매 시작 로직 작성
-      //   if (everAuctionStarted && !isAuctionStarted) {
-      //     alert("이미 경매가 완료되었습니다.");
-      //   } else if (isAuctionStarted === false && everAuctionStarted === false) {
-      //     setAuctionStatusText("경매 중");
-      //     setIsAuctionStarted(true);
-      //     setEverAuctionStarted(true);
-
-      //     await joinRoom();
-      //     socketRef.current.emit("start", {
-      //       room: props.auctionRoomId,
-      //       init_price: initialPrice,
-      //     });
-
-      //     // 경매 종료 로직 작성
-      //   } else if (isAuctionStarted === true && everAuctionStarted === true) {
-      //     setAuctionStatusText("경매 종료");
-      //     setIsAuctionStarted(false);
-
-      //     await leaveRoom();
-
-      //     // 여기에 openvidu 세션 강제 종료 로직을 넣을 수 있으면 넣을 것.
-      //   }
-      // } else {
-      //   if (everAuctionStarted && !isAuctionStarted) {
-      //     alert("이미 경매가 완료되었습니다.");
-      //   } else if (isAuctionStarted && AuctionStatusText === "경매 중") {
-
-      //   }
-      //   if (isAuctionStarted) {
-      //     joinRoom();
-      //     handleStart();
-      //     setEverAuctionStarted(true);
-      //     setAuctionStatusText("경매 중");
-      //   } else if (isAuctionStarted && everAuctionStarted) {
-      //     handleStop();
-      //     leaveRoom();
-      //     setIsAuctionStarted(false);
-      //     setAuctionStatusText("경매 종료");
-      //     // alert("경매가 시작되지 않았습니다.");
-      //   }
-      // }
     };
 
     // 금액을 올바른 형식으로 표시하는 함수
@@ -653,7 +609,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [endText, setEndText] = useState("");
 
     if (!browserSupportsSpeechRecognition) {
-      return <span>크롬을 사용해 주세요</span>;
+      return alert(
+        "브라우저가 음성 인식을 지원하지 않습니다. 크롬 브라우저를 사용해주세요."
+      );
     }
 
     return (
