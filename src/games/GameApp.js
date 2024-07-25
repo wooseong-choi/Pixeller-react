@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import GameScene from "./GameScene";
+import _ from "lodash";
 
 const NAVBAR_HEIGHT = 64;
 
@@ -11,16 +12,14 @@ const GameApp = () => {
     height: window.innerHeight - NAVBAR_HEIGHT,
   });
 
-  const handleResize = () => {
+  const handleResize = _.debounce(() => {
     const newWidth = window.innerWidth;
     const newHeight = window.innerHeight - NAVBAR_HEIGHT;
     setGameSize({ width: newWidth, height: newHeight });
     if (window.game) {
       window.game.scale.resize(newWidth, newHeight);
     }
-  };
-
-  window.addEventListener("resize", handleResize);
+  }, 300);
 
   useEffect(() => {
     // Phaser.Game 인스턴스가 여러 번 생성되지 않도록 확인
@@ -62,6 +61,7 @@ const GameApp = () => {
       };
     }
 
+    window.addEventListener("resize", handleResize);
     handleResize();
 
     // 컴포넌트 언마운트 시 Phaser 게임 정리

@@ -441,11 +441,11 @@ body {
 }
 .syschat {
   width: 100%;
-  height: 50%;
+  height: 20%;
   position: absolute;
   bottom: 0;
-  /* opacity: 0.4; */
-  background: linear-gradient(to bottom, white, transparent);
+  opacity: 0.4;
+  /* background: linear-gradient(to bottom, white, transparent); */
   background-color: rgba(204, 204, 204, 0.4);
   overflow-y: auto;
   text-align: right;
@@ -461,8 +461,8 @@ body {
 .syschat > p {
   margin: 0;
   padding: 1px;
-  font-size: 14px;
-  font: caption;
+  font-size: 35px;
+  /* font: caption; */
   color: #000;
 }
 
