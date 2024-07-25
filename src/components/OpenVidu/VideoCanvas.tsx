@@ -27,6 +27,7 @@ type VideoCanvasProps = {
   isSeller: boolean;
   setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
   Room: Room;
+  isViduOpen: boolean;
 };
 
 export type VideoCanvasHandle = {
@@ -81,6 +82,7 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       const join = async () => {
         await joinRoom();
       };
+      console.log("component mount");
       join();
 
       return () => {
