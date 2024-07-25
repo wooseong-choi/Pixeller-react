@@ -82,16 +82,13 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const startVideoStream = async (e) => {
     e.preventDefault();
-    // console.log("startVideoStream", isViduOpen);
-    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
+    console.log("startVideoStream", isViduOpen);
 
-    if (isViduOpen) {
-      setIsViduOpen(false);
-    } else {
-      setIsViduOpen(true);
-    }
+    setIsViduOpen((prev) => !prev);
+
     // toggleCamDiv();
-    // console.log("end of startVideoStream", isViduOpen);
+    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
+    console.log("end of startVideoStream", isViduOpen);
   };
 
   const toggleCamDiv = () => {
@@ -161,6 +158,11 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
     window.addEventListener("start-auction", startAuction);
+
+    return () => {
+      window.removeEventListener("start-video", startVideoStream);
+      window.removeEventListener("start-auction", startAuction);
+    };
   }, []);
 
   return (
@@ -171,16 +173,16 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             {/* <div className={"cam-div " + isViduOpen ? "active" : ""}> */}
             {isViduOpen ? (
               <div className={`cam-div active`}>
-                  <VideoCanvas
-                    userName={userName}
-                    auctionRoomId={"wholeMap"}
-                    isMicOpen={isMicOpen}
-                    isCamOpen={isCamOpen}
-                    ref={MainVidRef}
-                    setRoom={setRoom}
-                    Room={room}
-                    isViduOpen={isViduOpen}
-                  />
+                <VideoCanvas
+                  userName={userName}
+                  auctionRoomId={"wholeMap"}
+                  isMicOpen={isMicOpen}
+                  isCamOpen={isCamOpen}
+                  ref={MainVidRef}
+                  setRoom={setRoom}
+                  Room={room}
+                  isViduOpen={isViduOpen}
+                />
               </div>
             ) : null}
             <div className="Modals">
