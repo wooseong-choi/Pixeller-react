@@ -204,7 +204,7 @@ class Player implements iChara {
     if (isMoving) {
       if (!move_soundEffect.isPlaying) {
         move_soundEffect.play({
-          volume: 0.2,
+          volume: 0.1,
           loop: true,
         });
       }
