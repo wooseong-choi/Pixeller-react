@@ -368,7 +368,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setBidder(data.username);
             // setCountDown(10);
             triggerCoinConfetti();
-            // playBidSounds();
+            bidSound.play().catch((error) => console.error("Error playing bid sound:", error));
+            if (data.username === username) {
+              setTimeout(() => {
+                playRandomBidSound();
+              }, 1000);
+            }
             break;
           case "countdown":
             countdown_sound[data.tick - 1].play().catch((error) => console.error("Error playing auction start sound:", error));            
