@@ -5,7 +5,7 @@ const Bgm = ({clickPauseHandler, bgmRunning, isAuctionOpen}) => {
   useEffect(() => {
     const audioElement = document.getElementById('audio');
     if (audioElement) {
-      audioElement.volume = 0.4; // 볼륨을 절반으로 설정
+      audioElement.volume = 0.2; // 볼륨을 절반으로 설정
     }
   }, [bgmRunning]); // bgmRunning이 변경될 때마다 실행
 
