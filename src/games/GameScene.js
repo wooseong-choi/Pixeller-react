@@ -1089,7 +1089,7 @@ class GameScene extends Phaser.Scene {
   }
 
   handleUnProximityEvent(player1) {
-    console.log(`플레이어 ${player1}가 충돌 반경 에서 벗어났습니다!`);
+    // console.log(`플레이어 ${player1}가 충돌 반경 에서 벗어났습니다!`);
     // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
     
     window.dispatchEvent(
