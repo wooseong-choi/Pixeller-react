@@ -25,7 +25,7 @@ export const createProduct = async (productDto, imgFiles) => {
     });
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -35,7 +35,7 @@ export const getAllProducts = async () => {
     const response = await axiosCRUDInstance.get("/api/products");
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -45,7 +45,7 @@ export const getProductById = async (id) => {
     const response = await axiosCRUDInstance.get(`/api/products/${id}`);
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -73,7 +73,7 @@ export const updateProduct = async (id, productDto, imgFiles) => {
     );
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -83,7 +83,7 @@ export const deleteProduct = async (id) => {
     const response = await axiosCRUDInstance.delete(`/api/products/${id}`);
     return response.status;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -95,7 +95,7 @@ export const getProductFiles = async (productId) => {
     );
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -111,7 +111,7 @@ export const createPurchaseWish = async (productId) => {
       return false;
     }
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -130,7 +130,7 @@ export const checkSellerTrueOrFalse = async (username, productId) => {
     );
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };
 
@@ -145,6 +145,6 @@ export const checkSellerProduct = async () => {
     });
     return response.data;
   } catch (error) {
-    throw error;
+    // throw error;
   }
 };

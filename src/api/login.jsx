@@ -16,7 +16,7 @@ export const login = async (user) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error;
+    // throw error;
   }
 };
 
@@ -39,7 +39,7 @@ export const loginS = async (user) => {
     }
   } catch (error) {
     console.log(error);
-    return alert("에러가 발생했습니다.");
+    // return alert("에러가 발생했습니다.");
   }
 };
 

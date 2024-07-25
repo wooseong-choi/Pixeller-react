@@ -27,7 +27,7 @@ const ProductCreate = ({ handleClose }) => {
   };
 
   const deleteFile = (deleteFile) => {
-    setSelectedFiles(selectedFiles.filter(file => file !== deleteFile));
+    setSelectedFiles(selectedFiles.filter((file) => file !== deleteFile));
   };
 
   const user = sessionStorage.getItem("username");
@@ -42,12 +42,15 @@ const ProductCreate = ({ handleClose }) => {
   };
 
   const getUploadUrl = async (file) => {
-    const response = await axiosCRUDInstance.get("/api/presigned-url/"+file.name, {
-      headers: {
-        // "Content-Type": "multipart/form-data",
-        authorization: "Bearer " + sessionStorage.getItem("user"),
-      },
-    });
+    const response = await axiosCRUDInstance.get(
+      "/api/presigned-url/" + file.name,
+      {
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          authorization: "Bearer " + sessionStorage.getItem("user"),
+        },
+      }
+    );
     return response.data;
   };
 
@@ -62,15 +65,18 @@ const ProductCreate = ({ handleClose }) => {
       const file = form.imgFiles.files[i];
       const uploadUrl = await getUploadUrl(file);
       console.log(uploadUrl.data.url);
-      
+
       const response = await axios.put(uploadUrl.data.url, file, {
         headers: {
-          'Content-Type': 'image/png',
+          "Content-Type": "image/png",
           // authorization: "Bearer " + sessionStorage.getItem("user"),
         },
       });
 
-      files.push({path: uploadUrl.data.url.split('?')[0], filename: file.name});
+      files.push({
+        path: uploadUrl.data.url.split("?")[0],
+        filename: file.name,
+      });
 
       console.log(response);
     }
@@ -90,7 +96,7 @@ const ProductCreate = ({ handleClose }) => {
     }
 
     var fileCheck = document.getElementById("file-input").value;
-    if(!fileCheck){
+    if (!fileCheck) {
       alert("사진을 등록해주세요");
       return false;
     }
@@ -100,12 +106,12 @@ const ProductCreate = ({ handleClose }) => {
     //   alert("판매자 정보가 없습니다.");
     //   return false;
     // }
-    
+
     const databody = {
       files: files,
       name: formData.get("name"),
       description: formData.get("description"),
-      price:formData.get("price"),
+      price: formData.get("price"),
     };
 
     // return false;
@@ -124,16 +130,15 @@ const ProductCreate = ({ handleClose }) => {
       }
       // return response.data;
     } catch (error) {
-      throw error;
+      // throw error;
     }
   };
 
   const handleCloseHandler = (e) => {
-    const item = document.querySelector('.bottom_menu_item.item');
+    const item = document.querySelector(".bottom_menu_item.item");
     item.setAttribute("class", item.getAttribute("class") + " off");
     handleClose();
   };
-
 
   return (
     <div className="product-create-content">
@@ -174,15 +179,17 @@ const ProductCreate = ({ handleClose }) => {
                 onChange={handleInputChange}
                 value={value}
               />
-              
+
               <label className="label-upload">사진 업로드</label>
               <div className="photo-upload">
                 <div className="upload-placeholder">
                   {selectedFiles.length === 0 && (
-                      <span
+                    <span
                       className="plus-icon"
-                      onClick={() => document.getElementById("file-input").click()}
-                      >
+                      onClick={() =>
+                        document.getElementById("file-input").click()
+                      }
+                    >
                       <img src="icon/svg/sagin.svg" alt="plus" />
                     </span>
                   )}
@@ -201,9 +208,13 @@ const ProductCreate = ({ handleClose }) => {
                         src={URL.createObjectURL(file)}
                         alt={`Preview ${index}`}
                         className="uploaded-image"
-                        onClick={() => document.getElementById("file-input").click()}
+                        onClick={() =>
+                          document.getElementById("file-input").click()
+                        }
                       />
-                      <button type="button" onClick={() => deleteFile(file)}>X</button>
+                      <button type="button" onClick={() => deleteFile(file)}>
+                        X
+                      </button>
                     </div>
                   ))}
                 </div>
