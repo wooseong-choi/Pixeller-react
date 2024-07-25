@@ -991,6 +991,11 @@ class GameScene extends Phaser.Scene {
       }
     }
 
+    // 충돌 반경 내에서의 충돌 감지
+    if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.player.x, this.player.y) < this.player.collisionRadius) {
+      this.handleProximityEvent();
+    }
+
     // 'Q' 키가 눌렸을 때 실행할 코드
     // if (Phaser.Input.Keyboard.JustDown(this.qKey)) {
     // this.Player.moveTo(600, 320);
@@ -1022,6 +1027,11 @@ class GameScene extends Phaser.Scene {
     // if( Phaser.Input.Keyboard.JustDown(this.cursors.space)){
     //   console.log("space key down");
     // }
+  }
+
+  handleProximityEvent() {
+    console.log('플레이어가 충돌 반경 내에 있습니다!');
+    // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
   }
 
   checkPlayersInSpecialArea(centralAreaName) {
