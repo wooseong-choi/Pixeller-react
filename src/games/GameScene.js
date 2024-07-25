@@ -48,6 +48,7 @@ class GameScene extends Phaser.Scene {
       },
     });
     this.OPlayer = {};
+    this.camOPlayers = [];
     this.temp_OPlayer = {};
 
     this.x = 32;
@@ -997,13 +998,34 @@ class GameScene extends Phaser.Scene {
 
     // 충돌 반경 내에서의 충돌 감지
     // 모든 플레이어 간의 충돌 반경 내에서의 충돌 감지
-    const playersArray = this.players.getChildren();
-    for (let i = 0; i < playersArray.length; i++) {
-      if(playersArray[i] != this.player){
-        if (this.checkProximity(this.player, playersArray[i])) {
-          this.handleProximityEvent(this.player, playersArray[i]);
+    // const playersArray = this.players.getChildren();
+    // for (let i = 0; i < playersArray.length; i++) {
+    //   if(playersArray[i] != this.player){
+    //     if (this.checkProximity(this.player, playersArray[i])) {
+    //       this.handleProximityEvent(this.player, playersArray[i]);
+    //     }
+    //   }
+    // }
+
+    for (let key in this.OPlayer) {
+      const otherPlayer = this.OPlayer[key].player;
+      if(otherPlayer != this.player){
+        if (this.checkProximity(this.player, otherPlayer)) {
+          this.handleProximityEvent(this.player, otherPlayer);
         }
       }
+    }
+
+    for (let index = 0; index < this.camOPlayers.length; index++) {
+      const otherPlayer = this.camOPlayers[index];
+      if(otherPlayer != this.player){
+        if (!this.checkProximity(this.player, otherPlayer)) {
+          this.camOPlayers.splice(index, 1);
+        }
+      }      
+    }
+    if(this.camOPlayers.length == 0){
+      this.handleUnProximityEvent(this.player);
     }
 
     // 'Q' 키가 눌렸을 때 실행할 코드
@@ -1047,12 +1069,33 @@ class GameScene extends Phaser.Scene {
   handleProximityEvent(player1, player2) {
     console.log(`플레이어 ${player1}와 ${player2}가 충돌 반경 내에 있습니다!`);
     // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
+    
+    // player2를 players 배열에 추가
+    if (!this.camOPlayers.includes(player2)) {
+      this.camOPlayers.push(player2);
+      console.log(`player2 (${player2})가 배열에 추가되었습니다.`);
+    }
+
     window.dispatchEvent(
       new CustomEvent("start-video", {
         detail: {
           uid: this.uid,
           unsername: this.username,
           method: 'join'
+        },
+      })
+    );
+  }
+
+  handleUnProximityEvent(player1) {
+    console.log(`플레이어 ${player1}가 충돌 반경 에서 벗어났습니다!`);
+    // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
+    
+    window.dispatchEvent(
+      new CustomEvent("end-video", {
+        detail: {
+          uid: this.uid,
+          unsername: this.username,
         },
       })
     );
