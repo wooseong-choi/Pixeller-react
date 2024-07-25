@@ -22,7 +22,7 @@ const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
             const subscribe = () => {
                 // stompClient.send(`/sub/chat-room/${user.uid}?page=${page}&size=${size}`);
                 stompClient.subscribe(`/sub/chat-room/${user.uid}`, (res) => {
-                    console.log('TㅅT',res);
+                    // console.log('TㅅT',res);
                     showChatList(JSON.parse(res.body));
                 });
                 stompClient.send(`/pub/chat-room/${user.uid}`,{},JSON.stringify({
@@ -39,7 +39,7 @@ const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
         if(chatRoomId) {
             const subscribe = () => {
                 stompClient.subscribe(`/sub/message/direct/${chatRoomId}`, (res) => {
-                    console.log('ㅗVㅗ',res);
+                    // console.log('ㅗVㅗ',res);
                     showMessage(JSON.parse(res.body));
                 });
                 stompClient.send(`/pub/message/direct/${chatRoomId}`,{},JSON.stringify({
@@ -52,9 +52,9 @@ const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
     }, [chatRoomId]);
 
     const showChatList = (cl) => {
-        console.log('showChatList',cl);
+        // console.log('showChatList',cl);
         if(cl.content.length > 0){
-            console.log(cl.content);
+            // console.log(cl.content);
             if(cl.currentPage === 0) setChatList(cl.content);
             else if(cl.currentPage > 0) setChatList(prevList => [...cl.content, ...prevList]);
         }
@@ -64,7 +64,7 @@ const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
 
     const joinRoomHandler = (e) => {
         const roomId = e.currentTarget.getAttribute('id');
-        console.log(roomId);
+        // console.log(roomId);
         const splitedRoomId = roomId.split('-')[1];
         setChatRoomId(splitedRoomId);
         setRoomIdFirstSend(splitedRoomId);
@@ -76,7 +76,7 @@ const Chat = ({stompClient, roomIdFirstSend, setRoomIdFirstSend}) => {
     }
     
     const showMessage = (message) => {
-        console.log(message);
+        // console.log(message);
 
         if(message.isBulk){
             if(message.content.length > 0){

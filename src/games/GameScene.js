@@ -197,7 +197,7 @@ class GameScene extends Phaser.Scene {
 
         case "userList":
           // 채팅 nav에서 접속한 전체 유저의 목록을 받는 이벤트이다
-          console.log(data);
+          // console.log(data);
           window.dispatchEvent(
             new CustomEvent("receive-userlist", {
               detail: { users: data.users },
@@ -216,12 +216,12 @@ class GameScene extends Phaser.Scene {
 
     // 웹 소켓 끊겼을 때 발생 이벤트
     this.socket.on("disconnecting", function () {
-      console.log("Socket.IO disconnected.");
+      // console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
     });
 
     this.socket.on("disconnect", function () {
-      console.log("Socket.IO disconnected.");
+      // console.log("Socket.IO disconnected.");
       this.socket?.emit("leave");
     });
 
@@ -231,7 +231,7 @@ class GameScene extends Phaser.Scene {
         this.socket.disconnect();
         window.location.href = "/";
       } else if (error.message === "Invalid token") {
-        console.log("Session expired. Redirecting to login page.");
+        // console.log("Session expired. Redirecting to login page.");
         const refreshToken = getCookie("refresh_token");
         axiosInstance
           .post(
@@ -244,7 +244,7 @@ class GameScene extends Phaser.Scene {
             }
           )
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             sessionStorage.removeItem("user");
             sessionStorage.setItem("user", res.data.jwt);
             const option = {
@@ -261,7 +261,7 @@ class GameScene extends Phaser.Scene {
             this.socket.emit("refreshToken", res.data.jwt);
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
             // alert("Session expired. Redirecting to login page.");
             // Navigate("/");
           });
@@ -735,7 +735,7 @@ class GameScene extends Phaser.Scene {
 
   async create_OPlayer() {
     if (!this.players) {
-      console.error("players group is not initialized");
+      // console.error("players group is not initialized");
       return;
     }
 
@@ -812,7 +812,7 @@ class GameScene extends Phaser.Scene {
       // });
 
     } catch (error) {
-      console.error("Failed to load products", error);
+      // console.error("Failed to load products", error);
     }
   }
   

@@ -29,7 +29,7 @@ const ChatDivComponent = ({stompClient,messages}) => {
                 detail: { sender: user.id, message: message }
             }));
         } catch (error) {
-            console.error('Error sending message: ', error);
+            // console.error('Error sending message: ', error);
         }
         // document.getElementById("message").value = "";
         setMessage(''); // 메시지 전송 후 입력 필드 초기화
