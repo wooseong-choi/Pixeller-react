@@ -188,7 +188,6 @@
   background: #3b3b3b;
   border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 10px;
   z-index: 2;
   height: auto;
   width: auto;
@@ -415,7 +414,7 @@
   box-sizing: border-box; /* 패딩과 보더를 포함한 전체 크기 계산 */
   padding: 10px;
   text-align: center;
-  border: 2px solid #999;
+  /* border: 2px solid #999; */
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 세로 방향으로 정렬 */
   justify-content: center; /* 세로 중앙 정렬 */
@@ -643,13 +642,13 @@ body {
   font-weight: bold;
 }
 
-.winner {
+/* .winner {
   border: 2px solid #fc9905;
 }
 
 .bidder {
   border: 2px solid #2359e4;
-}
+} */
 
 .price-animation-overlay {
   position: fixed;
@@ -674,4 +673,8 @@ body {
 
 .auction-new-right-right .title h1 .animated-max-bid-price {
   display: inline-block;
+}
+
+.product-detail-div {
+  overflow: auto;
 }
