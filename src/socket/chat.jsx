@@ -52,7 +52,7 @@ const createDirectRoom = async (token, receiverId) => {
     );
     return response.data.data.roomId;
   } catch (error) {
-    console.error('Failed to create direct room: ', error);
+    // console.error('Failed to create direct room: ', error);
   }
 };
 
