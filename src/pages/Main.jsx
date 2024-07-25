@@ -83,12 +83,28 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   const startVideoStream = async (e) => {
     e.preventDefault();
     console.log("startVideoStream", isViduOpen);
-
+    
+    const detail = e.detail;
+    const isViduDivOpen = document.querySelector(".cam-div");
+    
+    if(detail.method === 'join' && isViduDivOpen) {
+      return false;
+    }
+    
     setIsViduOpen((prev) => !prev);
-
+    
     // toggleCamDiv();
     if (MainVidRef.current) await MainVidRef.current.leaveRoom();
     console.log("end of startVideoStream", isViduOpen);
+  };
+
+  const endVideoStream = async (e) => {
+    e.preventDefault();
+    console.log("endVideoStream", isViduOpen);
+    setIsViduOpen(false);
+    // toggleCamDiv();
+    if (MainVidRef.current) await MainVidRef.current.leaveRoom();
+    console.log("end of endVideoStream", isViduOpen);
   };
 
   const toggleCamDiv = () => {
@@ -158,10 +174,12 @@ const Main = ({ isListOpen, setIsListOpen }) => {
   useEffect(() => {
     window.addEventListener("start-video", startVideoStream);
     window.addEventListener("start-auction", startAuction);
-
+    window.addEventListener("end-video", endVideoStream);
+    
     return () => {
       window.removeEventListener("start-video", startVideoStream);
       window.removeEventListener("start-auction", startAuction);
+      window.removeEventListener("end-video", endVideoStream);
     };
   }, []);
 
@@ -181,7 +199,6 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                   ref={MainVidRef}
                   setRoom={setRoom}
                   Room={room}
-                  isViduOpen={isViduOpen}
                 />
               </div>
             ) : null}

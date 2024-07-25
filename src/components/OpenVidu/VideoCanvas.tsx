@@ -27,7 +27,6 @@ type VideoCanvasProps = {
   isSeller: boolean;
   setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
   Room: Room;
-  isViduOpen: boolean;
 };
 
 export type VideoCanvasHandle = {

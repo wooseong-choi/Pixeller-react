@@ -41,6 +41,8 @@ class Player implements iChara {
   direction: string;
   oldPosition: { x: number; y: number };
   client_id: string;
+  // 충돌 반경 설정 (예: 100 픽셀)
+  collisionRadius = 100;
   /**
    * constructor of class Player
    * @param obj Game Object of Phaser
