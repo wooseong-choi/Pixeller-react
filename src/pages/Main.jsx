@@ -268,7 +268,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
             <div id="gameMain" className="game">
               <GameApp />
             </div>
-            <div className={`lists ${isListOpen ? "open" : ""}`}>
+            {/* <div className={`lists ${isListOpen ? "open" : ""}`}>
               <List
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -278,7 +278,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
                 openPCModal={openPCModal}
                 setTotalProductCounts={setTotalProductCounts}
               />
-            </div>
+            </div> */}
             <div className="bottom_menu_div ">
               <BottomMenu
                 closePLModal={closePLModal}
