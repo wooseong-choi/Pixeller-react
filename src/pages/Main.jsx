@@ -189,7 +189,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
         <div id="GameApp" className="flex">
           <div id="canvas-parent" className="flex main">
             {/* <div className={"cam-div " + isViduOpen ? "active" : ""}> */}
-            {isViduOpen ? (
+            {isViduOpen && !isAuctionOpen ? (
               <div className={`cam-div active`}>
                 <VideoCanvas
                   userName={userName}
@@ -306,7 +306,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
               />
             </div>
             <div className="product_list_div">
-              {isPLListOpen ? (
+              {isPLListOpen && !isAuctionOpen ? (
                 <ProductBox
                   closePLModal={closePLModal}
                   setRoomIdFirstSend={setRoomIdFirstSend}

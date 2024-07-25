@@ -124,7 +124,7 @@ body {
     skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) 
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)
   );
-  z-index: 9999;
+  z-index: 59999;
   margin: auto;
 }
 

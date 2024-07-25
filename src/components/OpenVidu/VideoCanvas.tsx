@@ -145,43 +145,54 @@ const VideoCanvas = forwardRef<VideoCanvasHandle, VideoCanvasProps>(
       }
     }
 
+    // async function micController(isMicOpen: boolean) {
+    //   // if (room) {
+    //   //   room.localParticipant.setMicrophoneEnabled(isMicOpen);
+    //   // }
+    //   if (localTrack) {
+    //     if (localTrack.isMuted && !isMicOpen) {
+    //       localTrack.unmute();
+    //     } else if (!localTrack.isMuted && isMicOpen) {
+    //       localTrack.mute();
+    //     } else {
+    //       console.log("undefined status: ", localTrack.isMuted, isMicOpen);
+    //     }
+    //   } else {
+    //     console.log("localTrack is undefined");
+    //   }
+    // }
+
+    // async function camController(isCamOpen: boolean) {
+    //   // if (room) {
+    //   //   room.localParticipant.setCameraEnabled(isCamOpen);
+    //   // }
+    //   if (localTrack) {
+    //     if (localTrack.isUpstreamPaused && !isCamOpen) {
+    //       localTrack.resumeUpstream();
+    //     } else if (!localTrack.isUpstreamPaused && isCamOpen) {
+    //       localTrack.pauseUpstream();
+    //     } else {
+    //       console.log(
+    //         "undefined status: ",
+    //         localTrack.isUpstreamPaused,
+    //         isCamOpen
+    //       );
+    //     }
+    //   } else {
+    //     console.log("localTrack is undefined");
+    //   }
+    // }
     async function micController(isMicOpen: boolean) {
-      // if (room) {
-      //   room.localParticipant.setMicrophoneEnabled(isMicOpen);
-      // }
-      if (localTrack) {
-        if (localTrack.isMuted && !isMicOpen) {
-          localTrack.unmute();
-        } else if (!localTrack.isMuted && isMicOpen) {
-          localTrack.mute();
-        } else {
-          console.log("undefined status: ", localTrack.isMuted, isMicOpen);
-        }
-      } else {
-        console.log("localTrack is undefined");
+      if (props.Room) {
+        props.Room.localParticipant.setMicrophoneEnabled(isMicOpen);
+      }
+    }
+    async function camController(isCamOpen: boolean) {
+      if (props.Room) {
+        props.Room.localParticipant.setCameraEnabled(isCamOpen);
       }
     }
 
-    async function camController(isCamOpen: boolean) {
-      // if (room) {
-      //   room.localParticipant.setCameraEnabled(isCamOpen);
-      // }
-      if (localTrack) {
-        if (localTrack.isUpstreamPaused && !isCamOpen) {
-          localTrack.resumeUpstream();
-        } else if (!localTrack.isUpstreamPaused && isCamOpen) {
-          localTrack.pauseUpstream();
-        } else {
-          console.log(
-            "undefined status: ",
-            localTrack.isUpstreamPaused,
-            isCamOpen
-          );
-        }
-      } else {
-        console.log("localTrack is undefined");
-      }
-    }
 
     async function leaveRoom() {
       // Leave the room by calling 'disconnect' method over the Room object
