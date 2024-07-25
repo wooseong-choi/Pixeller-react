@@ -609,8 +609,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [endText, setEndText] = useState("");
 
     if (!browserSupportsSpeechRecognition) {
-      return alert(
-        "브라우저가 음성 인식을 지원하지 않습니다. 크롬 브라우저를 사용해주세요."
+      return (
+        <>
+          {alert(
+            "브라우저가 음성 인식을 지원하지 않습니다. 크롬 브라우저를 사용해주세요."
+          )}
+        </>
       );
     }
 
