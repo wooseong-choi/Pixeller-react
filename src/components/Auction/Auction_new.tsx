@@ -187,7 +187,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         origin: { y: 0.6 },
         zIndex: 1003,
       });
-
+      
       congratulation
         .play()
         .catch((error) => console.error("Error playing sound:", error));
@@ -368,6 +368,9 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             setBidder(data.username);
             // setCountDown(10);
             triggerCoinConfetti();
+            if (data.username !== username) {
+              bidSound.play().catch((error) => console.error("Error playing bid sound:", error));
+            }
             // playBidSounds();
             break;
           case "countdown":
@@ -748,27 +751,18 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
                               </div>
                               <span>{remoteTrack.participantIdentity}</span>
                             </>
-                          ) : // <AudioComponent
-                          //   key={remoteTrack.trackPublication.trackSid}
-                          //   track={remoteTrack.trackPublication.audioTrack!}
-                          // />
-                          null}
+                          ) : (
+                            <AudioComponent
+                              key={remoteTrack.trackPublication.trackSid}
+                              track={remoteTrack.trackPublication.audioTrack!}
+                            />
+                          )}
                         </>
                       )
                   )}
-                  {remoteTracks.map((remoteTrack, index) => (
-                    <>
-                      {remoteTrack.trackPublication.kind === "video" ? null : (
-                        <AudioComponent
-                          key={remoteTrack.trackPublication.trackSid}
-                          track={remoteTrack.trackPublication.audioTrack!}
-                        />
-                      )}
-                    </>
-                  ))}
                 </div>
                 <div className="auction-new-right-right">
-                  <div className="title">
+                <div className="title">
                     <h1>Price {<AnimatedBidPrice price={maxBidPrice} />}</h1>
                   </div>
                   {showPriceAnimation && (

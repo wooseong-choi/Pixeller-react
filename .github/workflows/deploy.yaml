@@ -3,7 +3,7 @@ name: Deploy React App
 on:
   push:
     branches:
-      - dev-feat003-pilaf
+      - release_deploy
 
 jobs:
   build:
