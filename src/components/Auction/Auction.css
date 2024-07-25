@@ -441,19 +441,20 @@ body {
 }
 .syschat {
   width: 100%;
-  height: 20%;
+  height: 15%;
   position: absolute;
   bottom: 0;
   opacity: 0.4;
   /* background: linear-gradient(to bottom, white, transparent); */
-  background-color: rgba(204, 204, 204, 0.4);
+  background-color: rgba(256, 256, 256, 0.4);
   overflow-y: auto;
   text-align: right;
 }
 .syschat:hover,
 .syschat:active,
 .syschat:focus {
-  background-color: rgba(204, 204, 204, 0.8);
+  height: 40%;
+  background-color: rgba(256, 256, 256, 0.8);
   opacity: 1;
   transition: opacity 0.5s;
 }
@@ -461,7 +462,7 @@ body {
 .syschat > p {
   margin: 0;
   padding: 1px;
-  font-size: 35px;
+  font-size: 25px;
   /* font: caption; */
   color: #000;
 }
@@ -662,7 +663,7 @@ body {
 .price-animation-overlay .animated-max-bid-price {
   font-size: 0.35em;
   color: #2359e4;
-  background-color: unset!important;
+  background-color: unset !important;
   border-radius: unset;
   padding: 0;
   cursor: none;
@@ -671,6 +672,6 @@ body {
   line-height: inherit;
 }
 
-.auction-new-right-right .title h1 .animated-max-bid-price{
+.auction-new-right-right .title h1 .animated-max-bid-price {
   display: inline-block;
 }
