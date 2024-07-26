@@ -132,11 +132,11 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
                       <span>판매자 : {item.memberDto.id}</span>
                   </div>
                   <div className="new-product-DM-div">
-                    <div>
-                      <span onClick={dmHandler} data-uid={item.memberDto.memberId} >판매자에게 DM 보내기</span>
+                    <div onClick={dmHandler} data-uid={item.memberDto.memberId} >
+                      <span>판매자에게 DM 보내기</span>
                     </div>
-                    <div>
-                      <span onClick={()=>{handleSetAuctionProduct(item);}} data-uid={item.memberDto.memberId} >경매하러가기</span>
+                    <div onClick={()=>{handleSetAuctionProduct(item);}} data-uid={item.memberDto.memberId}>
+                      <span  >경매하러가기</span>
                     </div>
                   </div>
                 </div>
