@@ -134,6 +134,7 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     const [bidPrice, setBidPrice] = useState(initialPrice); // 현재 입찰가
     const [maxBidPrice, setMaxBidPrice] = useState(initialPrice); // 최고 입찰가
     const [syschat, setSyschat] = useState(""); // 시스템 채팅
+    const [bidReady, setBidReady] = useState(true); // 입찰 준비 완료 여부
 
     // 상품 관련
     const [product, setProduct] = useState({
@@ -247,16 +248,22 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
     };
 
     const bidding = (price) => {
-      socketRef.current.emit("bid", {
-        room: props.auctionRoomId,
-        bid_price: price,
-        username: username,
-        product_id: productId,
-        bid_time: new Date().toISOString(),
-      });
+      if (bidReady) {
+        socketRef.current.emit("bid", {
+          room: props.auctionRoomId,
+          bid_price: price,
+          username: username,
+          product_id: productId,
+          bid_time: new Date().toISOString(),
+        });
+        setBidReady(false);
+        setTimeout(() => {
+          setBidReady(true);
+        }, 1000);
 
-      triggerCoinConfetti();
-      playBidSounds();
+        triggerCoinConfetti();
+        playBidSounds();
+      }
     };
 
     const handleBid = (event) => {
