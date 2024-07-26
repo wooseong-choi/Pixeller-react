@@ -224,13 +224,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       confetti({
         ...defaults,
         particleCount: 80,
-        scalar: 2,
-        shapes: ["circle"],
-      });
-
-      confetti({
-        ...defaults,
-        particleCount: 80,
         scalar: 3,
         shapes: ["circle"],
       });
@@ -266,22 +259,25 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
       }
     };
 
+    const upBidPrice = (upPrice) => {
+      setBidPrice(maxBidPrice + upPrice);
+      bidding(maxBidPrice + upPrice);
+    };
+
     const handleBid = (event) => {
       if (isAuctionStarted && bidPrice > maxBidPrice) {
-        bidding(bidPrice);
+        bidding(bidPrice)
       }
-      // && !isSeller) // <= 로직 정리 후에 다시 삽입.
+        // && !isSeller) // <= 로직 정리 후에 다시 삽입.
     };
     const handleMinBid = (event) => {
       if (isAuctionStarted) {
-        setBidPrice(maxBidPrice + 500);
-        bidding(maxBidPrice + 500);
+        upBidPrice(500);
       }
     };
     const handleMinBidTimes = (event) => {
       if (isAuctionStarted) {
-        setBidPrice(maxBidPrice + 1000);
-        bidding(maxBidPrice + 1000);
+        upBidPrice(1000);
       }
     };
 
