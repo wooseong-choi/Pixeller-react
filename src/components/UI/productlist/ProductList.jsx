@@ -1,12 +1,18 @@
 // SidebarSection.js
 import React, { useEffect, useRef, useState } from "react";
 // import Swiper JS
-import Swiper from 'swiper/bundle';
+import Swiper from "swiper/bundle";
 // import Swiper styles
-import '../../../static/css/swiper-bundle.min.css';
+import "../../../static/css/swiper-bundle.min.css";
 import { axiosCRUDInstance } from "../../../api/axios.jsx";
 
-const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuctionOpen, goProductId}) => {
+const ProductList = ({
+  products,
+  setRoomIdFirstSend,
+  setAuctionProduct,
+  setIsAuctionOpen,
+  goProductId,
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Throttle function to limit the execution of the event handler
@@ -34,17 +40,17 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
           prevIndex > 0 ? prevIndex - 1 : prevIndex
         );
       }
-    },300); // 1 second delay
+    }, 300); // 1 second delay
 
     window.addEventListener("wheel", handleSwipe);
 
     if (products.length > 0) {
-        const swiper = new Swiper('.product-bottom .swiper-container', {
-            navigation: {
-                nextEl: ".product-bottom .swiper-button-next",
-                prevEl: ".product-bottom .swiper-button-prev",
-            },
-        });
+      const swiper = new Swiper(".product-bottom .swiper-container", {
+        navigation: {
+          nextEl: ".product-bottom .swiper-button-next",
+          prevEl: ".product-bottom .swiper-button-prev",
+        },
+      });
     }
     return () => {
       window.removeEventListener("wheel", handleSwipe);
@@ -53,20 +59,24 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
 
   const comma3number = (num) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  }
+  };
 
   const dmHandler = async (e) => {
-    const oppositeId = e.currentTarget.getAttribute('data-uid');
-  
+    const oppositeId = e.currentTarget.getAttribute("data-uid");
+
     try {
-      const response = await axiosCRUDInstance.post("/api/chat-room/opposite/"+oppositeId,{}, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + sessionStorage.getItem("user"),
-        },
-      });
+      const response = await axiosCRUDInstance.post(
+        "/api/chat-room/opposite/" + oppositeId,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + sessionStorage.getItem("user"),
+          },
+        }
+      );
       const result = response.data;
-      console.log('result',result );
+      console.log("result", result);
       if (result.success) {
         const roomId = result.data["roomId"];
         setRoomIdFirstSend(roomId);
@@ -76,7 +86,7 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
     } catch (error) {
       console.error("Error during DM API call:", error);
     }
-  }
+  };
 
   const handleSetAuctionProduct = (productId) => {
     setAuctionProduct(productId);
@@ -84,8 +94,8 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
   };
 
   useEffect(() => {
-    if (goProductId ) {
-      document.querySelectorAll('.product-item-card' ).forEach((item, index) => {
+    if (goProductId) {
+      document.querySelectorAll(".product-item-card").forEach((item, index) => {
         if (item.id === `product-${goProductId}`) {
           setSelectedIndex(index);
         }
@@ -95,29 +105,33 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
 
   return (
     <>
-        {products.map((item, index) => (
-          <div
-            key={item.productId}
-            id={`product-${item.productId}`}
-            className={`product-item-card ${
-              index === selectedIndex ? "selected" : ""
-            }`}
-            style={{ transform: `translateY(${(index - selectedIndex) * 100}%)` }}
-          >
-            
-            <div className="product-bottom">
-                <div className="swiper-container swiper">
-                    <div className="swiper-wrapper">
-                    {item.imageFileUrls.map((url, index) => (
-                        <>
-                        <div key={index} className="swiper-slide">
-                        <img key={index} src={url} alt="product" />
-                        </div>
-                        </>
-                    ))}
+      {products.map((item, index) => (
+        <div
+          key={item.productId}
+          id={`product-${item.productId}`}
+          className={`product-item-card ${
+            index === selectedIndex ? "selected" : ""
+          }`}
+          style={{ transform: `translateY(${(index - selectedIndex) * 100}%)` }}
+        >
+          <div className="product-bottom">
+            <div className="swiper-container swiper">
+              <div className="swiper-wrapper">
+                {item.imageFileUrls.map((url, index) => (
+                  <>
+                    <div key={index} className="swiper-slide">
+                      <img key={index} src={url} alt="product" />
                     </div>
-                    <div className="swiper-button-next"></div>
-                    <div className="swiper-button-prev"></div>
+                  </>
+                ))}
+              </div>
+              <div className="swiper-button-next"></div>
+              <div className="swiper-button-prev"></div>
+            </div>
+            <div className="new-product-info">
+              <div className="new-product-info-div">
+                <div className="product-name">
+                  <span>{item.name}</span>
                 </div>
                 <div className="new-product-info">
                   <div className="new-product-info-div">
@@ -140,9 +154,11 @@ const ProductList = ({products, setRoomIdFirstSend, setAuctionProduct, setIsAuct
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
-            ))}
+        </div>
+      ))}
     </>
   );
 };
