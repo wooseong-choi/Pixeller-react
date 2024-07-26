@@ -495,13 +495,6 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
         }
       );
 
-      room.on("activeSpeakersChanged", (speakers) => {
-        console.log("activeSpeakersChanged: ", speakers);
-        if (!isAuctionStarted) {
-          setBidder(speakers[0]?.identity);
-        }
-      });
-
       room.on(
         RoomEvent.TrackUnsubscribed,
         (
