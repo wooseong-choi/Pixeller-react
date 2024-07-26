@@ -150,7 +150,7 @@ const ProductList = ({
                       <span>판매자에게 DM 보내기</span>
                     </div>
                     <div onClick={()=>{handleSetAuctionProduct(item);}} data-uid={item.memberDto.memberId}>
-                      <span  >경매하러가기</span>
+                      <span>경매하러가기</span>
                     </div>
                   </div>
                 </div>
