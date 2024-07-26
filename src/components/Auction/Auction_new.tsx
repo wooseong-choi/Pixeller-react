@@ -599,8 +599,12 @@ const Auction_new = forwardRef<VideoCanvasHandle, AuctionSellerProps>(
             init_price: initialPrice,
           });
           setAuctionStatusText("경매 중");
+          setIsAuctionStarted(true);
+          setEverAuctionStarted(true);
         } else {
           setAuctionStatusText("경매 종료");
+          setIsAuctionStarted(false);
+          setEverAuctionStarted(true);
         }
       }
     };
