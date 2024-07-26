@@ -1,22 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 const Bgm = ({clickPauseHandler, bgmRunning, isAuctionOpen}) => {
+  const audioRef = useRef(null);
   
   useEffect(() => {
-    const audioElement = document.getElementById('audio');
-    if (audioElement) {
-      audioElement.volume = 0.2; // 볼륨을 절반으로 설정
+    if (audioRef.current) {
+      if (isAuctionOpen) {
+        audioRef.current.volume = 0.3; // Auction.mp3의 볼륨을 0.5로 설정
+      } else {
+        audioRef.current.volume = 0.05; // 다른 BGM의 볼륨은 기본값(1)으로 설정
+      }
     }
-  }, [bgmRunning]); // bgmRunning이 변경될 때마다 실행
+  }, [bgmRunning, isAuctionOpen]); // bgmRunning 또는 isAuctionOpen이 변경될 때마다 실행
 
   return (
     <div className="bottom_menu_item pause" onClick={clickPauseHandler}>
-        {bgmRunning ? 
-          isAuctionOpen? 
-          <audio id="audio" src="bgm/Auction.mp3" autoPlay loop ></audio> 
-          :<audio id="audio" src="bgm/MapleStory_-_Raindrop_Flower.mp3" autoPlay loop ></audio> 
-          
-        : null}
+        {bgmRunning && (
+          <audio 
+            ref={audioRef}
+            src={isAuctionOpen ? "bgm/Auction.mp3" : "bgm/MapleStory_-_Raindrop_Flower.mp3"}
+            autoPlay 
+            loop 
+          />
+        )}
         <img src="icon/svg/Pause.svg" alt="pause" />
     </div>
   );
