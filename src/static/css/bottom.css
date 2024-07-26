@@ -139,7 +139,7 @@ body {
   border-radius: 2em;
   z-index: 10010;
   height: 60px;
-  opacity: 0.5;
+  /* opacity: 0.5; */
   position: relative;
   left: calc(-50%);
 }
@@ -165,7 +165,7 @@ body {
     skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) 
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)
   );
-  z-index: 39999;
+  z-index: 9999;
   margin: auto;
 }
 .product_list_div {
