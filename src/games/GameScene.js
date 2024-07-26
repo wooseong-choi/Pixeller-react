@@ -1,4 +1,3 @@
-// test
 import Phaser from "phaser";
 import Player from "./character/Player.ts";
 import Scroll from "./scroll/scrollEventHandler.ts";
@@ -1068,7 +1067,7 @@ class GameScene extends Phaser.Scene {
   }
 
   handleProximityEvent(player1, player2) {
-    console.log(`플레이어 ${player1}와 ${player2}가 충돌 반경 내에 있습니다!`);
+    // console.log(`플레이어 ${player1}와 ${player2}가 충돌 반경 내에 있습니다!`);
     // 여기에 충돌 반경 내에서 발생할 이벤트를 추가하세요
     
     // player2를 players 배열에 추가

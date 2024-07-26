@@ -82,7 +82,7 @@ const Main = ({ isListOpen, setIsListOpen }) => {
 
   const startVideoStream = async (e) => {
     e.preventDefault();
-    console.log("startVideoStream", isViduOpen);
+    // console.log("startVideoStream", isViduOpen);
     
     const detail = e.detail;
     const isViduDivOpen = document.querySelector(".cam-div");
