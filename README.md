@@ -1,70 +1,101 @@
-# Getting Started with Create React App
+# PIXELLER
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 프로젝트 개요
+메타버스에서 실시간으로 중고 물품의 상태를 확인하고 중고 거래 및 실시간 경매를 진행해보세요!
 
-## Available Scripts
+https://pixeller.net/
 
-In the project directory, you can run:
+## 개발 기간
+2024년 6월 24일 ~ 7월 27일 (약 5주)
 
-### `npm start`
+## 기능 소개
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 2D 메타버스
+- 화상 연결
+- DM
+- 경매
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 포스터
 
-### `npm test`
+<img src="./img/POSTER.png" alt="POSTER">
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## PIXELLER 메인 화면
 
-### `npm run build`
+<img src="./img/픽셀러 UI.png">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 경매장
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<img src="./img/경매장 사진.png">
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 시스템 아키텍쳐
 
-### `npm run eject`
+<img src="./img/Mixed Architecture.png">
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 기술 스택
+## Front End
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+[![Phaser](https://img.shields.io/badge/Phaser-3.55.2-FAA61A?style=flat&logo=phaser)](https://phaser.io/)
+[![React](https://img.shields.io/badge/React-17.0.2-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Back End
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+[![Nest.js](https://img.shields.io/badge/Nest.js-7.6.15-E0234E?style=flat&logo=nestjs)](https://nestjs.com/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.5.4-6DB33F?style=flat&logo=springboot)](https://spring.io/projects/spring-boot)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.8.16-FF6600?style=flat&logo=rabbitmq)](https://www.rabbitmq.com/)
 
-## Learn More
+## Database
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+[![AWS RDS: MySQL](https://img.shields.io/badge/AWS%20RDS-MySQL-527FFF?style=flat&logo=amazonaws)](https://aws.amazon.com/rds/)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Object Storage
 
-### Code Splitting
+[![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat&logo=amazonaws)](https://aws.amazon.com/s3/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 통신
 
-### Analyzing the Bundle Size
+[![Socket.io](https://img.shields.io/badge/Socket.io-4.1.2-010101?style=flat&logo=socket.io)](https://socket.io/)
+[![STOMP](https://img.shields.io/badge/STOMP-1.2-010101?style=flat&logo=stomp)](https://stomp.github.io/stomp-specification-1.2.html)
+[![HTTPS](https://img.shields.io/badge/HTTPS-2.0-0058B0?style=flat&logo=https)](https://developer.mozilla.org/ko/docs/Web/HTTP/HTTPS)
+[![OpenVidu](https://img.shields.io/badge/OpenVidu-2.17.0-3A3A3A?style=flat&logo=openvidu)](https://openvidu.io/)
+[![Livekit](https://img.shields.io/badge/Livekit-1.2-8D8D8D?style=flat&logo=livekit)](https://docs.livekit.io/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## CI/CD
 
-### Making a Progressive Web App
+[![Github](https://img.shields.io/badge/Github-Actions-181717?style=flat&logo=github)](https://github.com/features/actions)
+[![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-527FFF?style=flat&logo=amazonaws)](https://aws.amazon.com/codedeploy/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Secure
 
-### Advanced Configuration
+[![AWS WAF](https://img.shields.io/badge/AWS%20WAF-527FFF?style=flat&logo=amazonaws)](https://aws.amazon.com/waf/)
+[![AWS Shield](https://img.shields.io/badge/AWS%20Shield-527FFF?style=flat&logo=amazonaws)](https://aws.amazon.com/shield/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 내가 한 작업
+- CORS 연동 및 프로젝트 기초 틀 잡기
+-  Spring 서버와 REST 방식으로 상품 관련 기능 구현
+- 기본 CSS 레이아웃 잡기 및 디자인 css로 구현
+- Phaser를 통한 캐릭터 이동 구현 및 NEST 서버와 WS 통신을 통한 동기화 기본 로직 설계
 
-### Deployment
+## 팀원 소개
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+|이름   |역할               |Github                             |
+|-------|------------------|-----------------------------------|
+|류강현 |Leader,Frontend    |https://github.com/ryyugang        |
+|김수민 |Backend            |https://github.com/kssumin         |
+|민사빈 |Backend            |https://github.com/sabinKrafton    |
+|최우성 |Frontend           |https://github.com/wooseong-choi   |
+|최재혁 |Frontend           |https://github.com/Digit24-dev     |
 
-### `npm run build` fails to minify
+## 프로젝트 산출물
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Trello
+    - https://trello.com/b/VUpxKJBd/namanmu
+
+## 시연 영상
+[![Video Label](http://img.youtube.com/vi/awCNAZ6LixU/0.jpg)](https://youtu.be/awCNAZ6LixU)
+
+## 실행 방법
+
+React: `npm start`
+NestJS: `nest start`
+Spring:
+(DB 별도 구축 필요)
