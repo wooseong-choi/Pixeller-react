@@ -75,6 +75,9 @@ https://pixeller.net/
 - 기본 CSS 레이아웃 잡기 및 디자인 css로 구현
 - Phaser를 통한 캐릭터 이동 구현 및 NEST 서버와 WS 통신을 통한 동기화 기본 로직 설계
 
+## Team Organization
+- https://github.com/Jungle-Team3-Olympus
+
 ## 팀원 소개
 
 |이름   |역할               |Github                             |
