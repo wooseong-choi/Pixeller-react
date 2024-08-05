@@ -96,6 +96,9 @@ https://pixeller.net/
 ## 시연 영상
 [![Video Label](http://img.youtube.com/vi/awCNAZ6LixU/0.jpg)](https://youtu.be/awCNAZ6LixU)
 
+## 발표 영상
+[![Video Label](http://img.youtube.com/vi/dDUJH7vD5eM/0.jpg)](https://youtu.be/dDUJH7vD5eM)
+
 ## 실행 방법
 
 React: `npm start`
